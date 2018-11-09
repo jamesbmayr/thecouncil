@@ -1,0 +1,164 @@
+/*** page ***/
+	/* container */
+		#container {
+			margin: 0px;
+			padding: 10px;
+			border: 0px;
+			width: calc(100vw - 20px);
+			height: calc(100vh - 20px);
+			text-align: left;
+			overflow-x: hidden;
+			overflow-y: scroll;
+			background: transparent;
+			z-index: 2;
+		}
+
+		#container-inner {
+			width: 100%;
+			max-width: 800px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+	/* canvas */
+		#canvas {
+			position: absolute;
+			bottom: 0px;
+			left: 50%;
+			transform: translateX(-50%);
+			min-width: 200vh;
+			min-height: 100vh;
+			width: 100vw;
+			height: 50vw;
+			z-index: -1;
+		}
+
+	/* title */
+		#title {
+			text-align: center;
+			width: calc(100% - 8px);
+			height: 200px;
+			padding: 4px;
+			margin-top: 5%;
+			display: block;
+			border-radius: var(--borderRadius);
+			box-shadow: 0px 0px 0px;
+		}
+
+		#logotype {
+			display: inline-block;
+			background-color: transparent;
+			background-image: url(./logo.png);
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
+			text-align: center;
+			user-select: none;
+			height: 200px;
+			width: 200px;
+			cursor: pointer;
+			margin: 0px;
+		}
+
+	/* sections */
+		.section {
+			margin: 0% 0% 10% 0%;
+			font-weight: normal;
+			cursor: default;
+			color: var(--black-4);
+			line-height: 1.25;
+			border-radius: var(--borderRadius);
+			width: 100%;
+			text-align: center;
+			background: transparent;
+			overflow: hidden;
+			box-shadow: 0px 0px 10px var(--black-2);
+		}
+
+		.header {
+			font-size: 150%;
+			width: 100%;
+			background-color: var(--black-4);
+			color: var(--white-4);
+			cursor: default;
+			text-align: center;
+			box-shadow: 0px 0px 25px var(--black-4);
+			padding: 5% 0px 0px 0px;
+		}
+
+		.content {
+			background-color: var(--black-4);
+			padding: 5%;
+			margin: 0px;
+			font-size: 100%;
+			color: var(--white-4);
+			cursor: default;
+			text-align: center;
+			width: calc(100% - 10%);
+			box-shadow: 0px 0px 25px var(--black-4);
+		}
+
+		#songs ul {
+			text-align: left;
+		}
+
+	/* feedback */
+		#feedback-text {
+			padding: 10px 5px 5px 5px;
+			max-width: calc(100% - 20px);
+			min-width: calc(100% - 20px);
+			margin-bottom: 2%;
+			border-radius: var(--borderRadius);
+			border: 0px;
+			min-height: 50px;
+		}
+
+		#feedback-email {
+			width: calc(100% - 20px - 100px);
+			padding: 10px 5px 5px 5px;
+			border-radius: var(--borderRadius) 0px 0px var(--borderRadius);
+			border: 0px;
+			line-height: 1;
+			font-size: 100%;
+		}
+
+		#feedback-submit {
+			vertical-align: bottom;
+			padding: 10px 5px 5px;
+			width: 100px;
+			line-height: 1.05;
+			font-size: 100%;
+			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
+			border: 0px;
+			background-color: var(--white-4);
+			color: var(--black-4);
+		}
+
+		@-moz-document url-prefix() {
+			#feedback-submit {
+				line-height: 1;
+			}
+		}
+
+/*** colors ***/
+	/* text */
+		.redtext {
+			color: var(--red-2);
+		}
+
+		.orangetext {
+			color: var(--orange-2);
+		}
+
+		.greentext {
+			color: var(--green-2);
+		}
+
+		.bluetext {
+			color: var(--blue-2);
+		}
+
+		.purpletext {
+			color: var(--purple-2);
+		}
+		

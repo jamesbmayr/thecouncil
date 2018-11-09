@@ -1,0 +1,112 @@
+/*** page ***/
+	html, body {
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(var(--cerulean-3), var(--cerulean-4));
+	}
+
+	/* container */
+		#container {
+			position: absolute;
+			height: auto;
+			min-width: 50%;
+			max-width: 90%;
+			top: 50%;
+			left: 50%;
+			padding: 5%;
+			transform: translateX(-50%) translateY(-50%);
+			text-align: center;
+			z-index: 2;
+			background: transparent;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+		}
+
+		#canvas {
+			position: absolute;
+			bottom: 0px;
+			left: 50%;
+			transform: translateX(-50%);
+			min-width: 200vh;
+			min-height: 100vh;
+			width: 100vw;
+			height: 50vw;
+		}
+
+/*** form ***/
+	/* title */
+		#title {
+			float: left;
+			width: 100%;
+			text-align: center;
+			line-height: 1;
+			font-size: 125%;
+			text-transform: uppercase;
+			cursor: default;
+			color: var(--black-4);
+		}
+
+	/* links */
+		#links {
+			float: left;
+			width: 100%;
+			margin: 5% 0% 5% 0%;
+			text-align: center;
+			line-height: 1;
+			font-size: 65%;
+		}
+
+	/* inputs */
+		#createName {
+			float: left;
+			width: calc(100% - 16px);
+			padding: 4px;
+			text-align: center;
+			line-height: 1;
+			font-size: 100%;
+		}
+		
+		#gameCode {
+			float: left;
+			width: calc(60% - 10px);
+			padding: 10px 5px 5px 5px;
+			text-align: center;
+			line-height: 1;
+			font-size: 100%;
+			border-radius: var(--borderRadius) 0px 0px var(--borderRadius);
+			border: 0px;
+		}
+
+	/* buttons */
+		#createGame {
+			float: left;
+			display: block;
+			width: 100%;
+			text-align: center;
+			line-height: 1;
+			font-size: 100%;
+			padding: 10px 5px 5px 5px;
+			margin: 5% 0% 5% 0%;
+			border-radius: var(--borderRadius);
+			border: 0px;
+		}
+
+		#joinGame {
+			float: left;
+			width: 40%;
+			text-align: center;
+			line-height: 1.05;
+			font-size: 100%;
+			padding: 10px 5px 5px 5px;
+			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
+			border: 0px;
+		}
+
+		@-moz-document url-prefix() {
+			#joinGame {
+				line-height: 1;
+			}
+		}
