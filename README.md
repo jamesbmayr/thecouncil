@@ -36,27 +36,28 @@ thecouncil
 |   |- websocket
 |
 |- main
-|   |- logic.js (logError, logStatus, logMessage, logTime; getEnvironment, getAsset, getSchema; isNumLet, isBot; renderHTML, sanitizeString, duplicateObject; generateRandom, chooseRandom, sortRandom; determineSession, cleanDatabase)
+|   |- logic.js (logError, logStatus, logMessage, logTime; getEnvironment, getAsset, getSchema; isNumLet, isBot; renderHTML, sanitizeString, duplicateObject; generateRandom, chooseRandom, sortRandom; determineSession)
 |   |- stylesheet.css
 |   |- icon.png
 |   |- logo.png
 |   |- banner.png
 |   |- \_404.html
+|   |- script.js (sanitizeString; isEmail, isNumLet; sendPost; displayMessage)
 |
 |- home
 |   |- logic.js (createGame, createPlayer; joinGame)
 |   |- index.html
 |   |- stylesheet.css
-|   |- script.js (isNumLet, sendPost, displayError; createGame, joinGame; drawLoop)
+|   |- script.js (createGame, joinGame)
 |
 |- about
 |   |- index.html
 |   |- stylesheet.css
-|   |- script.js (sanitizeString, sendPost, displayError; submitFeedback; drawLoop)
+|   |- script.js (submitFeedback)
 |
 |- game
-    |- logic.js (addPlayer, removePlayer; submitArrow, submitNote, submitTeam; changeSelection, launchGame; createAvatar, createTower, createColumn, createStartPosition, createArrow; triggerMove, triggerNote; getAngle, getScalar, getCells, getAvatar, getTower, getMatch, getBeatAgo; updateBeat, updateState, updateEffects, updateArrow, updateTower, updateVelocity, updateCollisions, updatePosition, updateHealth, updateMusic, updateMessage, updateWinning)
+    |- logic.js (addPlayer, removePlayer; submitStart, submitRecall, submitIssue, submitOption, submitTally, submitCampaign; selectIssue, selectOption; enactStart, enactRecall, enactTally, enactConsequences, enactCampaign, enactElection, enactEnd; getIdeology, getApproval; updateTime, updateRatings, updateRebellions, updateOverthrow, updateMembers, updateFuture, updateIssues)
     |- index.html
     |- stylesheet.css
-    |- script.js (createSocket, checkLoop; submitClick, submitKey, submitTouch; receivePost; createOverlay, drawMessage, drawMenu; drawDPad, drawKeyboard, drawEscape, buildMobileControls; setInstruments, playMusic, playSoundEffects, playSoundtrack, playAvatarSounds)
+    |- script.js (createSocket, checkLoop; submitStart, submitRecall, submitIssue, submitOption, submitTally, submitCampaign; receivePost, receiveStart; createIssue, createGovernment, createMember; updateIssues, updateGovernment, updateMember, updateButtons)
 </pre>

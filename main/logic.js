@@ -305,7 +305,13 @@
 
 					case "issues":
 						return {
-
+							repeal:    ["term-limits", "term-length", "no-tabling", "quick-voting", "majority-threshold", "absentee-voting", "leader-presence", "balanced-budget", "no-abstentions", "impartial-leader", "tiebreaker-leader", "kickback-ban", "donation-ban", "restricted-press", "secret-voting", "lower-age", "maximum-age", "felon-disenfranchisement", "poll-tax", "height-restrictions", "delayed-elections", "snap-elections", "no-consecutives", "no-self", "short-season", "executive-decision", "accurate-polling", "accurate-estimates", "financial-disclosure"],
+							violence:  [],
+							rebellion: [],
+							austerity: [],
+							small:     [],
+							medium:    [],
+							large:     []
 						}
 					break
 
@@ -337,8 +343,9 @@
 									election: 1800000,
 									name:     null,
 									leader:   null,
-									term:     0
+									term:     0,
 									issue:    null,
+									cooldown: 0,
 									exists:   true
 								},
 								treasury: 1000000,
@@ -434,7 +441,7 @@
 							name:        null,
 							description: null,
 							timeout:     300000,
-							intensity:   1,
+							type:        null,
 							options:     []
 						}
 					break

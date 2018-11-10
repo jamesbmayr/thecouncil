@@ -154,7 +154,7 @@
 					document.getElementById("data").innerHTML = JSON.stringify(data, "\t", 2)
 
 					updateIssues(data)
-					updateMember(data.members[window.id])
+					updateMember(data.members[window.id], data.rules)
 				}
 				else if (data) {
 					document.getElementById("data").innerHTML = JSON.stringify(data, "\t", 2)
@@ -162,7 +162,7 @@
 					updateGovernment(data)
 					updateIssues(data)
 					for (var m in data.members) {
-						updateMember(data.members[m])
+						updateMember(data.members[m], data.rules)
 					}
 				}
 		}
@@ -187,7 +187,7 @@
 
 /*** creates ***/
 	/* createIssue */
-		function createIssue(data) {
+		function createIssue(data, rules) {
 			// container
 				var issue = document.createElement("div")
 					issue.className = "issue"
@@ -254,6 +254,8 @@
 							var element = document.createElement("div")
 								element.className = "option-agencies-" + a
 								element.innerText = subdata.agencies[a] > 0 ? "+" + subdata.agencies[a] : subdata.agencies[a]
+								element.setAttribute("direction", subdata.agencies[a] > 0 ? "up" : subdata.agencies[a] < 0 ? "down" : "none")
+								element.setAttribute("accuracy", rules.includes("accurate-estimates") ? "high" : "low") // rule: accurate-estimates
 							agencies.appendChild(element)
 						}
 
@@ -266,6 +268,8 @@
 							var element = document.createElement("div")
 								element.className = "option-constituents-" + c
 								element.innerText = subdata.constituents[c].approval > 0 ? "+" + subdata.constituents[c].approval : subdata.constituents[c].approval
+								element.setAttribute("direction", subdata.constituents[c].approval > 0 ? "up" : subdata.constituents[c].approval < 0 ? "down" : "none")
+								element.setAttribute("accuracy", rules.includes("accurate-polling") ? "high" : "low") // rule: accurate-polling
 							constituents.appendChild(element)
 						}
 
@@ -417,7 +421,7 @@
 
 					// new issue
 						else {
-							createIssue(data.issues[i])
+							createIssue(data.issues[i], data.rules)
 						}
 				}
 
@@ -436,6 +440,7 @@
 					government.querySelector(".government-election").innerText = Math.round((data.state.election - data.state.time) / 1000)
 					government.querySelector(".government-leader"  ).innerText = data.state.leader ? data.state.leader.name : "?"
 					government.querySelector(".government-treasury").innerText = data.treasury
+					government.querySelector(".government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
 
 				// agencies
 					government.querySelector(".government-agencies-s").innerText = data.agencies.s
@@ -453,18 +458,26 @@
 		}
 
 	/* updateMember */
-		function updateMember(data) {
+		function updateMember(data, rules) {
 			var member = document.getElementById("member-" + data.id)
 			if (member) {
 				// funds
 					member.querySelector(".member-funds").innerText = data.funds
+					if (window.id == data.id || rules.includes("financial-disclosure")) {
+						member.querySelector(".member-funds").removeAttribute("hidden")
+					}
+					else {
+						member.querySelector(".member-funds").setAttribute("hidden", true)
+					}
 
 				// contituents
-					member.querySelector(".member-constituents-d").innerText = data.constituents.d.approval + "% x" + data.constituents.d.population
-					member.querySelector(".member-constituents-e").innerText = data.constituents.e.approval + "% x" + data.constituents.e.population
-					member.querySelector(".member-constituents-f").innerText = data.constituents.f.approval + "% x" + data.constituents.f.population
-					member.querySelector(".member-constituents-g").innerText = data.constituents.g.approval + "% x" + data.constituents.g.population
-					member.querySelector(".member-constituents-l").innerText = data.constituents.l.approval + "% x" + data.constituents.l.population
+					if (window.id == data.id) {
+						member.querySelector(".member-constituents-d").innerText = data.constituents.d.approval + "% x" + data.constituents.d.population
+						member.querySelector(".member-constituents-e").innerText = data.constituents.e.approval + "% x" + data.constituents.e.population
+						member.querySelector(".member-constituents-f").innerText = data.constituents.f.approval + "% x" + data.constituents.f.population
+						member.querySelector(".member-constituents-g").innerText = data.constituents.g.approval + "% x" + data.constituents.g.population
+						member.querySelector(".member-constituents-l").innerText = data.constituents.l.approval + "% x" + data.constituents.l.population
+					}
 
 				// leader
 					if (data.state.leader) {

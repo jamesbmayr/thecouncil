@@ -7,7 +7,6 @@
 			var on = { click:      "click", mousedown:  "mousedown", mousemove: "mousemove", mouseup:  "mouseup" }
 		}
 
-
 /*** tools ***/
 	/* sanitizeString */
 		function sanitizeString(string) {
