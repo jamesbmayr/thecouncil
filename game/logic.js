@@ -2,6 +2,12 @@
 	var main       = require("../main/logic")
 	module.exports = {}
 
+/*** maps ***/
+	var realms     = main.getAsset("realms")
+	var races      = main.getAsset("races")
+	var ideologies = main.getAsset("ideologies")
+	var issues     = main.getAsset("issues")
+
 /*** players ***/
 	/* addPlayer */
 		module.exports.addPlayer = addPlayer
@@ -35,6 +41,7 @@
 						}
 						else {
 							callback([request.session.id], {success: true,
+								start:   request.game.data.state.start,
 								id:      request.game.id,
 								data:    request.game.data,
 								message: "rejoined game!"
@@ -332,12 +339,10 @@
 			try {
 				// agencies
 					for (var a in request.game.data.agencies) {
-						request.game.data.agencies[a] = Math.floor(Math.randon() * 20) + 40
+						request.game.data.agencies[a] = Math.floor(Math.random() * 20) + 40
 					}
 
 				// ideologies
-					var races = main.getAsset("races")
-					var ideologies = main.getAsset("ideologies")
 					var available = main.sortRandom(["socialist", "socialist",
 						"liberal", "liberal", "liberal", "liberal", "liberal",
 						"moderate", "moderate", "moderate", "moderate", "moderate", "moderate", "moderate",
@@ -360,8 +365,8 @@
 
 						// populations & approval ratings
 							for (var c in member.constituents) {
-								member.constituents[c].population = Math.floor(Math.random() *  5) * 1000
-								member.constituents[c].approval   = Math.floor(Math.random() * 20) + 40
+								member.constituents[c].population = Math.floor(Math.random() *  4) * 1000 + 1000
+								member.constituents[c].approval   = Math.floor(Math.random() * 20)        + 40
 
 								if (c == member.race.short) {
 									member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + 25))
@@ -373,10 +378,10 @@
 					updateRatings(request, callback)
 
 				// start
-					request.game.data.state.name  = main.chooseRandom(main.getAsset("names"))
+					request.game.data.state.name  = main.chooseRandom(realms)
 					request.game.data.state.start = new Date().getTime()
 					request.game.data.state.cooldown = 15000
-					callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, start: true, message: "starting the game!"})
+					callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, start: true, message: "starting the game!", data: request.game.data})
 			}
 			catch (error) {
 				main.logError(error)
@@ -494,7 +499,10 @@
 						var option = issue.options.find(function (o) {
 							return o.id == request.game.data.members[m].state.selection
 						})
-						option.votes.push(m)
+
+						if (option) {
+							option.state.votes.push(m)
+						}
 						request.game.data.members[m].state.selection = null
 					}
 
@@ -506,12 +514,12 @@
 					}
 
 					for (var o in issue.options) {
-						if (issue.options[o].votes.length > winningOptions.votes) {
-							winningOptions.votes = issue.options[o].votes.length
+						if (issue.options[o].state.votes.length > winningOptions.votes) {
+							winningOptions.votes = issue.options[o].state.votes.length
 							winningOptions.ids   = [o]
 							totalVotes += 1
 						}
-						else if (issue.options[o].votes.length == winningOptions.votes) {
+						else if (issue.options[o].state.votes.length == winningOptions.votes) {
 							winningOptions.ids.push(o)
 							totalVotes += 1
 						}
@@ -526,17 +534,17 @@
 					}
 
 				// rule: executive-decision
-					else if (request.game.data.rules.includes("executive-decision") && issue.timeout <= 120000 && issue.options.find(function(o) { return o.votes.includes(request.game.data.state.leader) })) {
+					else if (request.game.data.rules.includes("executive-decision") && issue.timeout <= 120000 && issue.options.find(function(o) { return o.state.votes.includes(request.game.data.state.leader) })) {
 						issue.options.find(function(o) {
-							return o.votes.includes(request.game.data.state.leader)
+							return o.state.votes.includes(request.game.data.state.leader)
 						}).state.selected = true
 						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "rule: the leader can make executive decisions on urgent issues"})
 					}
 
 				// rule: tiebreaker-leader
-					else if (winningOptions.ids.length > 1 && request.game.data.rules.includes("tiebreaker-leader") && request.game.data.state.leader && issue.options.find(function(o) { return winningOptions.ids.includes(o.id) && o.votes.includes(request.game.data.state.leader) })) {
+					else if (winningOptions.ids.length > 1 && request.game.data.rules.includes("tiebreaker-leader") && request.game.data.state.leader && issue.options.find(function(o) { return winningOptions.ids.includes(o.id) && o.state.votes.includes(request.game.data.state.leader) })) {
 						issue.options.find(function(o) {
-							return winningOptions.ids.includes(o.id) && o.votes.includes(request.game.data.state.leader)
+							return winningOptions.ids.includes(o.id) && o.state.votes.includes(request.game.data.state.leader)
 						}).state.selected = true
 						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "rule: in the event of a tie, the leader's choice carries"})
 					}
@@ -664,8 +672,8 @@
 						var message = ""
 						for (var o in issue.options) {
 							message += issue.options[o].name + ": "
-							for (var v in issue.options[o].votes) {
-								message += request.game.data.members[issue.options[o].votes[v]].name
+							for (var v in issue.options[o].state.votes) {
+								message += request.game.data.members[issue.options[o].state.votes[v]].name
 							}
 							message += "; "
 						}
@@ -711,10 +719,10 @@
 						member.funds -= 1000
 
 				// member approvals
-					var issues = request.game.past.slice(request.game.past.length - 3, request.game.past.length)
-					for (var i in issues) {
-						var option = issues[i].options.find(function(o) {
-							return o.votes.includes(member.id)
+					var latestIssues = request.game.past.slice(request.game.past.length - 3, request.game.past.length)
+					for (var i in latestIssues) {
+						var option = latestIssues[i].options.find(function(o) {
+							return o.state.votes.includes(member.id)
 						})
 
 						if (option && option.state.selected) {
@@ -733,7 +741,7 @@
 					updateRatings(request, callback)
 
 				// message
-					callback([request.session.id], {success: true, message: "campaigning on " + issues.map(function (i) { return i.name }).join(" & ") })
+					callback([request.session.id], {success: true, message: "campaigning on " + latestIssues.map(function (i) { return i.name }).join(" & ") })
 			}
 			catch (error) {
 				main.logError(error)
@@ -887,13 +895,13 @@
 						}
 
 					// gameplay
-						else if (!request.game.data.state.end) {
+						else if (!request.game.data.state.end && request.game.data.state.time > 15000) {
 							// future issues
 								updateRebellions(request, callback)
 								updateFuture(request, callback)
 
 							// random issues
-								updateIssues(reuqest, callback)
+								updateIssues(request, callback)
 
 							// campaigns & donations (& riots)
 								updateMembers(request, callback)
@@ -906,7 +914,7 @@
 								}
 
 							// send data
-								callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), request.game.data)
+								callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, data: request.game.data})
 						}
 				}
 			}
@@ -930,10 +938,11 @@
 					for (var m in request.game.data.members) {
 						var member = request.game.data.members[m]
 
-						for (var c in request.game.data.constituents)
+						for (var c in request.game.data.constituents) {
 							request.game.data.constituents[c].population = Math.max(0, request.game.data.constituents[c].population + member.constituents[c].population)
 							request.game.data.constituents[c].approval   = request.game.data.constituents[c].approval + (member.constituents[c].population * member.constituents[c].approval)
 						}
+					}
 
 				// divide for ratings
 					for (var c in request.game.data.constituents) {
@@ -953,13 +962,13 @@
 				// rebellions
 					for (var c in request.game.data.constituents) {
 						if (request.game.data.constituents[c].approval <= 20 && !request.game.data.issues.find(function(i) { return i.type == "rebellion" })) {
-							request.game.data.issues.push(main.chooseRandom(main.getAsset("issues").rebellion))
+							request.game.data.issues.push(main.chooseRandom(issues.rebellion))
 						}
 					}
 
 				// austerity
 					if (request.game.data.treasury < 0 && !request.game.data.issues.find(function(i) { return i.type == "austerity" })) {
-						request.game.data.issues.push(main.chooseRandom(main.getAsset("issues").austerity))
+						request.game.data.issues.push(main.chooseRandom(issues.austerity))
 					}
 			}
 			catch (error) {
@@ -973,21 +982,24 @@
 		function updateOverthrow(request, callback) {
 			try {
 				// special ideoogies
-					var fascist = request.game.data.members.find(function(m) {
-						return m.ideology.name == "fascist"
-					}) || null
-
-					var populist = request.game.data.members.find(function(m) {
-						return m.ideology.name == "populist"
-					}) || null
-
-					var anarchist = request.game.data.members.find(function(m) {
-						return m.ideology.name == "anarchist"
-					}) || null
-
-					var crook = request.game.data.members.find(function(m) {
-						return m.ideology.name == "crook"
-					}) || null
+					var fascist = null
+					var populist = null
+					var anarchist = null
+					var crook = null
+					for (var m in request.game.data.members) {
+						if (request.game.data.members[m].ideology.name == "fascist") {
+							fascist = request.game.data.members[m]
+						}
+						else if (request.game.data.members[m].ideology.name == "populist") {
+							populist = request.game.data.members[m]
+						}
+						else if (request.game.data.members[m].ideology.name == "anarchist") {
+							anarchist = request.game.data.members[m]
+						}
+						else if (request.game.data.members[m].ideology.name == "crook") {
+							crook = request.game.data.members[m]
+						}
+					}
 
 				// fascist
 					if (fascist && getIdeology(request, fascist, callback) && fascist.state.leader) {
@@ -1058,7 +1070,7 @@
 								member.funds = Math.min(0, member.funds + Math.floor(member.constituents[c].population / 100))
 							}
 							else if (member.constituents[c].approval <= 20 && !request.game.data.issues.find(function(i) { return i.type == "violence" })) {
-								request.game.data.issues.push(main.chooseRandom(main.getAsset("issues").violence))
+								request.game.data.issues.push(main.chooseRandom(issues.violence))
 							}
 						}
 				}
@@ -1079,7 +1091,7 @@
 
 					// add to issues
 						if (request.game.future[f].timeout <= 0) {
-							var issue = main.getAsset("issues")[request.game.future[f].type].find(function (i) { return i.name == request.game.future[f].name })
+							var issue = issues[request.game.future[f].type].find(function (i) { return i.name == request.game.future[f].name })
 							request.game.data.issues.push(issue)
 
 							request.game.future.splice(f, 1)
@@ -1104,10 +1116,8 @@
 						if (request.game.data.issues[i].timeout <= 0 && !request.game.data.state.cooldown) {
 							if (request.game.data.state.issue == request.game.data.issues[i].id) {
 								enactTally(request, callback)
-								var option = request.game.data.issues[i].options.find(function(o) { return o.state.selected })
 							}
 							else if (!request.game.data.state.issue) {
-								var option = request.game.data.issues[i].options.find(function(o) { return o.state.default  })
 								enactConsequences(request, callback, request.game.data.issues[i])
 							}
 						}
@@ -1121,14 +1131,19 @@
 					 || (request.game.data.state.time %  60000 == 0 && !Math.floor(Math.random() * 3))		// 1 minute   = 33%
 					 || (request.game.data.state.time %  30000 == 0 && !Math.floor(Math.random() * 5))		// 30 seconds = 20%
 					 || (request.game.data.state.time %  15000 == 0 && !Math.floor(Math.random() * 8))) {	// 15 seconds = 12.5%
+					 	var tryAgain = 10
 						do {
-							var issue = main.chooseRandom(main.getAsset("issues")[type])
+							tryAgain--
+							var issue = main.chooseRandom(issues[type])
 						}
-						while (request.game.past.find(       function (p) { return p.name == issue.name })
+						while (issue && tryAgain && 
+							(  request.game.past.find(       function (p) { return p.name == issue.name })
 							|| request.game.data.issues.find(function (i) { return i.name == issue.name })
-							|| request.game.future.find(     function (f) { return f.name == issue.name }))
+							|| request.game.future.find(     function (f) { return f.name == issue.name })))
 
-						request.game.data.issues.push(issue)
+						if (issue) {
+							request.game.data.issues.push(issue)
+						}
 					}
 			}
 			catch (error) {

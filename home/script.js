@@ -24,7 +24,7 @@
 		function joinGame() {
 			// get values
 				var gameCode = document.getElementById("gameCode").value.replace(" ","").trim().toLowerCase() || false
-				var name     = sanitizeString(document.getElementById("createName").value) || null
+				var name     = sanitizeString(document.getElementById("name").value) || null
 
 			if (gameCode.length !== 4) {
 				displayMessage("The game code must be 4 characters.")

@@ -35,8 +35,15 @@
 						player.name = main.sanitizeString(request.post.name)
 					}
 
+				// other players
+					var otherNames = Object.keys(request.game.players).map(function(p) {
+						return request.game.players[p].name
+					}) || []
+
 				// return value
-					return player
+					if (!otherNames.length || !otherNames.includes(player.name)) {
+						return player
+					}
 			}
 			catch (error) {main.logError(error)}
 		}
@@ -65,10 +72,15 @@
 					callback({success: false, message: "Your name can be letters and numbers only."})
 				}
 				else {
-					// create player
-						request.game.players[request.session.id] = createPlayer(request)
+					var player = createPlayer(request)
 
-					callback({success: true, message: "game joined", location: "../../game/" + request.game.id})
+					if (!player) {
+						callback({success: false, message: "Name already taken."})
+					}
+					else {
+						request.game.players[request.session.id] = player
+						callback({success: true, message: "game joined", location: "../../game/" + request.game.id})
+					}
 				}
 			}
 			catch (error) {

@@ -143,7 +143,7 @@
 													fs.readFile("./" + request.path[1] + "/script.js", "utf8", function (error, file) {
 														if (error) { _404(error) }
 														else {
-															response.end("window.addEventListener('load', function() {\n\n" + main.getAsset("js variables") + "\n\n" + data + "\n\n" + file + "\n\n})")
+															response.end("window.addEventListener('load', function() {\n\n" + data + "\n\n" + file + "\n\n})")
 														}
 													})
 												}

@@ -87,7 +87,7 @@
 						return "logo.png"
 					break
 					case "google fonts":
-						return '<link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">'
+						return '<link href="https://fonts.googleapis.com/css?family=Cherry+Swash" rel="stylesheet">'
 					break
 					case "meta":
 						return '<meta charset="UTF-8"/>\
@@ -111,24 +111,10 @@
 						
 						return ('/*** variables ***/\n' +
 								'	:root {\n' +
-								'		--font: Orbitron, sans-serif;\n' +
+								'		--font: "Cherry Swash", fantasy;\n' +
 								'		--borderRadius: 10px;\n' +
 										cssColors +
 								'	}')
-					break
-					case "js variables":
-						var colors = getAsset("colors")
-						var jsColors = ""
-						for (var hue in colors) {
-							for (var shade in colors[hue]) {
-								jsColors += "	--" + hue + "-" + shade + ": " + colors[hue][shade] + ";\n"
-							}
-						}
-						
-						return ('/*** variables ***/\n' +
-								'	var font   = window.font   = "Orbitron"\n' +
-								'	var borderRadius = window.borderRadius = 10\n' +
-								'	var colors = window.colors = ' + JSON.stringify(getAsset("colors"), null, "\t"))
 					break
 
 					case "races":
@@ -156,14 +142,14 @@
 							},
 							{
 								singular:    "goblin",
-								plural:      "goblins"
+								plural:      "goblins",
 								altsingular: "goblin",
 								altplural:   "goblins",
 								short:       "g"
 							},
 							{
 								singular:    "lizardperson",
-								plural:      "lizardfolk"
+								plural:      "lizardfolk",
 								altsingular: "sss",
 								altplural:   "zzz",
 								short:       "l"
@@ -278,8 +264,8 @@
 						]
 					break
 
-					case "names":
-						return ["Caledonia"]
+					case "realms":
+						return ["Caledonia", "Faerponia", "People's Republic of Democracy", "Carasune", "Laige", "Beltoc", "Edilar", "Corano", "Ariule", "Seraveru", "Seltin", "Strelt", "Ocrano", "Hovalith", "Rescoth", "Nadroc", "Anago", "Pexis", "Quaris", "Bellun", "Venemith", "Hogate", "Isk", "Lisbith", "Tringe", "Orenth", "Ain", "Meleth", "Mullwood", "Aloonic Republic", "Torstonia", "Cotyllia", "Uzia Confederacy", "Hydris States", "Marle", "Precine Republic", "Priosian Alliance", "States of Phaleed", "Ivenin Confederacy"]
 					break
 
 					case "colors":
@@ -305,10 +291,11 @@
 
 					case "issues":
 						return {
-							repeal:    ["term-limits", "term-length", "no-tabling", "quick-voting", "majority-threshold", "absentee-voting", "leader-presence", "balanced-budget", "no-abstentions", "impartial-leader", "tiebreaker-leader", "kickback-ban", "donation-ban", "restricted-press", "secret-voting", "lower-age", "maximum-age", "felon-disenfranchisement", "poll-tax", "height-restrictions", "delayed-elections", "snap-elections", "no-consecutives", "no-self", "short-season", "executive-decision", "accurate-polling", "accurate-estimates", "financial-disclosure"],
+							repeal:    ["term-limits", "term-length", "no-tabling", "quick-voting", "majority-threshold", "absentee-voting", "leader-presence", "balanced-budget", "no-abstentions", "impartial-leader", "tiebreaker-leader", "kickback-ban", "donation-ban", "restricted-press", "secret-voting", "lower-age", "maximum-age", "felon-disenfranchisement", "poll-tax", "height-restrictions", "delayed-elections", "snap-elections", "no-consecutives", "no-self", "short-season", "executive-decision", "accurate-polling", "accurate-estimates", "financial-disclosure", "Whitesea Coast", "Firestorm Coast"],
 							violence:  [],
 							rebellion: [],
 							austerity: [],
+							effects:   [],
 							small:     [],
 							medium:    [],
 							large:     []

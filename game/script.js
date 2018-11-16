@@ -141,28 +141,28 @@
 
 			// starting
 				if (data.start) {
-					receiveStart(data)
+					receiveStart(data.data)
 				}
 
 			// leadership change
-				if (data.members && window.member) {
-					updateButtons(data)
+				if (data.data && data.data.members && window.member) {
+					updateButtons(data.data.members)
 				}
 
 			// new data
-				if (data && window.member) {
-					document.getElementById("data").innerHTML = JSON.stringify(data, "\t", 2)
+				if (data.data && window.member) {
+					document.getElementById("data").innerHTML = JSON.stringify(data.data, "\t", 2)
 
-					updateIssues(data)
-					updateMember(data.members[window.id], data.rules)
+					updateIssues(data.data)
+					updateMember(data.data.members[window.id], data.data.rules)
 				}
-				else if (data) {
-					document.getElementById("data").innerHTML = JSON.stringify(data, "\t", 2)
+				else if (data.data) {
+					document.getElementById("data").innerHTML = JSON.stringify(data.data, "\t", 2)
 					
-					updateGovernment(data)
-					updateIssues(data)
-					for (var m in data.members) {
-						updateMember(data.members[m], data.rules)
+					updateGovernment(data.data)
+					updateIssues(data.data)
+					for (var m in data.data.members) {
+						updateMember(data.data.members[m], data.data.rules)
 					}
 				}
 		}
@@ -175,13 +175,13 @@
 					createGovernment(data)
 					
 					for (var m in data.members) {
-						createMember(data.members[m])
+						createMember(data.members[m], data.rules)
 					}
 				}
 
 			// members
 				else {
-					createMember(data.members[window.id])
+					createMember(data.members[window.id], data.rules)
 				}
 		}
 
@@ -192,7 +192,7 @@
 				var issue = document.createElement("div")
 					issue.className = "issue"
 					issue.id = "issue-" + data.id
-					issue.setAttribute("intensity", data.intensity)
+					issue.setAttribute("type", data.type)
 					issue.addEventListener(on.click, submitIssue)
 				document.getElementById("issues").appendChild(issue)
 
@@ -328,7 +328,7 @@
 		}
 
 	/* createMember */
-		function createMember(data) {
+		function createMember(data, rules) {
 			// container
 				var member = document.createElement("div")
 					member.className = "member"
@@ -342,13 +342,16 @@
 				member.appendChild(name)
 
 				var race = document.createElement("div")
-					race.classrace = "member-race"
-					race.innerText = data.race
+					race.className = "member-race"
+					race.innerText = data.race.singular
 				member.appendChild(race)
 
 			// ideology
 				var ideology = document.createElement("div")
 					ideology.className = "member-ideology"
+				if (!window.id || window.id !== data.id) {
+					ideology.setAttribute("hidden", true)
+				}
 				member.appendChild(ideology)
 
 				var name = document.createElement("div")
@@ -362,10 +365,12 @@
 				ideology.appendChild(description)
 
 				for (var i in data.ideology) {
-					var element = document.createElement("div")
-						element.className = "member-ideology-" + i
-						element.innerText = data.ideology[i][0] + " - " + data.ideology[i][1]
-					ideology.appendChild(element)
+					if (["r", "s", "t", "m"].includes(i)) {
+						var element = document.createElement("div")
+							element.className = "member-ideology-" + i
+							element.innerText = data.ideology[i][0] + " - " + data.ideology[i][1]
+						ideology.appendChild(element)
+					}
 				}
 
 			// funds
@@ -376,16 +381,19 @@
 			// constituents
 				var constituents = document.createElement("div")
 					constituents.className = "member-constituents"
+				if (!window.id || window.id !== data.id) {
+					constituents.setAttribute("hidden", true)
+				}
 				member.appendChild(constituents)
 
 				for (var c in data.constituents) {
 					var element = document.createElement("div")
 						element.className = "member-constituents-" + c
-					contituents.appendChild(element)
+					constituents.appendChild(element)
 				}
 
 			// data
-				updateMember(data)
+				updateMember(data, rules)
 		}
 
 /*** updates ***/
@@ -399,7 +407,7 @@
 			// update issues
 				for (var i in data.issues) {
 					// existing issue
-						var issue = document.getElementById("issue-" + data.issues[i].id)
+						var issue = document.getElementById("issue-" + data.issues[i].id) || false
 						if (issue) {
 							// remove from id queue
 								ids.splice(ids.indexOf(data.issues[i].id), 1)
@@ -438,7 +446,7 @@
 				// stats
 					government.querySelector(".government-name"    ).innerText = data.state.name
 					government.querySelector(".government-election").innerText = Math.round((data.state.election - data.state.time) / 1000)
-					government.querySelector(".government-leader"  ).innerText = data.state.leader ? data.state.leader.name : "?"
+					government.querySelector(".government-leader"  ).innerText = data.state.leader ? data.members[data.state.leader].name : "?"
 					government.querySelector(".government-treasury").innerText = data.treasury
 					government.querySelector(".government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
 
@@ -448,7 +456,7 @@
 					government.querySelector(".government-agencies-t").innerText = data.agencies.t
 					government.querySelector(".government-agencies-m").innerText = data.agencies.m
 
-				// contituents
+				// constituents
 					government.querySelector(".government-constituents-d").innerText = data.constituents.d.approval + "% x" + data.constituents.d.population
 					government.querySelector(".government-constituents-e").innerText = data.constituents.e.approval + "% x" + data.constituents.e.population
 					government.querySelector(".government-constituents-f").innerText = data.constituents.f.approval + "% x" + data.constituents.f.population
@@ -470,14 +478,12 @@
 						member.querySelector(".member-funds").setAttribute("hidden", true)
 					}
 
-				// contituents
-					if (window.id == data.id) {
-						member.querySelector(".member-constituents-d").innerText = data.constituents.d.approval + "% x" + data.constituents.d.population
-						member.querySelector(".member-constituents-e").innerText = data.constituents.e.approval + "% x" + data.constituents.e.population
-						member.querySelector(".member-constituents-f").innerText = data.constituents.f.approval + "% x" + data.constituents.f.population
-						member.querySelector(".member-constituents-g").innerText = data.constituents.g.approval + "% x" + data.constituents.g.population
-						member.querySelector(".member-constituents-l").innerText = data.constituents.l.approval + "% x" + data.constituents.l.population
-					}
+				// constituents
+					member.querySelector(".member-constituents-d").innerText = data.constituents.d.approval + "% x" + data.constituents.d.population
+					member.querySelector(".member-constituents-e").innerText = data.constituents.e.approval + "% x" + data.constituents.e.population
+					member.querySelector(".member-constituents-f").innerText = data.constituents.f.approval + "% x" + data.constituents.f.population
+					member.querySelector(".member-constituents-g").innerText = data.constituents.g.approval + "% x" + data.constituents.g.population
+					member.querySelector(".member-constituents-l").innerText = data.constituents.l.approval + "% x" + data.constituents.l.population
 
 				// leader
 					if (data.state.leader) {
