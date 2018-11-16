@@ -23,6 +23,16 @@
 			return (/^[a-z0-9A-Z_\s]+$/).test(string)
 		}
 
+	/* chooseRandom */
+		function chooseRandom(options) {
+			if (!Array.isArray(options)) {
+				return false
+			}
+			else {
+				return options[Math.floor(Math.random() * options.length)]
+			}
+		}
+
 	/* sendPost */
 		function sendPost(post, callback) {
 			var request = new XMLHttpRequest()

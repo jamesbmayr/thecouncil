@@ -76,7 +76,7 @@
 									case (/\/apple\-touch\-icon\-precomposed[.]png$/).test(request.url):
 										try {
 											response.writeHead(200, {"Content-Type": "image/png"})
-											fs.readFile("./main/icon.png", function (error, file) {
+											fs.readFile("./main/images/icon.png", function (error, file) {
 												if (error) {_404(error)}
 												else {
 													response.end(file, "binary")
@@ -90,7 +90,7 @@
 									case (/\/logo[.]png$/).test(request.url):
 										try {
 											response.writeHead(200, {"Content-Type": "image/png"})
-											fs.readFile("./main/logo.png", function (error, file) {
+											fs.readFile("./main/images/logo.png", function (error, file) {
 												if (error) {_404(error)}
 												else {
 													response.end(file, "binary")
@@ -104,7 +104,35 @@
 									case (/\/banner[.]png$/).test(request.url):
 										try {
 											response.writeHead(200, {"Content-Type": "image/png"})
-											fs.readFile("./main/banner.png", function (error, file) {
+											fs.readFile("./main/images/banner.png", function (error, file) {
+												if (error) {_404(error)}
+												else {
+													response.end(file, "binary")
+												}
+											})
+										}
+										catch (error) {_404(error)}
+									break
+
+								// x
+									case (/\/x[.]png$/).test(request.url):
+										try {
+											response.writeHead(200, {"Content-Type": "image/png"})
+											fs.readFile("./main/images/x.png", function (error, file) {
+												if (error) {_404(error)}
+												else {
+													response.end(file, "binary")
+												}
+											})
+										}
+										catch (error) {_404(error)}
+									break
+
+								// j
+									case (/\/j[.]png$/).test(request.url):
+										try {
+											response.writeHead(200, {"Content-Type": "image/png"})
+											fs.readFile("./main/images/j.png", function (error, file) {
 												if (error) {_404(error)}
 												else {
 													response.end(file, "binary")
@@ -140,10 +168,15 @@
 											fs.readFile("./main/script.js", "utf8", function (error, data) {
 												if (error) {_404(error)}
 												else {
-													fs.readFile("./" + request.path[1] + "/script.js", "utf8", function (error, file) {
-														if (error) { _404(error) }
+													fs.readFile("./main/draw.js", "utf8", function (error, draw) {
+														if (error) {_404(error)}
 														else {
-															response.end("window.addEventListener('load', function() {\n\n" + data + "\n\n" + file + "\n\n})")
+															fs.readFile("./" + request.path[1] + "/script.js", "utf8", function (error, file) {
+																if (error) { _404(error) }
+																else {
+																	response.end("window.addEventListener('load', function() {\n\n" + data + "\n\n" + draw + "\n\n" + file + "\n\n})")
+																}
+															})
 														}
 													})
 												}

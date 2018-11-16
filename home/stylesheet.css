@@ -25,88 +25,197 @@
 			-o-user-select: none;
 		}
 
-		#canvas {
-			position: absolute;
-			bottom: 0px;
-			left: 50%;
-			transform: translateX(-50%);
-			min-width: 200vh;
-			min-height: 100vh;
-			width: 100vw;
-			height: 50vw;
-		}
-
 /*** form ***/
 	/* title */
+		#title-outer {
+			top: 5vh;
+			left: 5vh;
+			background-color: var(--white-4);
+		}
+
 		#title {
-			float: left;
-			width: 100%;
-			text-align: center;
-			line-height: 1;
+			height: 40vh;
+			width: 60vh;
+			background-color: var(--black-4);
+			color: var(--white-4);
 			font-size: 125%;
-			text-transform: uppercase;
-			cursor: default;
-			color: var(--black-4);
-		}
-
-	/* links */
-		#links {
-			float: left;
-			width: 100%;
-			margin: 5% 0% 5% 0%;
+			user-select: none;
+			cursor: pointer;
 			text-align: center;
-			line-height: 1;
-			font-size: 65%;
+			text-shadow: 0px 0px 10px var(--black-4);
 		}
 
-	/* inputs */
-		#createName {
+		#title-inner {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			width: 80%;
+		}
+
+		#title:hover, #title:focus {
+			box-shadow: 0px 0px 20px var(--black-4);
+		}
+
+	/* creator */
+		#creator-outer {
+			top: 20px;
+			right: 100px;
+		}
+
+		#creator {
+			background-color: var(--black-3);
+			background-image: url("j.png");
+			background-position: center center;
+			background-size: contain;
+			background-repeat: no-repeat;
+			left: -10px;
+			height: 60px;
+			width: 90px;
+			border-radius: var(--borderRadius) 0px 0px var(--borderRadius);
+		}
+
+		#creator-outer .flag-pole {
+			left: 80px;
+		}
+
+		#creator:hover, #creator:focus {
+			box-shadow: 0px 0px 20px var(--black-4);
+		}	
+
+	/* new */
+		#new-outer {
+			position: absolute;
+			top: calc(50vh - 50px);
+			left: 15vw;
+		}
+
+		#createGame {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: calc(30vw + 15px);
+			height: 120px;
 			float: left;
-			width: calc(100% - 16px);
-			padding: 4px;
 			text-align: center;
 			line-height: 1;
 			font-size: 100%;
+			padding: 5px 5px 5px 0px;
+			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
+			border: 0px;
+			background-color: var(--greengray-2);
+		}
+
+	/* join */
+		#join-outer {
+			position: absolute;
+			top: calc(50vh - 150px);
+			right: 40vw;
+		}
+
+		#name {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: 30vw;
+			height: 40px;
+			padding: 5px;
+			text-align: center;
+			line-height: 1;
+			font-size: 100%;
+			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
+			border-width: 5px 5px 5px 0px;
+			background-color: var(--red-0);
 		}
 		
 		#gameCode {
-			float: left;
-			width: calc(60% - 10px);
-			padding: 10px 5px 5px 5px;
+			position: absolute;
+			top: 70px;
+			left: 0px;
+			width: 30vw;
+			height: 40px;
+			padding: 5px;
 			text-align: center;
 			line-height: 1;
 			font-size: 100%;
-			border-radius: var(--borderRadius) 0px 0px var(--borderRadius);
-			border: 0px;
-		}
-
-	/* buttons */
-		#createGame {
-			float: left;
-			display: block;
-			width: 100%;
-			text-align: center;
-			line-height: 1;
-			font-size: 100%;
-			padding: 10px 5px 5px 5px;
-			margin: 5% 0% 5% 0%;
-			border-radius: var(--borderRadius);
-			border: 0px;
+			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
+			border-width: 5px 5px 5px 0px;
+			background-color: var(--yellow-0);
 		}
 
 		#joinGame {
-			float: left;
-			width: 40%;
+			position: absolute;
+			top: 140px;
+			left: 0px;
+			width: calc(30vw + 15px);
+			height: 60px;
 			text-align: center;
-			line-height: 1.05;
+			line-height: 1;
 			font-size: 100%;
-			padding: 10px 5px 5px 5px;
+			padding: 5px 5px 5px 0px;
 			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
 			border: 0px;
+			background-color: var(--cerulean-2);
 		}
 
-		@-moz-document url-prefix() {
-			#joinGame {
-				line-height: 1;
-			}
+/*** flags ***/
+	#flags {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	#flags canvas {
+		z-index: 0;
+	}
+
+	/* components */
+		.flag-outer {
+			position: absolute;
+			height: auto;
+			width: auto;
 		}
+
+		.flag-pole {
+			position: absolute;
+			left: -10px;
+			top: -5px;
+			width: 10px;
+			border-radius: 5px;
+			background-color: var(--black-4);
+			height: 100vh;
+		}
+
+		.flag {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			background-color: var(--black-4);
+			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
+			pointer-events: initial;
+		}
+
+/*** mobile ***/
+	@media screen and (max-width: 800px) {
+		#creator-outer {
+			top: 10px;
+			right: 90px;
+		}
+
+		#new-outer {
+			top: 50vh;
+		}
+
+		#join-outer {
+			top: calc(50vh - 65px);
+			right: 42vw;
+		}
+
+		#flags {
+			display: none;
+		}
+	}

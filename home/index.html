@@ -10,21 +10,26 @@
 	</head>
 	<body>
 		<div id="message" class="hidden"></div>
-		<div id="container">
-			<div id="title">The Council</div>
-			<div id="links">
-				<a href="./about">about</a>
-				 • 
-				<a href="https://github.com/jamesbmayr/thecouncil" target="_blank">code</a>
-				 • 
-				<a href="https://jamesmayr.com" target="_blank">creator</a>
-			</div>
-			<div id="form">
-				<button id="createGame">new</button>
-				<hr>
-				<input id="name" type="text" placeholder="name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-				<input id="gameCode" type="text" placeholder="game id" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/><button id="joinGame">join</button>
-			</div>
+		<div class="flag-outer" id="title-outer">
+			<a class="flag" href="./about" id="title">
+				<span id="title-inner">The Council</span>
+			</a>
+			<div class="flag-pole"></div>
 		</div>
+		<div class="flag-outer" id="creator-outer">
+			<a class="flag" id="creator" href="https://jamesmayr.com" target="_blank"></a>
+			<div class="flag-pole"></div>
+		</div>
+		<div class="flag-outer" id="new-outer">
+			<button class="flag" id="createGame">new</button>
+			<div class="flag-pole"></div>
+		</div>
+		<div class="flag-outer" id="join-outer">
+			<input class="flag" id="name" type="text" placeholder="name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+			<input class="flag" id="gameCode" type="text" placeholder="code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+			<button class="flag" id="joinGame">join</button>
+			<div class="flag-pole"></div>
+		</div>
+		<div id="flags"></div>
 	</body>
 </html>

@@ -35,3 +35,7 @@
 				}
 			}
 		}
+
+/*** flags ***/
+	/* createFlags */
+		document.querySelectorAll("canvas.flag").forEach(createFlag)

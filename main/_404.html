@@ -14,6 +14,10 @@
 					left: 0px;
 					height: 100vh;
 					width: 100vw;
+					background-image: url("x.png");
+					background-position: center center;
+					background-size: cover;
+					background-repeat: no-repeat;
 					margin: 0px;
 					padding: 0px;
 					border: 0px;
@@ -26,12 +30,12 @@
 					transform: translateX(-50%) translateY(-50%);
 					font-size: 100%;
 					color: var(--white-4);
-					background-color: var(--black-4);
+					background-color: transparent;
 					cursor: default;
 					text-align: center;
-					opacity: 0.75;
 					border-radius: var(--borderRadius);
-					padding: 2% 5% 2% 5%;
+					line-height: 1.5;
+					user-select: none;
 				}
 
 				#header {
@@ -39,11 +43,11 @@
 					width: 100%;
 					padding: 0% 0% 2% 0%;
 					margin: 0 0 5% 0;
-					color: var(--red-1);
+					color: var(--white-4);
 					cursor: default;
 					text-align: center;
 					text-transform: uppercase;
-				}
+				}				
 
 				#goback:hover, #goback:focus {
 					text-shadow: 0px 0px 50px var(--white-4);
@@ -54,9 +58,8 @@
 		<div id="container">
 			<div id="content">
 				<div id="header">404</div>
-				There's nothing here...
-				<br><br>
-				<a id="goback" href="../../">Turn back.</a>
+				<div>Nothing here.</div>
+				<a id="goback" href="../../">Go back.</a>
 			</div>
 		</div>
 	</body>

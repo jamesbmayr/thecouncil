@@ -57,3 +57,35 @@
 					})
 			}
 		}
+
+/*** flags ***/
+	/* populateFlags */
+		populateFlags()
+		function populateFlags() {
+			var flags = document.getElementById("flags")
+			var width = window.innerWidth / 6
+			for (var i = 1; i < 6; i++) {
+				// container
+					var outer = document.createElement("div")
+						outer.id = "flag-outer-" + i
+						outer.className = "flag-outer"
+						outer.style.top = (window.innerHeight - (i % 2 == 0 ? 125 : 150)) + "px"
+						outer.style.left = "calc(100vw / 6 * " + (i - 0.5) + ")"
+					flags.appendChild(outer)
+
+				// flag
+					var flag = document.createElement("canvas")
+						flag.className = "flag"
+						flag.height = 1000
+						flag.width = 1500
+						flag.style.height = "100px"
+						flag.style.width = "150px"
+						createFlag(flag)
+					outer.appendChild(flag)
+
+				// pole
+					var pole = document.createElement("div")
+						pole.className = "flag-pole"
+					outer.appendChild(pole)
+			}
+		}

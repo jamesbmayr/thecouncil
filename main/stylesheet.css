@@ -23,7 +23,6 @@
 			font-weight: bold;
 			outline: none;
 			cursor: pointer;
-			text-transform: uppercase;
 			color: var(--blue-2);
 		}
 
@@ -42,10 +41,9 @@
 			-webkit-appearance: none;
 			-moz-appearance: none;
 			overflow: hidden;
-			color: var(--black-4);
-			background-color:  var(--white-4);
+			color: var(--black-3);
+			background-color: var(--white-4);
 			padding: 0px;
-			text-transform: uppercase;
 			box-shadow: 0px 0px 10px var(--black-4);
 		}
 
@@ -61,7 +59,7 @@
 		}
 
 		button:hover, button:focus, select:focus, textarea:focus, input:focus {
-			box-shadow: 0px 0px 50px var(--black-4);
+			box-shadow: 0px 0px 20px var(--black-4);
 		}
 
 		select:-moz-focusring {
