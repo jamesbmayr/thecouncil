@@ -58,34 +58,59 @@
 			}
 		}
 
-/*** flags ***/
-	/* populateFlags */
-		populateFlags()
-		function populateFlags() {
-			var flags = document.getElementById("flags")
-			var width = window.innerWidth / 6
-			for (var i = 1; i < 6; i++) {
-				// container
-					var outer = document.createElement("div")
-						outer.id = "flag-outer-" + i
-						outer.className = "flag-outer"
-						outer.style.top = (window.innerHeight - (i % 2 == 0 ? 125 : 150)) + "px"
-						outer.style.left = "calc(100vw / 6 * " + (i - 0.5) + ")"
-					flags.appendChild(outer)
+/*** details ***/
+	/* updateBackground */
+		var backgroundLoop = setInterval(updateBackground, 100)
+		updateBackground()
+		function updateBackground() {
+			cycleColors()
+			moveFlags()
+		}
 
-				// flag
-					var flag = document.createElement("canvas")
-						flag.className = "flag"
-						flag.height = 1000
-						flag.width = 1500
-						flag.style.height = "100px"
-						flag.style.width = "150px"
-						createFlag(flag)
-					outer.appendChild(flag)
+	/* moveFlags */
+		function moveFlags() {
+			document.querySelectorAll("#flags-background .flag-outer").forEach(function(outer) {
+				// get data
+					var bottom = Number(outer.style.bottom.replace("px", ""))
+					var direction = Number(outer.getAttribute("direction"))
+						direction = (bottom > 300) ? -1 : (bottom < -300) ? 1 : direction
+					if (bottom == 0 && direction == 1) {
+						createFlag(outer.querySelector(".flag"))
+					}
 
-				// pole
-					var pole = document.createElement("div")
-						pole.className = "flag-pole"
-					outer.appendChild(pole)
-			}
+				// move
+					bottom = bottom + ((direction == 1) ? 5 : -5)
+					outer.style.bottom = bottom + "px"
+					outer.setAttribute("direction", direction)
+			})
+		}
+
+	/* cycleColors */
+		function cycleColors() {
+			// get color & direction
+				var colors = document.body.style["background-color"]
+					colors = colors ? colors.replace("rgb(", "").replace(")", "").split(",").map(function(c) { return Number(c) }) : [Math.floor(Math.random() * 100) + 50, Math.floor(Math.random() * 100) + 100, Math.floor(Math.random() * 100) + 150]
+				var r = Number(document.body.getAttribute("r"))
+				var g = Number(document.body.getAttribute("g"))
+				var b = Number(document.body.getAttribute("b"))
+
+				if (!r) { r = 1 }
+				if (!g) { g = 1 }
+				if (!b) { b = 1 }
+
+			// set colors
+				colors[0] = (r == 1) ? (colors[0] + (Math.floor(Math.random() * 2) + 1)) : (colors[0] - (Math.floor(Math.random() * 2) + 1))
+				colors[1] = (g == 1) ? (colors[1] + (Math.floor(Math.random() * 2) + 1)) : (colors[1] - (Math.floor(Math.random() * 2) + 1))
+				colors[2] = (b == 1) ? (colors[2] + (Math.floor(Math.random() * 2) + 1)) : (colors[2] - (Math.floor(Math.random() * 2) + 1))
+
+			// set direction
+				r = (colors[0] <  50) ? 1 : (colors[0] > 150) ? -1 : r
+				g = (colors[1] < 100) ? 1 : (colors[1] > 200) ? -1 : g
+				b = (colors[2] < 150) ? 1 : (colors[2] > 250) ? -1 : b
+
+			// update values
+				document.body.style["background-color"] = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")"
+				document.body.setAttribute("r", r)
+				document.body.setAttribute("g", g)
+				document.body.setAttribute("b", b)
 		}

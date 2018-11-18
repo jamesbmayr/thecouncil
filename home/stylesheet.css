@@ -2,7 +2,6 @@
 	html, body {
 		width: 100%;
 		height: 100%;
-		background: linear-gradient(var(--cerulean-3), var(--cerulean-4));
 	}
 
 	/* container */
@@ -36,13 +35,15 @@
 		#title {
 			height: 40vh;
 			width: 60vh;
-			background-color: var(--black-4);
-			color: var(--white-4);
-			font-size: 125%;
+			background-color: var(--cerulean-3);
 			user-select: none;
 			cursor: pointer;
-			text-align: center;
 			text-shadow: 0px 0px 10px var(--black-4);
+			box-shadow: 0px 0px 10px var(--black-4);
+			background-image: url("banner.png");
+			background-position: center center;
+			background-size: cover;
+			background-repeat: no-repeat;
 		}
 
 		#title-inner {
@@ -51,6 +52,9 @@
 			left: 50%;
 			transform: translateX(-50%) translateY(-50%);
 			width: 80%;
+			color: var(--white-4);
+			font-size: 0%;
+			text-align: center;
 		}
 
 		#title:hover, #title:focus {
@@ -86,7 +90,7 @@
 	/* new */
 		#new-outer {
 			position: absolute;
-			top: calc(50vh - 50px);
+			top: calc(50vh);
 			left: 15vw;
 		}
 
@@ -95,7 +99,7 @@
 			top: 0px;
 			left: 0px;
 			width: calc(30vw + 15px);
-			height: 120px;
+			height: 135px;
 			float: left;
 			text-align: center;
 			line-height: 1;
@@ -103,7 +107,7 @@
 			padding: 5px 5px 5px 0px;
 			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
 			border: 0px;
-			background-color: var(--greengray-2);
+			background-color: var(--green-2);
 		}
 
 	/* join */
@@ -155,22 +159,28 @@
 			padding: 5px 5px 5px 0px;
 			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
 			border: 0px;
-			background-color: var(--cerulean-2);
+			background-color: var(--blue-2);
 		}
 
 /*** flags ***/
-	#flags {
+	#flags-background {
 		position: absolute;
 		top: 0px;
 		left: 0px;
 		width: 100%;
 		height: 100%;
 		pointer-events: none;
-		z-index: 0;
+		z-index: -1;
+		filter: blur(1.5px);
 	}
 
-	#flags canvas {
-		z-index: 0;
+	#flags-background .flag-outer {
+		position: absolute;
+	}
+
+	#flags-background .flag {
+		width: 150px;
+		height: 100px;
 	}
 
 	/* components */
@@ -187,7 +197,8 @@
 			width: 10px;
 			border-radius: 5px;
 			background-color: var(--black-4);
-			height: 100vh;
+			height: 150vh;
+			box-shadow: 0px 0px 10px var(--black-4);
 		}
 
 		.flag {
@@ -213,9 +224,5 @@
 		#join-outer {
 			top: calc(50vh - 65px);
 			right: 42vw;
-		}
-
-		#flags {
-			display: none;
 		}
 	}

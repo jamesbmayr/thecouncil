@@ -10,6 +10,28 @@
 	</head>
 	<body>
 		<div id="message" class="hidden"></div>
+		<div id="flags-background">
+			<div class="flag-outer" style="left: calc(100vw / 6 * 0.5); bottom: 0px" direction="-1">
+				<canvas class="flag" height="1000" width="1500"></canvas>
+				<div class="flag-pole"></div>
+			</div>
+			<div class="flag-outer" style="left: calc(100vw / 6 * 1.5); bottom: -150px" direction="1">
+				<canvas class="flag" height="1000" width="1500"></canvas>
+				<div class="flag-pole"></div>
+			</div>
+			<div class="flag-outer" style="left: calc(100vw / 6 * 2.5); bottom: -150px" direction="-1">
+				<canvas class="flag" height="1000" width="1500"></canvas>
+				<div class="flag-pole"></div>
+			</div>
+			<div class="flag-outer" style="left: calc(100vw / 6 * 3.5); bottom: 0px" direction="1">
+				<canvas class="flag" height="1000" width="1500"></canvas>
+				<div class="flag-pole"></div>
+			</div>
+			<div class="flag-outer" style="left: calc(100vw / 6 * 4.5); bottom: -300px" direction="1">
+				<canvas class="flag" height="1000" width="1500"></canvas>
+				<div class="flag-pole"></div>
+			</div>
+		</div>
 		<div class="flag-outer" id="title-outer">
 			<a class="flag" href="./about" id="title">
 				<span id="title-inner">The Council</span>
@@ -30,6 +52,5 @@
 			<button class="flag" id="joinGame">join</button>
 			<div class="flag-pole"></div>
 		</div>
-		<div id="flags"></div>
 	</body>
 </html>
