@@ -53,7 +53,7 @@
 		var messageFadeout = null
 		function displayMessage(message) {
 			var element = document.getElementById("message")
-			element.textContent = message || "unknown error"
+			element.innerHTML = message || "unknown error"
 			element.className = ""
 			element.style.opacity = 0
 			

@@ -16,9 +16,6 @@
 				if (!request.game) {
 					callback([request.session.id], {success: false, message: "unable to find game"})
 				}
-				else if (!request.game.players[request.session.id] && !request.game.observers[request.session.id]) {
-					callback([request.session.id], {success: false, message: "unable to find player or observer"})
-				}
 				else {
 					// add player
 						if (request.game.players[request.session.id]) {
@@ -28,6 +25,8 @@
 
 					// add observer
 						else {
+							request.game.observers[request.session.id] = main.getSchema("player")
+							request.game.observers[request.session.id].id = request.session.id
 							request.game.observers[request.session.id].connected  = true
 							request.game.observers[request.session.id].connection = request.connection
 						}
@@ -351,13 +350,16 @@
 						"fascist", "populist", "anarchist", "crook"]).slice(0, Object.keys(request.game.players).length)
 
 				// members
+					var count = 0
 					for (var p in request.game.players) {
+						count++
 						var player = request.game.players[p]
 
 						// info
 							var member          = main.getSchema("member")
 								member.id       = player.id
 								member.name     = player.name
+								member.district = count
 								member.race     = main.chooseRandom(races)
 								member.ideology = ideologies.find(function(i) { return i.name == available[0] })
 								available.shift()
@@ -422,10 +424,15 @@
 					request.game.data.members[request.session.id].state.selection = request.post.selection || null
 
 				// all selected?
+					var allSelected = true
 					for (var m in request.game.data.members) {
-						if (request.game.data.members[m].state.campaign || request.game.data.members[m].state.selection) {
-							enactTally(request, callback)
+						if (!request.game.data.members[m].state.campaign && !request.game.data.members[m].state.selection) {
+							allSelected = false
 						}
+					}
+
+					if (allSelected) {
+						enactTally(request, callback)
 					}
 			}
 			catch (error) {
@@ -441,8 +448,7 @@
 			try {
 				// create issue
 					var issue = main.getSchema("issue")
-						issue.name        = "leader"
-						issue.description = "who should lead the council? the leader selects which issues are voted on."
+						issue.name        = "who should lead the council?"
 						issue.timeout     = 60000
 						issue.type        = "leader"
 
@@ -516,11 +522,11 @@
 					for (var o in issue.options) {
 						if (issue.options[o].state.votes.length > winningOptions.votes) {
 							winningOptions.votes = issue.options[o].state.votes.length
-							winningOptions.ids   = [o]
+							winningOptions.ids   = [issue.options[o].id]
 							totalVotes += 1
 						}
 						else if (issue.options[o].state.votes.length == winningOptions.votes) {
-							winningOptions.ids.push(o)
+							winningOptions.ids.push(issue.options[o].id)
 							totalVotes += 1
 						}
 					}
@@ -550,7 +556,7 @@
 					}
 
 				// tie --> default
-					else if (winningOptions.ids.length > 1) {
+					else if (winningOptions.ids.length !== 1) {
 						issue.options.find(function(o) {
 							return o.state.default
 						}).state.selected = true
@@ -622,7 +628,7 @@
 										member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + winningOption.constituents[c].approval * approvalMultiplier))
 									}
 									else {
-										member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + Math.floor(issue.options[o].constituents[c].approval / 2 * multiplier)))
+										member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + Math.floor(issue.options[o].constituents[c].approval / 2 * approvalMultiplier)))
 									}
 									member.constituents[c].population = Math.max(0, member.constituents[c].population + winningOption.constituents[c].population)
 								}
@@ -673,17 +679,19 @@
 						for (var o in issue.options) {
 							message += issue.options[o].name + ": "
 							for (var v in issue.options[o].state.votes) {
-								message += request.game.data.members[issue.options[o].state.votes[v]].name
+								message += request.game.data.members[issue.options[o].state.votes[v]].name + ", "
 							}
-							message += "; "
+							message = message.substring(0, message.length - 2)
+							message += "<br>"
 						}
+						message = message.substring(0, message.length - 4)
 
 						setTimeout(function() {
 							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: message})
-						}, 2000)
+						}, 3000)
 						setTimeout(function() {
 							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " --> " + winningOption.name)})
-						}, 4000)
+						}, 7000)
 					}
 					else {
 						request.game.data.state.cooldown = 5000
@@ -853,21 +861,21 @@
 						request.game.data.state.term += 1000
 
 					// start
-						if (request.game.data.state.time == 2000) {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "congratulations! you've been elected to the council of " + request.game.data.state.name + "!"})
+						if (request.game.data.state.time == 5000) {
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "welcome to the council of " + request.game.data.state.name + "!"})
 						}
-						else if (request.game.data.state.time == 5000) {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "your goal? get reelected when the council session ends. that means an overall approval rating of over 50%."})
-						}
-						else if (request.game.data.state.time == 8000) {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "your real goal? take a look at your secret ideology - that's how you want the government to be run."})
-						}
-						else if (request.game.data.state.time == 12000) {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "influence government agencies, the treasury, and your approval rating by voting on issues."})
+						else if (request.game.data.state.time == 10000) {
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "vote on issues to affect government agencies - and keep your approval ratings up."})
 						}
 						else if (request.game.data.state.time == 15000) {
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "your secret ideology shows how you want the government run."})
+						}
+						else if (request.game.data.state.time == 20000) {
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "when the session ends, get reelected - that's 50%+ approval overall."})
+						}
+						else if (request.game.data.state.time == 25000) {
 							enactRecall(request, callback)
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "first up: choose a council leader to select which issues are voted on."})
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "ready? choose a council leader to set the issue agenda."})
 						}
 
 					// end
@@ -883,19 +891,19 @@
 								callback([m], {success: true, message: request.game.data.members[m].state.reelected ? "...congratulations on your reelection!" : "...the voters have spoken! you're out!"})
 							}
 						}
-						else if (request.game.data.state.time == request.game.data.state.election + 9000 && request.game.data.state.exists) {
+						else if (request.game.data.state.time == request.game.data.state.election + 11000 && request.game.data.state.exists) {
 							for (var m in request.game.data.members) {
 								callback([m], {success: true, message: request.game.data.members[m].state.achieved ? "you have accomplished your policy goals!" : "you have failed to achieve your policy goals."})
 							}
 						}
-						else if (request.game.data.state.time == request.game.data.state.election + 12000 && request.game.data.state.exists) {
+						else if (request.game.data.state.time == request.game.data.state.election + 15000 && request.game.data.state.exists) {
 							for (var m in request.game.data.members) {
 								callback([m], {success: true, message: request.game.data.members[m].state.reelected && request.game.data.members[m].state.achieved ? "you win!" : "you lose!"})
 							}
 						}
 
 					// gameplay
-						else if (!request.game.data.state.end && request.game.data.state.time > 15000) {
+						else if (!request.game.data.state.end && request.game.data.state.time > 30000) {
 							// future issues
 								updateRebellions(request, callback)
 								updateFuture(request, callback)
@@ -1026,7 +1034,7 @@
 					}
 
 				// crook
-					else if (crook && getIdeology(request, crook, callback) && crook.funds >= 100000) {
+					else if (crook && getIdeology(request, crook, callback) && crook.funds >= 25000) {
 						crook.state.reelected = true
 						crook.state.achieved  = true
 						request.game.data.state.exists = false

@@ -10,10 +10,7 @@
 			try {
 				// create game
 					request.game    = main.getSchema("game")
-					request.game.id = id
-
-				// create observers
-					request.game.observers[request.session.id] = createPlayer(request)
+					request.game.id = id					
 
 				callback({success: true, message: "game created", location: "../../game/" + request.game.id})
 			}

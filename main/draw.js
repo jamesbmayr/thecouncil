@@ -420,11 +420,11 @@
 
 /*** flag ***/
 	/* createFlag */
-		function createFlag(canvas) {
+		function createFlag(canvas, data) {
 			if (canvas.tagName.toLowerCase() == "canvas") {
 				// data
 					var context = canvas.getContext("2d")
-					var data = randomizeData({})
+					var data = data || randomizeData({})
 
 				// field
 					clearCanvas( canvas, context      )
