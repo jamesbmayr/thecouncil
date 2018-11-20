@@ -152,7 +152,7 @@
 				}
 				else {
 					enactRecall(request, callback)
-					callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: request.game.data.members[request.session.id].name + " calls for new leadership!"})
+					callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, recall: true, message: request.game.data.members[request.session.id].name + " calls for new leadership!"})
 				}
 			}
 			catch (error) {
@@ -239,7 +239,7 @@
 				else if ( request.game.data.members[request.session.id].state.selection ==  request.post.selection) {
 					callback([request.session.id], {success: false, message: "option already selected"})
 				}
-				else if (!request.game.data.issues.find(function(i) { return i.id == request.game.data.state.issue }).options.find(function(o) { return o.id == request.post.selection })) {
+				else if (request.post.selection && !request.game.data.issues.find(function(i) { return i.id == request.game.data.state.issue }).options.find(function(o) { return o.id == request.post.selection })) {
 					callback([request.session.id], {success: false, message: "option not found"})
 				}
 				else if (request.game.data.issues.find(function(i) { return i.id == request.game.data.state.issue }).type == "leader" && request.game.data.rules.includes("no-self") && request.post.selection == request.session.id) { // rule: no-self
@@ -678,10 +678,15 @@
 						var message = ""
 						for (var o in issue.options) {
 							message += issue.options[o].name + ": "
-							for (var v in issue.options[o].state.votes) {
-								message += request.game.data.members[issue.options[o].state.votes[v]].name + ", "
+							if (issue.options[o].state.votes.length) {
+								for (var v in issue.options[o].state.votes) {
+									message += request.game.data.members[issue.options[o].state.votes[v]].name + ", "
+								}
+								message = message.substring(0, message.length - 2)
 							}
-							message = message.substring(0, message.length - 2)
+							else {
+								message += " -"
+							}
 							message += "<br>"
 						}
 						message = message.substring(0, message.length - 4)
@@ -690,7 +695,7 @@
 							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: message})
 						}, 3000)
 						setTimeout(function() {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " --> " + winningOption.name)})
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " &larr; " + winningOption.name)})
 						}, 7000)
 					}
 					else {
@@ -698,7 +703,7 @@
 						
 						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "time's up! you have failed to act!"})
 						setTimeout(function() {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " --> " + winningOption.name)})
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " &larr; " + winningOption.name)})
 						}, 3000)
 					}
 

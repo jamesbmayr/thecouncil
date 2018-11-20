@@ -1,14 +1,17 @@
 /*** page ***/
 	/* container */
 		#container {
+			position: absolute;
+			top: 0px;
+			left: 0px;
 			margin: 0px;
-			padding: 10px;
+			padding: 0px;
 			border: 0px;
-			width: calc(100vw - 20px);
-			height: calc(100vh - 20px);
+			width: 100%;
+			height: 100%;
 			text-align: left;
 			overflow-x: hidden;
-			overflow-y: scroll;
+			overflow-y: hidden;
 			z-index: 2;
 		}
 
@@ -19,7 +22,7 @@
 			margin-right: auto;
 		}
 
-/*** header ***/
+/*** player - header ***/
 	#header {
 		position: fixed;
 		top: 0px;
@@ -37,6 +40,9 @@
 			background-color: var(--black-4);
 			color: var(--white-4);
 			user-select: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-o-user-select: none;
 			cursor: pointer;
 		}
 
@@ -85,6 +91,9 @@
 			color: var(--white-4);
 			text-align: center;
 			user-select: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-o-user-select: none;
 			cursor: pointer;
 		}
 
@@ -110,22 +119,288 @@
 			margin-right: 8px;
 		}
 
-/*** members ***/
-	#members {
-		min-height: 100%;
-		margin-top: 150px;
-		margin-bottom: 50px;
-		user-select: none;
+/*** observer - start ***/
+	#submit-start {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		height: 400px;
+		width: 600px;
+		font-size: 80px;
+		background-image: url("banner.png");
+		background-position: center center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		border: 0px;
+		border-radius: 0px calc(var(--borderRadius) * 4) calc(var(--borderRadius) * 4) 0px;
 	}
 
-	.member-info, .member-funds, .member-constituents, .member-ideology {
-		float: left;
-		width: calc(100% - 20px);
-		padding: 10px;
-		background-color: var(--black-0);
-		border-radius: var(--borderRadius);
-		margin-bottom: 10px;
+	#submit-start-inner {
+		font-size: 60px;
+		background-color: var(--white-4);
+		color: var(--cerulean-4);
+		padding: 5px 50px 5px 50px;
+		line-height: 2;
 	}
+
+	#submit-start-pole {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-310px) translateY(-210px);
+		background-color: var(--black-4);
+		width: 10px;
+		height: 100vh;
+		border-radius: var(--borderRadius);
+		box-shadow: 0px 0px 20px var(--black-4);
+	}
+
+/*** observer - columns ***/
+	#column-left {
+		float: left;
+		width: 35%;
+		height: 100vh;
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
+
+	#column-right {
+		float: left;
+		width: 65%;
+		height: 100vh;
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
+
+/*** government ***/
+	#government {
+		background-color: var(--black-3);
+		color: var(--white-4);
+		padding: 10px;
+		float: left;
+		user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-o-user-select: none;
+	}
+
+	#container:not([gameplay]) #government {
+		display: none;
+	}
+
+	/* flag */
+		.government-flag {
+			float: left;
+			width: 100%;
+			height: auto;
+			border-radius: var(--borderRadius);
+		}
+
+	/* text */
+		.government-name {
+			float: left;
+			text-align: left;
+			width: calc(100% - 10px - 60px);
+			padding: 10px 10px 10px 0px;
+			font-size: 30px;
+			height: 40px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.government-election {
+			float: left;
+			margin-top: 10px;
+			height: 30px;
+			text-align: center;
+			background-color: var(--black-4);
+			border-radius: var(--borderRadius);
+			color: var(--white-4);
+			padding: 5px;
+			font-size: 20px;
+			opacity: 1;
+			width: 50px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.government-leader {
+			float: left;
+			width: 60%;
+			font-size: 20px;
+			text-align: left;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.government-treasury {
+			float: left;
+			width: 40%;
+			font-size: 20px;
+			text-align: right;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.government-treasury:before {
+			content: "$ ";
+		}
+
+	/* agencies */
+		.government-agencies {
+			float: left;
+			width: 100%;
+			padding-top: 30px;
+		}
+
+	/* agencies */
+		.government-agencies-line {
+			background-color: var(--black-4);
+			float: left;
+			width: 100%;
+			border-radius: 4px;
+			height: 4px;
+			z-index: 1;
+			opacity: 1;
+			margin: 25px 0px 25px 0px;
+		}
+
+		.government-agencies-s, .government-agencies-r, .government-agencies-t, .government-agencies-m {
+			position: relative;
+			transform: translateX(-50%) translateY(-50%);
+			border-radius: 100%;
+			height: 20px;
+			width: 40px;
+			z-index: 2;
+			color: var(--white-4);
+			font-size: 15px;
+			text-align: center;
+			padding: 10px 0px 10px 0px;
+			overflow: hidden;
+		}
+
+		.government-agencies-s {
+			background-color: var(--agency-s);
+		}
+
+		.government-agencies-r {
+			background-color: var(--agency-r);
+		}
+
+		.government-agencies-t {
+			background-color: var(--agency-t);
+		}
+
+		.government-agencies-m {
+			background-color: var(--agency-m);
+		}
+
+	/* constituents */
+		.government-constituents {
+			float: left;
+			width: 100%;
+		}
+
+		.government-constituents-line {
+			background-color: var(--black-4);
+			float: left;
+			height: 2px;
+			border-radius: 2px;
+			z-index: 2;
+			width: calc(100% + 10px);
+			transform: translateY(101px);
+			margin-left: -5px;
+			opacity: 0.5;
+		}
+
+		.government-constituents {
+			height: 200px;
+			margin-top: -1px;
+			display: flex;
+		}
+
+		.government-constituents div {
+			align-self: flex-end;
+			text-align: center;
+			bottom: 0px;
+			border-radius: var(--borderRadius) var(--borderRadius) 0px 0px;
+			font-size: 20px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.government-constituents-d {
+			background-color: var(--race-d);
+			border-radius: var(--borderRadius) var(--borderRadius) 0px var(--borderRadius) !important;
+		}
+
+		.government-constituents-e {
+			background-color: var(--race-e);
+		}
+
+		.government-constituents-f {
+			background-color: var(--race-f);
+		}
+
+		.government-constituents-g {
+			background-color: var(--race-g);
+		}
+
+		.government-constituents-l {
+			background-color: var(--race-l);
+			border-radius: var(--borderRadius) var(--borderRadius) var(--borderRadius) 0px !important;
+		}
+
+		.government-constituents div span {
+			display: block;
+			font-size: 10px;
+		}
+
+/*** members ***/
+	#members {
+		float: left;
+		height: calc(100vh - 250px);
+		padding: 170px 20px 80px 20px;
+		user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-o-user-select: none;
+		width: calc(100% - 40px);
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
+
+	#container:not([gameplay]) #members {
+		display: none;
+	}
+
+	/* desktop */
+		#column-left #members {
+			height: auto;
+			overflow-y: hidden;
+			padding: 20px 20px 0px 20px;
+			background-color: var(--black-2);
+		}
+
+		#column-left .member {
+			float: left;
+			padding: 10px 10px 0px 10px;
+			background-color: var(--black-3);
+			border-radius: var(--borderRadius);
+			margin-bottom: 20px;
+			width: calc(100% - 20px);
+		}
+
+	/* sections */
+		.member-info, .member-funds, .member-constituents, .member-ideology {
+			float: left;
+			width: calc(100% - 20px);
+			padding: 10px;
+			background-color: var(--black-0);
+			border-radius: var(--borderRadius);
+			margin-bottom: 10px;
+		}
 
 	/* info */
 		.member-name {
@@ -271,10 +546,36 @@
 
 /*** issues ***/
 	#issues {
-		min-height: 100%;
-		margin-top: 150px;
-		margin-bottom: 50px;
+		float: left;
+		height: calc(100vh - 250px);
+		padding: 170px 20px 80px 20px;
+		width: calc(100% - 40px);
+		user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-o-user-select: none;
+		overflow-x: hidden;
+		overflow-y: scroll;
 	}
+
+	#container:not([gameplay]) #issues {
+		display: none;
+	}
+
+	/* desktop */
+		#column-right #issues {
+			margin-top: 0px;
+			height: auto;
+			overflow-y: hidden;
+			padding: 20px;
+		}
+
+		#column-right .issue {
+			float: left;
+			padding: 10px 10px 0px 10px;
+			border-radius: var(--borderRadius);
+			margin-bottom: 20px;
+		}
 
 	/* info */
 		.issue {
@@ -283,8 +584,12 @@
 			padding: 10px;
 			background-color: var(--black-1);
 			border-radius: var(--borderRadius);
-			user-select: none;
 			margin-bottom: 10px;
+			box-shadow: 0px 0px 10px var(--black-2);
+		}
+
+		.issue:hover, .issue:focus, .issue[selected] {
+			box-shadow: 0px 0px 20px var(--black-4);
 		}
 
 		.issue-timeout {
@@ -317,11 +622,15 @@
 			border-radius: var(--borderRadius);
 			margin-bottom: 10px;
 			cursor: pointer;
+			box-shadow: 0px 0px 10px var(--black-2);
+		}
+
+		.option:hover, .option:focus, .option[selected] {
+			box-shadow: 0px 0px 20px var(--black-4);
 		}
 
 		.option[selected] {
-			background-color: var(--black-3);
-			box-shadow: 0px 0px 10px var(--white-4);
+			background-color: var(--black-2);
 		}
 
 		.option-name {
@@ -403,12 +712,12 @@
 
 		.option-agencies div[direction="down"]:before {
 			color: var(--white-4);
-			content: "< ";
+			content: "← ";
 		}
 
 		.option-agencies div[direction="up"]:after {
 			color: var(--white-4);
-			content: " >";
+			content: " →";
 		}
 
 		.option-agencies div[accuracy="low"] span {
@@ -464,12 +773,12 @@
 
 		.option-constituents div[direction="down"]:before {
 			color: var(--white-4);
-			content: "< ";
+			content: "↓ ";
 		}
 
 		.option-constituents div[direction="up"]:after {
 			color: var(--white-4);
-			content: " >";
+			content: " ↑";
 		}
 
 		.option-constituents div[accuracy="low"] span {

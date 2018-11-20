@@ -49,42 +49,29 @@
 		}
 
 	/* displayMessage */
-		var messageFadein = null
-		var messageFadeout = null
+		var messageLoop = null
+		var messageTime = 0
 		function displayMessage(message) {
 			var element = document.getElementById("message")
-			element.innerHTML = message || "unknown error"
-			element.className = ""
-			element.style.opacity = 0
-			
-			if (typeof messageFadein  !== "undefined") { clearInterval(messageFadein)  }
-			if (typeof messageFadeout !== "undefined") { clearInterval(messageFadeout) }
-
-			messageFadein = setInterval(function() { // fade in
+				element.innerHTML = message || "unknown error"
 				element.className = ""
-				var opacity = Number(element.style.opacity) * 100
+				element.style.opacity = 0
+			
+			if (typeof messageLoop !== "undefined") {
+				clearInterval(messageLoop)
+				messageTime = 0
+			}
 
-				if (opacity < 100) {
-					element.style.opacity = Math.ceil( opacity + ((100 - opacity) / 10) ) / 100
+			messageLoop = setInterval(function() { // fade in
+				if (messageTime < 5) {
+					messageTime += 0.1
+					element.style.opacity = (-0.5 * Math.pow(messageTime, 2)) + (2.5 * messageTime)
 				}
 				else {
-					clearInterval(messageFadein)
-					if (typeof messageFadeout !== "undefined") { clearInterval(messageFadeout) }
-					
-					messageFadeout = setInterval(function() { // fade out
-						var opacity = Number(element.style.opacity) * 100
-
-						if (opacity > 0.01) {
-							element.style.opacity = Math.floor(opacity - ((101 - opacity) / 10) ) / 100
-						}
-						else {
-							clearInterval(messageFadeout)
-							if (typeof messageFadein !== "undefined") { clearInterval(messageFadein) }
-
-							element.className = "hidden"
-							element.style.opacity = 0
-						}
-					}, 100)
-				}
+					clearInterval(messageLoop)
+					messageTime = 0
+					element.className = "hidden"
+					element.style.opacity = 0
+				}			
 			}, 100)
 		}

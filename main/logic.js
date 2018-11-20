@@ -469,7 +469,7 @@
 									exists:   true,
 									flag:     createFlag()
 								},
-								treasury: 1000000,
+								treasury: 10000,
 								agencies: {
 									s: 50,
 									r: 50,

@@ -174,6 +174,9 @@
 				if (data.data && data.data.members && window.member) {
 					updateButtons(data.data)
 				}
+				else if (data.data && data.recall && window.member) {
+					selectCouncil()
+				}
 
 			// new data
 				if (data.data && window.member) {
@@ -181,8 +184,6 @@
 					updateMember(data.data, data.data.members[window.id], data.data.rules)
 				}
 				else if (data.data) {
-					document.getElementById("data").innerHTML = JSON.stringify(data.data, "\t", 2)
-					
 					updateGovernment(data.data)
 					updateIssues(data.data)
 					for (var m in data.data.members) {
@@ -193,9 +194,12 @@
 
 	/* receiveStart */
 		function receiveStart(data) {
+			document.getElementById("container").setAttribute("gameplay", true)
+
 			// observers
 				if (!window.member) {
-					document.getElementById("submit-start").setAttribute("hidden", true)					
+					document.getElementById("submit-start").setAttribute("hidden", true)
+					document.getElementById("submit-start-pole").setAttribute("hidden", true)					
 					createGovernment(data)
 					
 					for (var m in data.members) {
@@ -307,6 +311,14 @@
 			// container
 				var government = document.getElementById("government")
 
+			// flag
+				var flag = document.createElement("canvas")
+					flag.className = "government-flag"
+					flag.setAttribute("height", 1000)
+					flag.setAttribute("width",  1500)
+				createFlag(flag, data.state.flag)
+				government.appendChild(flag)
+
 			// text
 				var name = document.createElement("div")
 					name.className = "government-name"
@@ -333,12 +345,20 @@
 				government.appendChild(agencies)
 
 				for (var a in data.agencies) {
-					var element = document.createElement("div")
-						element.className = "government-agencies-" + a
-					agencies.appendChild(element)
+					var line = document.createElement("div")
+						line.className = "government-agencies-line"
+					agencies.appendChild(line)
+
+					var dot = document.createElement("div")
+						dot.className = "government-agencies-" + a
+					line.appendChild(dot)
 				}
 
 			// constituents
+				var line = document.createElement("div")
+					line.className = "government-constituents-line"
+				government.appendChild(line)
+
 				var constituents = document.createElement("div")
 					constituents.className = "government-constituents"
 				government.appendChild(constituents)
@@ -349,7 +369,7 @@
 						element.innerText = c
 					constituents.appendChild(element)
 
-					var span = document.createElement("div")
+					var span = document.createElement("span")
 						span.className = "government-constituents-numbers-" + c
 					element.appendChild(span)
 				}
@@ -511,15 +531,18 @@
 				// stats
 					government.querySelector(".government-name"    ).innerText = data.state.name
 					government.querySelector(".government-election").innerText = Math.round((data.state.election - data.state.time) / 1000)
-					government.querySelector(".government-leader"  ).innerText = data.state.leader ? data.members[data.state.leader].name : "?"
+					government.querySelector(".government-leader"  ).innerText = "leader: " + (data.state.leader ? data.members[data.state.leader].name : "?")
 					government.querySelector(".government-treasury").innerText = data.treasury
 					government.querySelector(".government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
 
 				// agencies
-					government.querySelector(".government-agencies-s").innerText = data.agencies.s
-					government.querySelector(".government-agencies-r").innerText = data.agencies.r
-					government.querySelector(".government-agencies-t").innerText = data.agencies.t
-					government.querySelector(".government-agencies-m").innerText = data.agencies.m
+					var arr = ["r", "s", "t", "m"]
+					arr.forEach(function(a) {
+						document.querySelectorAll(".government-agencies-" + a).forEach(function (dot) {
+							dot.style.left = data.agencies[a] + "%"
+							dot.innerText = a + "" + data.agencies[a]
+						})
+					})
 
 				// population
 					var population = 0
@@ -569,7 +592,8 @@
 					}
 
 				// ideologies
-					["r", "s", "t", "m"].forEach(function(a) {
+					var arr = ["r", "s", "t", "m"]
+					arr.forEach(function(a) {
 						document.querySelectorAll(".member-ideology-dot-" + a).forEach(function (dot) {
 							dot.style.left = government.agencies[a] + "%"
 						})

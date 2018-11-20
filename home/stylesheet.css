@@ -39,7 +39,7 @@
 			user-select: none;
 			cursor: pointer;
 			text-shadow: 0px 0px 10px var(--black-4);
-			box-shadow: 0px 0px 10px var(--black-4);
+			box-shadow: 0px 0px 10px var(--black-2);
 			background-image: url("banner.png");
 			background-position: center center;
 			background-size: cover;
@@ -77,6 +77,7 @@
 			height: 60px;
 			width: 90px;
 			border-radius: var(--borderRadius) 0px 0px var(--borderRadius);
+			box-shadow: 0px 0px 10px var(--black-2);
 		}
 
 		#creator-outer .flag-pole {

@@ -14,11 +14,11 @@
 	<body>
 		<div id="message" class="hidden"></div>
 		<div id="container">
-			<div id="header">
-				<script node>
-					if (request.game.players[request.session.id]) {
-						var leader = Boolean(request.game.data.members[request.session.id] && request.game.data.members[request.session.id].state.leader)
+			<script node>
+				if (request.game.players[request.session.id]) {
+					var leader = Boolean(request.game.data.members[request.session.id] && request.game.data.members[request.session.id].state.leader)
 
+					"<div id='header'>" + 
 						"<div id='mode-bar'>" +
 							"<div id='select-council'>" +
 								"<canvas height='1000' width='1500'></canvas>" +
@@ -33,28 +33,23 @@
 							"<button id='submit-recall'" + (leader ? " hidden" : "") + ">recall</button>" +
 							"<button id='submit-tally'"  + (leader ? "" : " hidden") + ">tally</button>" +
 							"<button id='submit-campaign'>campaign</button>" +
-						"</div>"
-					}
-					else {
-						if (!request.game.data.state.start) {
-							"<button id='submit-start'>start game</button>"
-						}
-						else {
-							"<button id='submit-start' hidden>start game</button>"
-						}
-					}
-				</script>node>
-			</div>
-			<script node>
-				if (request.game.players[request.session.id]) {
+						"</div>" +
+					"</div>" +
 					"<div id='members'></div>" + 
 					"<div id='issues' hidden></div>"
 				}
 				else {
-					"<pre id='data'></pre>" +
-					"<div id='government'></div>" +
-					"<div id='members'></div>" +
-					"<div id='issues'></div>"
+					"<div id='submit-start-pole'" + (request.game.data.state.start ? " hidden" : "") + "></div>" +
+					"<button id='submit-start'" + (request.game.data.state.start ? " hidden" : "") + ">" +
+						"<span id='submit-start-inner'>launch [" + request.game.id + "]</span>" +
+					"</button>" +
+					"<div id='column-left'>" +
+						"<div id='government'></div>" +
+						"<div id='members'></div>" +
+					"</div>" +
+					"<div id='column-right'>" +
+						"<div id='issues'></div>" +
+					"</div>"
 				}
 			</script>node>
 		</div>

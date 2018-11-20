@@ -1,4 +1,4 @@
-09/*** actions ***/
+/*** actions ***/
 	/* submitFeedback */
 		document.getElementById("feedback-submit").addEventListener(on.click, submitFeedback)
 		document.getElementById("feedback-email").addEventListener("keyup", function(event) { if (event.which == 13) { submitFeedback() } })
@@ -38,7 +38,9 @@
 
 /*** details ***/
 	/* createFlags */
-		document.querySelectorAll("canvas.flag").forEach(createFlag)
+		document.querySelectorAll("canvas.flag").forEach(function(canvas) {
+			createFlag(canvas, null)
+		})
 
 	/* cycleColors */
 		var backgroundLoop = setInterval(cycleColors, 100)
