@@ -447,10 +447,7 @@
 		function enactRecall(request, callback) {
 			try {
 				// create issue
-					var issue = main.getSchema("issue")
-						issue.name        = "who should lead the council?"
-						issue.timeout     = 60000
-						issue.type        = "leader"
+					var issue = getAttributes(main.getSchema("issue"), issues.leader[0], callback)
 
 				// members
 					for (var m in request.game.data.members) {
@@ -531,8 +528,24 @@
 						}
 					}
 
+				// rebellion: insufficient funds
+					if (issue.type == "rebellion" && (request.game.state.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
+						issue.options.find(function(o) {
+							return o.state.default
+						}).state.selected = true
+						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "not enough gold to meet the rebels' demands"})
+					}
+
+				// rebellion: insufficient military
+					else if (issue.type == "rebellion" && (request.game.state.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
+						issue.options.find(function(o) {
+							return o.state.default
+						}).state.selected = true
+						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "the military is too week to stop the rebels"})
+					}
+
 				// rule: balanced-budget
-					if (request.game.data.rules.includes("balanced-budget") && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury < 0) && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury + request.game.data.treasury < 0)) {
+					else if (request.game.data.rules.includes("balanced-budget") && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury < 0) && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury + request.game.data.treasury < 0)) {
 						issue.options.find(function(o) {
 							return o.state.default
 						}).state.selected = true
@@ -641,12 +654,22 @@
 
 				// rules
 					for (var r in winningOption.rules) {
-						if (winningOption.rules[r].enact) {
-							request.game.data.rules.push(winningOption.rules[r].name)
+						var rule = winningOption.rules[r]
+
+						if (rule.enact) {
+							request.game.data.rules.push(rule.name)
 						}
-						else if (request.game.data.rules.includes(winningOption.rules[r].name)) {
-							request.game.data.rules.splice(request.game.data.rules.indexOf(winningOption.rules[r].name), 1)
+						else if (request.game.data.rules.includes(rule.name)) {
+							request.game.data.rules.splice(request.game.data.rules.indexOf(rule.name), 1)
 						}
+
+						// change election time
+							if ((rule.name == "snap-elections" && rule.enact) || (rule.name == "delayed-elections" && !rule.enact)) {
+								request.game.data.state.election -= 600000
+							}
+							else if ((rule.name == "snap-elections" && !rule.enact) || (rule.name == "delayed-elections" && rule.enact)) {
+								request.game.data.state.election += 600000
+							}
 					}
 
 				// future issues
@@ -851,6 +874,32 @@
 			catch (error) {
 				main.logError(error)
 				callback([request.session.id], {success: false, message: "unable to calculate approval rating"})
+			}
+		}
+
+	/* getAttributes */
+		module.exports.getAttributes = getAttributes
+		function getAttributes(issue, info, callback) {
+			try {
+				for (var key in info) {
+					if (typeof info[key] == "object" && Array.isArray(info[key])) {
+						issue[key] = []
+						issue = getAttributes(issue[key], info[key])
+					}
+					else if (typeof info[key] == "object") {
+						issue[key] = {}
+						issue = getAttributes(issue[key], info[key])	
+					}
+					else {
+						issue[key] = info[key]
+					}
+				}
+
+				return issue
+			}
+			catch (error) {
+				main.logError(error)
+				callback([request.session.id], {success: false, message: "unable to apply issue attributes"})
 			}
 		}
 
