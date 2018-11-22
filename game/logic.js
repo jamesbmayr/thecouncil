@@ -528,69 +528,120 @@
 						}
 					}
 
-				// rebellion: insufficient funds
-					if (issue.type == "rebellion" && (request.game.state.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
-						issue.options.find(function(o) {
-							return o.state.default
-						}).state.selected = true
-						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "not enough gold to meet the rebels' demands"})
-					}
+				// special event types
+					// rebellion: insufficient funds
+						if (issue.type == "rebellion" && (request.game.state.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "not enough treasury to meet the rebels' demands"})
+						}
 
-				// rebellion: insufficient military
-					else if (issue.type == "rebellion" && (request.game.state.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
-						issue.options.find(function(o) {
-							return o.state.default
-						}).state.selected = true
-						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "the military is too week to stop the rebels"})
-					}
+					// rebellion: insufficient military
+						else if (issue.type == "rebellion" && (request.game.state.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "the military is too weak to stop the rebels"})
+						}
 
-				// rule: balanced-budget
-					else if (request.game.data.rules.includes("balanced-budget") && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury < 0) && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury + request.game.data.treasury < 0)) {
-						issue.options.find(function(o) {
-							return o.state.default
-						}).state.selected = true
-						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "rule: the treasury must become and stay positive"})
-					}
+					// violence: insufficient funds
+						if (issue.type == "violence" && (request.game.state.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "not enough treasury to meet the protestors' demands"})
+						}
 
-				// rule: executive-decision
-					else if (request.game.data.rules.includes("executive-decision") && issue.timeout <= 120000 && issue.options.find(function(o) { return o.state.votes.includes(request.game.data.state.leader) })) {
-						issue.options.find(function(o) {
-							return o.state.votes.includes(request.game.data.state.leader)
-						}).state.selected = true
-						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "rule: the leader can make executive decisions on urgent issues"})
-					}
+					// violence: insufficient military
+						else if (issue.type == "violence" && (request.game.state.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "the military is too weak to suppress the violence"})
+						}
 
-				// rule: tiebreaker-leader
-					else if (winningOptions.ids.length > 1 && request.game.data.rules.includes("tiebreaker-leader") && request.game.data.state.leader && issue.options.find(function(o) { return winningOptions.ids.includes(o.id) && o.state.votes.includes(request.game.data.state.leader) })) {
-						issue.options.find(function(o) {
-							return winningOptions.ids.includes(o.id) && o.state.votes.includes(request.game.data.state.leader)
-						}).state.selected = true
-						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "rule: in the event of a tie, the leader's choice carries"})
-					}
+					// austerity: insufficient s
+						else if (issue.type == "austerity" && (request.game.state.agencies.s + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.s) < 0)) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "cutbacks to social services are not enough"})
+						}
 
-				// tie --> default
-					else if (winningOptions.ids.length !== 1) {
-						issue.options.find(function(o) {
-							return o.state.default
-						}).state.selected = true
-						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "no option had a plurality of votes"})
-					}
+					// austerity: insufficient r
+						else if (issue.type == "austerity" && (request.game.state.agencies.r + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.r) < 0)) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "cutbacks to regulation are not enough"})
+						}
 
-				// rule: majority-threshold
-					else if (request.game.data.rules.includes("majority-threshold") && (winningOption.ids.length <= totalVotes / 2)) {
-						issue.options.find(function(o) {
-							return o.state.default
-						}).state.selected = true
-						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "rule: options must have an outright majority"})
-					}
+					// austerity: insufficient t
+						else if (issue.type == "austerity" && (request.game.state.agencies.t + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.t) < 0)) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "cutbacks to tech & research are not enough"})
+						}
 
-				// outright winner
-					else {
-						issue.options.find(function(o) {
-							return o.id == winningOptions.ids[0]
-						}).state.selected = true
-						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "a plurality has decided"})
-					}
+					// austerity: insufficient m
+						else if (issue.type == "austerity" && (request.game.state.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "cutbacks to military are not enough"})
+						}
+
+				// special rules
+					// rule: balanced-budget
+						else if (request.game.data.rules.includes("balanced-budget") && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury < 0) && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury + request.game.data.treasury < 0)) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "rule: the treasury must become and stay positive"})
+						}
+
+					// rule: executive-decision
+						else if (request.game.data.rules.includes("executive-decision") && issue.timeout <= 120000 && issue.options.find(function(o) { return o.state.votes.includes(request.game.data.state.leader) })) {
+							issue.options.find(function(o) {
+								return o.state.votes.includes(request.game.data.state.leader)
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "rule: the leader can make executive decisions on urgent issues"})
+						}
+
+					// rule: tiebreaker-leader
+						else if (winningOptions.ids.length > 1 && request.game.data.rules.includes("tiebreaker-leader") && request.game.data.state.leader && issue.options.find(function(o) { return winningOptions.ids.includes(o.id) && o.state.votes.includes(request.game.data.state.leader) })) {
+							issue.options.find(function(o) {
+								return winningOptions.ids.includes(o.id) && o.state.votes.includes(request.game.data.state.leader)
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "rule: in the event of a tie, the leader's choice carries"})
+						}
+
+					// rule: majority-threshold
+						else if (request.game.data.rules.includes("majority-threshold") && (winningOption.ids.length <= totalVotes / 2)) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "rule: options must have an outright majority"})
+						}
+
+				// otherwise
+					// tie --> default
+						else if (winningOptions.ids.length !== 1) {
+							issue.options.find(function(o) {
+								return o.state.default
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "no option had a plurality of votes"})
+						}
+
+					// outright winner
+						else {
+							issue.options.find(function(o) {
+								return o.id == winningOptions.ids[0]
+							}).state.selected = true
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "a plurality has decided"})
+						}
 
 				// reset & enact consequences
 					enactConsequences(request, callback, issue)
@@ -664,10 +715,10 @@
 						}
 
 						// change election time
-							if ((rule.name == "snap-elections" && rule.enact) || (rule.name == "delayed-elections" && !rule.enact)) {
+							if ((rule.name == "snap-elections" && rule.enact) || (rule.name == "delayed-elections" && !rule.enact)) { // rule: snap-elections // rule: delayed-elections
 								request.game.data.state.election -= 600000
 							}
-							else if ((rule.name == "snap-elections" && !rule.enact) || (rule.name == "delayed-elections" && rule.enact)) {
+							else if ((rule.name == "snap-elections" && !rule.enact) || (rule.name == "delayed-elections" && rule.enact)) { // rule: snap-elections // rule: delayed-elections
 								request.game.data.state.election += 600000
 							}
 					}
@@ -1024,13 +1075,13 @@
 				// rebellions
 					for (var c in request.game.data.constituents) {
 						if (request.game.data.constituents[c].approval <= 20 && !request.game.data.issues.find(function(i) { return i.type == "rebellion" })) {
-							request.game.data.issues.push(main.chooseRandom(issues.rebellion))
+							request.game.data.issues.push(issues.rebellion[0])
 						}
 					}
 
 				// austerity
 					if (request.game.data.treasury < 0 && !request.game.data.issues.find(function(i) { return i.type == "austerity" })) {
-						request.game.data.issues.push(main.chooseRandom(issues.austerity))
+						request.game.data.issues.push(issues.austerity[0])
 					}
 			}
 			catch (error) {
