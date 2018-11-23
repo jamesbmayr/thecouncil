@@ -8,16 +8,12 @@
 		<link rel="stylesheet" type="text/css" href="home/stylesheet.css"/>
 		<script type="text/javascript" src="home/script.js"></script>
 		<script>window.id = "<script node>request.session.id</script>node>"</script>
-		<script>window.member = <script node>Boolean(request.game.players[request.session.id])</script>node> || false</script>
-		<script>window.leader = <script node>Boolean(request.game.data.members[request.session.id] && request.game.data.members[request.session.id].state.leader)</script>node> || false</script>
 	</head>
 	<body>
 		<div id="message" class="hidden"></div>
 		<div id="container">
 			<script node>
 				if (request.game.players[request.session.id]) {
-					var leader = Boolean(request.game.data.members[request.session.id] && request.game.data.members[request.session.id].state.leader)
-
 					"<div id='header'>" + 
 						"<div id='mode-bar'>" +
 							"<div id='select-council'>" +
@@ -30,8 +26,8 @@
 							"</div>" +
 						"</div>" +
 						"<div id='action-bar'>" +
-							"<button id='submit-recall'" + (leader ? " hidden" : "") + ">recall</button>" +
-							"<button id='submit-tally'"  + (leader ? "" : " hidden") + ">tally</button>" +
+							"<button id='submit-recall'>recall</button>" +
+							"<button id='submit-tally'>tally</button>" +
 							"<button id='submit-campaign'>campaign</button>" +
 						"</div>" +
 					"</div>" +

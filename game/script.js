@@ -167,19 +167,19 @@
 
 			// starting
 				if (data.start) {
-					receiveStart(data.data)
+					receiveStart(data)
+				}
+				else if (data.showRecall !== undefined || data.showTally !== undefined || data.showCampaign !== undefined) {
+					updateButtons(data)
 				}
 
-			// leadership change
-				if (data.data && data.data.members && window.member) {
-					updateButtons(data.data)
-				}
-				else if (data.data && data.recall && window.member) {
+			// recall
+				else if (data.data && data.recall && data.data.members[window.id]) {
 					selectCouncil()
 				}
 
 			// new data
-				if (data.data && window.member) {
+				if (data.data && data.data.members[window.id]) {
 					updateIssues(data.data)
 					updateMember(data.data, data.data.members[window.id], data.data.rules)
 				}
@@ -197,21 +197,23 @@
 			document.getElementById("container").setAttribute("gameplay", true)
 
 			// observers
-				if (!window.member) {
+				if (!data.data.members[window.id]) {
 					document.getElementById("submit-start").setAttribute("hidden", true)
 					document.getElementById("submit-start-pole").setAttribute("hidden", true)					
-					createGovernment(data)
+					createGovernment(data.data)
 					
-					for (var m in data.members) {
-						createMember(data, data.members[m], data.rules)
+					for (var m in data.data.members) {
+						createMember(data.data, data.data.members[m], data.data.rules)
 					}
 				}
 
 			// members
 				else {
-					createMember(data, data.members[window.id], data.rules)
-					createFlag(document.querySelector("#select-council canvas" ), data.state.flag)
-					createFlag(document.querySelector("#select-district canvas"), data.members[window.id].state.flag)
+					createMember(data.data, data.data.members[window.id], data.data.rules)
+					createFlag(document.querySelector("#select-council canvas" ), data.data.state.flag)
+					createFlag(document.querySelector("#select-district canvas"), data.data.members[window.id].state.flag)
+
+					updateButtons(data)
 				}
 		}
 
@@ -255,15 +257,19 @@
 						option.appendChild(name)
 
 					// money
-						var treasury = document.createElement("div")
-							treasury.className = "option-treasury"
-							treasury.innerText = subdata.treasury > 0 ? "+" + subdata.treasury : subdata.treasury
-						option.appendChild(treasury)
+						if (subdata.treasury) {
+							var treasury = document.createElement("div")
+								treasury.className = "option-treasury"
+								treasury.innerText = subdata.treasury > 0 ? "+" + subdata.treasury : subdata.treasury
+							option.appendChild(treasury)
+						}
 
-						var funds = document.createElement("div")
-							funds.className = "option-funds"
-							funds.innerText = subdata.funds > 0 ? "+" + subdata.funds : subdata.funds
-						option.appendChild(funds)
+						if (subdata.funds) {
+							var funds = document.createElement("div")
+								funds.className = "option-funds"
+								funds.innerText = subdata.funds > 0 ? "+" + subdata.funds : subdata.funds
+							option.appendChild(funds)
+						}
 
 					// agencies
 						var agencies = document.createElement("div")
@@ -619,14 +625,29 @@
 
 	/* updateButtons */
 		function updateButtons(data) {
-			if (window.leader && data.members[window.id] && !data.members[window.id].state.leader) {
-				window.leader = false
-				document.getElementById("submit-recall").removeAttribute("hidden")
-				document.getElementById("submit-tally" ).setAttribute(   "hidden", true)
-			}
-			else if (!window.leader && data.members[window.id] && data.members[window.id].state.leader) {
-				window.leader = true
-				document.getElementById("submit-tally" ).removeAttribute("hidden")
-				document.getElementById("submit-recall").setAttribute(   "hidden", true)
-			}
+			var actionBar = document.getElementById("action-bar")
+
+			// recall
+				if (data.showRecall == true) {
+					actionBar.setAttribute("showRecall", true)
+				}
+				else if (data.showRecall == false) {
+					actionBar.removeAttribute("showRecall")
+				}
+
+			// tally
+				if (data.showTally == true) {
+					actionBar.setAttribute("showTally", true)
+				}
+				else if (data.showTally == false) {
+					actionBar.removeAttribute("showTally")
+				}
+
+			// campaign
+				if (data.showCampaign == true) {
+					actionBar.setAttribute("showCampaign", true)
+				}
+				else if (data.showCampaign == false) {
+					actionBar.removeAttribute("showCampaign")
+				}
 		}

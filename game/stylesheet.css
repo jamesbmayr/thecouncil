@@ -119,6 +119,22 @@
 			margin-right: 8px;
 		}
 
+		#action-bar:not([showRecall]) #submit-recall {
+			display: none;
+		}
+
+		#action-bar:not([showTally]) #submit-tally {
+			display: none;
+		}
+
+		#action-bar[showTally] #submit-recall {
+			display: none;
+		}
+
+		#action-bar:not([showCampaign]) #submit-campaign {
+			display: none;
+		}
+
 /*** observer - start ***/
 	#submit-start {
 		position: absolute;
@@ -562,6 +578,20 @@
 		display: none;
 	}
 
+	.issue {
+		float: left;
+		width: calc(100% - 20px);
+		padding: 10px;
+		background-color: var(--black-1);
+		border-radius: var(--borderRadius);
+		margin-bottom: 10px;
+		box-shadow: 0px 0px 10px var(--black-2);
+	}
+
+	.issue:hover, .issue:focus, .issue[selected] {
+		box-shadow: 0px 0px 20px var(--black-4);
+	}
+
 	/* desktop */
 		#column-right #issues {
 			margin-top: 0px;
@@ -577,21 +607,28 @@
 			margin-bottom: 20px;
 		}
 
+	/* colors */
+		.issue[type="leader"] {
+			background-color: var(--purple-1);
+		}
+
+		.issue[type="austerity"] {
+			background-color: var(--yellow-1);
+		}
+
+		.issue[type="violence"] {
+			background-color: var(--orange-1);
+		}
+
+		.issue[type="rebellion"] {
+			background-color: var(--red-1);
+		}
+
+		.issue[type="repeal"] {
+			background-color: var(--blue-1);
+		}
+		
 	/* info */
-		.issue {
-			float: left;
-			width: calc(100% - 20px);
-			padding: 10px;
-			background-color: var(--black-1);
-			border-radius: var(--borderRadius);
-			margin-bottom: 10px;
-			box-shadow: 0px 0px 10px var(--black-2);
-		}
-
-		.issue:hover, .issue:focus, .issue[selected] {
-			box-shadow: 0px 0px 20px var(--black-4);
-		}
-
 		.issue-timeout {
 			float: right;
 			margin-top: -20px;
@@ -678,6 +715,10 @@
 			height: 100px;
 			margin-right: 2.5px;
 			pointer-events: none;
+		}
+
+		.issue[type="leader"] .option-agencies {
+			display: none;
 		}
 
 		.option-agencies div {
