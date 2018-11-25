@@ -451,6 +451,7 @@
 									break
 
 									default:
+										console.log(request.post.action)
 										_400("invalid action")
 									break
 								}

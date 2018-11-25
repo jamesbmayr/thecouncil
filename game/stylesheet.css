@@ -22,6 +22,19 @@
 			margin-right: auto;
 		}
 
+		#background {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			font-size: 100px;
+			color: var(--black-4);
+		}
+
+		#container[gameplay] #background {
+			display: none;
+		}
+
 /*** player - header ***/
 	#header {
 		position: fixed;
@@ -388,15 +401,20 @@
 	}
 
 	#container:not([gameplay]) #members {
-		display: none;
+		visibility: hidden;
 	}
 
 	/* desktop */
 		#column-left #members {
 			height: auto;
 			overflow-y: hidden;
+			width: calc(100% - 40px);
 			padding: 20px 20px 0px 20px;
 			background-color: var(--black-2);
+		}
+
+		#column-left #members[hidden] {
+			display: block;
 		}
 
 		#column-left .member {
@@ -416,6 +434,8 @@
 			background-color: var(--black-0);
 			border-radius: var(--borderRadius);
 			margin-bottom: 10px;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 
 	/* info */
@@ -575,7 +595,7 @@
 	}
 
 	#container:not([gameplay]) #issues {
-		display: none;
+		visibility: hidden;
 	}
 
 	.issue {
@@ -584,7 +604,7 @@
 		padding: 10px;
 		background-color: var(--black-1);
 		border-radius: var(--borderRadius);
-		margin-bottom: 10px;
+		margin-bottom: 20px;
 		box-shadow: 0px 0px 10px var(--black-2);
 	}
 
@@ -644,6 +664,7 @@
 		.issue-name {
 			font-size: 20px;
 			margin-bottom: 10px;
+			pointer-events: none;
 		}		
 
 	/* option info */
@@ -684,6 +705,7 @@
 			font-size: 30px;
 			text-align: right;
 			pointer-events: none;
+			margin-bottom: 10px;
 		}
 
 		.option-treasury:before {
@@ -691,13 +713,14 @@
 		}
 
 		.option-funds {
-			float: left;
+			float: right;
 			width: 50%;
 			height: 40px;
 			font-size: 20px;
 			text-align: right;
 			line-height: 2.5;
 			pointer-events: none;
+			margin-bottom: 10px;
 		}
 
 		.option-funds:before {
@@ -711,8 +734,8 @@
 	/* option agencies */
 		.option-agencies {
 			float: left;
-			width: calc(50% - 2.5px);
-			height: 100px;
+			width: 100%;
+			height: 50px;
 			margin-right: 2.5px;
 			pointer-events: none;
 		}
@@ -723,7 +746,8 @@
 
 		.option-agencies div {
 			height: 25px;
-			width: 100%;
+			width: calc(25% - 20px);
+			margin: 10px;
 			float: left;
 			border-radius: var(--borderRadius);
 			color: var(--white-4);
@@ -772,20 +796,28 @@
 	/* option constituents */
 		.option-constituents {
 			float: left;
-			width: calc(50% - 2.5px);
-			height: 100px;
+			width: calc(100%);
+			height: 50px;
 			margin-left: 2.5px;
 			pointer-events: none;
 		}
 
 		.option-constituents div {
-			height: 20px;
-			width: 100%;
+			height: 50px;
+			width: 20%;
 			float: left;
-			border-radius: var(--borderRadius);
+			border-radius: var(--borderRadius) var(--borderRadius) 0px 0px;
 			color: var(--white-4);
 			font-size: 15px;
 			text-align: center;
+		}
+
+		.option-constituents div:first-child {
+			border-radius: var(--borderRadius) var(--borderRadius) 0px var(--borderRadius);
+		}
+
+		.option-constituents div:last-child {
+			border-radius: var(--borderRadius) var(--borderRadius) var(--borderRadius) 0px;
 		}
 
 		.option-constituents-d {

@@ -318,7 +318,7 @@
 				else if (request.game.data.members[request.session.id].state.leader && request.game.data.rules.includes("leader-presence")) { // rule: leader-presence
 					callback([request.session.id], {success: false, message: "rule: leaders cannot leave to campaign for reelection"})
 				}
-				else if (!request.game.past.length < 3) {
+				else if (request.game.past.length < 3) {
 					callback([request.session.id], {success: false, message: "not enough issues to campaign on"})
 				}
 				else if (request.game.data.members[request.session.id].state.funds < 1000) {
@@ -403,7 +403,7 @@
 						// populations & approval ratings
 							for (var c in member.constituents) {
 								member.constituents[c].population = (Math.floor(Math.random() * 4) * 1000) + 1000
-								member.constituents[c].approval   = (Math.floor(Math.random() * 7) - 3) * 5 + 50
+								member.constituents[c].approval   = (Math.floor(Math.random() * 7) - 3) * 5 + 40
 
 								if (c == member.race.short) {
 									member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + 20))
@@ -503,7 +503,6 @@
 								}
 						}
 						else {
-							option.treasury = -1000
 							option.constituents[request.game.data.members[m].race.short].approval = 5
 							issue.options.push(option)
 						}
@@ -695,6 +694,8 @@
 				// data
 					var winningOption = issue.options.find(function(o) {
 						return o.state.selected
+					}) || issue.options.find(function(o) {
+						return o.state.default
 					})
 
 				// special numbers
@@ -746,7 +747,7 @@
 							for (var v in issue.options[o].state.votes) {
 								var member = request.game.data.members[issue.options[o].state.votes[v]]
 								
-								if (issue.options[o].selected) {
+								if (issue.options[o].state.selected) {
 									member.funds                          = Math.max(0, member.funds + winningOption.funds * donationMultiplier)
 									for (var c in member.constituents) {
 										member.constituents[c].approval   = Math.max(0, Math.min(100, member.constituents[c].approval + winningOption.constituents[c].approval * approvalMultiplier))
@@ -760,7 +761,7 @@
 											member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + winningOption.constituents[c].approval * approvalMultiplier))
 										}
 										else {
-											member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + Math.floor(issue.options[o].constituents[c].approval / 2 * approvalMultiplier)))
+											member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + issue.options[o].constituents[c].approval * approvalMultiplier))
 										}
 										member.constituents[c].population = Math.max(0, member.constituents[c].population + winningOption.constituents[c].population)
 									}
@@ -809,7 +810,7 @@
 
 							// update "tally" button
 								for (var m in request.game.data.members) {
-									if (request.game.data.members[m].state.leader) {
+									if (request.game.data.state.leader == m) {
 										callback(m, {success: true, showTally: true})
 									}
 									else {
@@ -832,7 +833,7 @@
 							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Time's up!<br><br>An unresolved issue is resolving itself..."})
 						}, 0)
 						setTimeout(function() {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " &larr; " + winningOption.name)})
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " &rarr; " + winningOption.name)})
 						}, 5000)
 					}
 					else {
@@ -859,7 +860,7 @@
 							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: message})
 						}, 3000)
 						setTimeout(function() {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " &larr; " + winningOption.name)})
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " &rarr; " + winningOption.name)})
 						}, 8000)
 					}
 
@@ -1016,12 +1017,19 @@
 			try {
 				for (var key in info) {
 					if (typeof info[key] == "object" && Array.isArray(info[key])) {
-						issue[key] = []
-						issue = getAttributes(issue[key], info[key])
+						issue[key] = issue[key] || []
+
+						if (key == "options") {
+							while (issue.options.length < info.options.length) {
+								issue.options.push(main.getSchema("option"))
+							}
+						}
+
+						issue[key] = getAttributes(issue[key], info[key], callback)
 					}
 					else if (typeof info[key] == "object") {
-						issue[key] = {}
-						issue = getAttributes(issue[key], info[key])	
+						issue[key] = issue[key] || {}
+						issue[key] = getAttributes(issue[key], info[key], callback)	
 					}
 					else {
 						issue[key] = info[key]
@@ -1111,7 +1119,7 @@
 						callback(ids, {success: true, message: "Decide issues on behalf of your constituents."})
 					}
 					else if (time == 25000) {
-						callback(ids, {success: true, message: "First, choose a council leader to select which issues are debated."})
+						callback(ids, {success: true, recall: true, message: "First, choose a council leader to select which issues are debated."})
 					}
 
 				// end
@@ -1181,13 +1189,13 @@
 				// rebellions
 					for (var c in request.game.data.constituents) {
 						if (request.game.data.constituents[c].approval <= 20 && !request.game.data.issues.find(function(i) { return i.type == "rebellion" })) {
-							request.game.data.issues.push(issues.rebellion[0])
+							request.game.data.issues.push(getAttributes(main.getSchema("issue"), issues.rebellion[0], callback))
 						}
 					}
 
 				// austerity
 					if (request.game.data.treasury < 0 && !request.game.data.issues.find(function(i) { return i.type == "austerity" })) {
-						request.game.data.issues.push(issues.austerity[0])
+						request.game.data.issues.push(getAttributes(main.getSchema("issue"), issues.austerity[0], callback))
 					}
 			}
 			catch (error) {
@@ -1237,7 +1245,7 @@
 					}
 
 				// populist
-					else if (populist && getIdeology(request, populist, callback) && getApproval(populist, callback) >= 80) {
+					else if (populist && getIdeology(request, populist, callback) && getApproval(populist, callback) >= 75) {
 						populist.state.reelected = true
 						populist.state.achieved  = true
 						request.game.data.state.exists = false
@@ -1289,7 +1297,7 @@
 								member.funds = Math.min(0, member.funds + Math.floor(member.constituents[c].population / 100))
 							}
 							else if (member.constituents[c].approval <= 20 && !request.game.data.issues.find(function(i) { return i.type == "protest" })) {
-								request.game.data.issues.push(main.chooseRandom(issues.protest))
+								request.game.data.issues.push(getAttributes(main.getSchema("issue"), main.chooseRandom(issues.protest), callback))
 							}
 						}
 				}
@@ -1311,6 +1319,7 @@
 					// add to issues
 						if (request.game.future[f].delay <= 0) {
 							var issue = issues[request.game.future[f].type].find(function (i) { return i.name == request.game.future[f].name })
+								issue = getAttributes(main.getSchema("issue"), issue, callback)
 							request.game.data.issues.push(issue)
 
 							request.game.future.splice(f, 1)
@@ -1362,7 +1371,7 @@
 								|| request.game.future.find(     function (f) { return f.name == issue.name })))
 
 							if (issue) {
-								request.game.data.issues.push(issue)
+								request.game.data.issues.push(getAttributes(main.getSchema("issue"), issue, callback))
 							}
 						}
 					}

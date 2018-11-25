@@ -342,9 +342,9 @@
 								{
 									name:        "socialist",
 									description: "build a large government that controls the means of production and distribution",
-									s:           [80,100],
-									r:           [80,100],
-									t:           [80,100],
+									s:           [75,100],
+									r:           [75,100],
+									t:           [75,100],
 									m:           [ 0,100],
 									other:       null
 								},
@@ -378,9 +378,9 @@
 								{
 									name:        "libertarian",
 									description: "eliminate the social, regulatory, and technology expenditures of the state",
-									s:           [ 0, 20],
-									r:           [ 0, 20],
-									t:           [ 0, 20],
+									s:           [ 0, 25],
+									r:           [ 0, 25],
+									t:           [ 0, 25],
 									m:           [ 0,100],
 									other:       null
 								},
@@ -390,32 +390,32 @@
 									s:           [ 0,100],
 									r:           [ 0,100],
 									t:           [ 0,100],
-									m:           [80,100],
+									m:           [75,100],
 									other:       "be council leader"
 								},
 								{
 									name:        "populist",
 									description: "expand the scope of government as an autocratic champion of the people",
-									s:           [80,100],
+									s:           [75,100],
 									r:           [ 0,100],
 									t:           [ 0,100],
 									m:           [ 0,100],
-									other:       "80+ approval rating"
+									other:       "75+ approval rating"
 								},
 								{
-									name:        "weaken the military and let a rebellion overthrow the government",
-									description: "",
+									name:        "anarchist",
+									description: "weaken the military and let a rebellion overthrow the government",
 									s:           [ 0,100],
 									r:           [ 0,100],
 									t:           [ 0,100],
-									m:           [ 0, 20],
+									m:           [ 0, 25],
 									other:       "successful rebellion"
 								},
 								{
 									name:        "crook",
 									description: "weaken regulation and amass a personal fortune in your campaign funds",
 									s:           [ 0,100],
-									r:           [ 0, 20],
+									r:           [ 0, 25],
 									t:           [ 0,100],
 									m:           [ 0,100],
 									other:       "25000 in funds"

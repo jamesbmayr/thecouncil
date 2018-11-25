@@ -111,7 +111,7 @@
 				// select
 					else {
 						socket.send(JSON.stringify({
-							action:    "submitSelection",
+							action:    "submitIssue",
 							selection: event.target.id.split("-")[1]
 						}))
 					}
@@ -123,7 +123,6 @@
 			if (event.target.className == "option") {
 				// unselect
 					if (event.target.getAttribute("selected")) {
-						console.log("unselecting")
 						document.querySelectorAll(".option[selected]").forEach(function(element) {
 							element.removeAttribute("selected")
 						})
@@ -136,7 +135,6 @@
 
 				// select
 					else {
-						console.log("selecting")
 						document.querySelectorAll(".option[selected]").forEach(function(element) {
 							element.removeAttribute("selected")
 						})
@@ -174,7 +172,7 @@
 				}
 
 			// recall
-				else if (data.data && data.recall && data.data.members[window.id]) {
+				else if (data.recall) {
 					selectCouncil()
 				}
 
@@ -488,7 +486,6 @@
 /*** updates ***/
 	/* updateIssues */
 		function updateIssues(data) {
-			try {
 			// get existing issues
 				var ids = Array.from(document.querySelectorAll(".issue")).map(function (element) {
 					return element.id
@@ -527,7 +524,6 @@
 				for (var i in ids) {
 					document.getElementById(ids[i]).remove()
 				}
-			} catch (error) {console.log(error)}
 		}
 
 	/* updateGovernment */
