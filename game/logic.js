@@ -1354,7 +1354,7 @@
 				// random new issue
 					if (request.game.past.length > 1) { // not until 1st leader and 1st real issue are resolved
 						var addIssue = false
-						var type = main.chooseRandom(["small", "medium", "large"])
+						var type = main.chooseRandom(["small", "small", "small", "medium", "medium", "large"])
 						if ((request.game.data.state.time % 300000 == 0) 										// 5 minutes  = 100%
 						 || (request.game.data.state.time % 120000 == 0 && !Math.floor(Math.random() * 2))		// 2 minutes  = 50%
 						 || (request.game.data.state.time %  60000 == 0 && !Math.floor(Math.random() * 3))		// 1 minute   = 33%
