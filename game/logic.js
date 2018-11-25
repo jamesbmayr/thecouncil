@@ -415,7 +415,7 @@
 					updateRatings(request, callback)
 
 				// start
-					request.game.data.state.name  = main.chooseRandom(realms)
+					request.game.data.state.name  = [main.chooseRandom(realms), main.chooseRandom(realms)]
 					request.game.data.state.start = new Date().getTime()
 					request.game.data.state.cooldown = 15000
 					callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, start: true, message: "starting the game!", data: request.game.data})
@@ -580,20 +580,20 @@
 							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "the military is too weak to stop the rebels"})
 						}
 
-					// violence: insufficient funds
-						if (issue.type == "violence" && (request.game.state.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
+					// protest: insufficient funds
+						if (issue.type == "protest" && (request.game.state.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
 							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "not enough treasury to meet the protestors' demands"})
 						}
 
-					// violence: insufficient military
-						else if (issue.type == "violence" && (request.game.state.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
+					// protest: insufficient military
+						else if (issue.type == "protest" && (request.game.state.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "the military is too weak to suppress the violence"})
+							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "the military is too weak to suppress the protest"})
 						}
 
 					// austerity: insufficient s
@@ -1099,7 +1099,7 @@
 				
 				// start
 					if (time == 5000) {
-						callback(ids, {success: true, message: "Welcome to the council of " + request.game.data.state.name + "!"})
+						callback(ids, {success: true, message: "Welcome to the council of " + request.game.data.state.name[0] + "!"})
 					}
 					else if (time == 10000) {
 						callback(ids, {success: true, message: "When the session ends, get reelected - that's 50%+ approval overall."})
@@ -1283,13 +1283,13 @@
 							member.state.campaign = false
 						}
 
-					// donations vs. riots
+					// donations vs. protest
 						for (var c in member.constituents) {
 							if (member.constituents[c].approval >= 80 && !request.game.data.rules.includes("donation-ban")) { // rule: donation-ban
 								member.funds = Math.min(0, member.funds + Math.floor(member.constituents[c].population / 100))
 							}
-							else if (member.constituents[c].approval <= 20 && !request.game.data.issues.find(function(i) { return i.type == "violence" })) {
-								request.game.data.issues.push(main.chooseRandom(issues.violence))
+							else if (member.constituents[c].approval <= 20 && !request.game.data.issues.find(function(i) { return i.type == "protest" })) {
+								request.game.data.issues.push(main.chooseRandom(issues.protest))
 							}
 						}
 				}
