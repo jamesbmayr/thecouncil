@@ -4,14 +4,15 @@ Keep the republic from crumbling - rule the fantasy realm together in The Counci
 
 ---
 <pre>
-????????????????
-????????????????
-????????????????
-????????????????
-????????????????
-????????????????
-????????????????
-????????????????
+-----------------------------
+--------------*--------------
+-----------*-----*-----------
+---------*---------*---------
+--------*-----*-----*--------
+---------*---------*---------
+-----------*-----*-----------
+--------------*--------------
+-----------------------------
 </pre>
 ---
 
@@ -36,28 +37,32 @@ thecouncil
 |   |- websocket
 |
 |- main
-|   |- logic.js (logError, logStatus, logMessage, logTime; getEnvironment, getAsset, getSchema; isNumLet, isBot; renderHTML, sanitizeString, duplicateObject; generateRandom, chooseRandom, sortRandom; determineSession)
-|   |- stylesheet.css
-|   |- icon.png
-|   |- logo.png
-|   |- banner.png
+|   |- logic.js (logError, logStatus, logMessage, logTime; getEnvironment, getAsset, getSchema; isNumLet, isBot; renderHTML, sanitizeString, duplicateObject; generateRandom, chooseRandom, sortRandom; determineSession; createFlag)
 |   |- \_404.html
-|   |- script.js (sanitizeString; isEmail, isNumLet; sendPost; displayMessage)
+|   |- stylesheet.css
+|   |- script.js (sanitizeString; isEmail, isNumLet; chooseRandom; sendPost; displayMessage)
+|   |- draw.js (clearData, randomizeData; clearCanvas, rotateCanvas; drawLine, drawCircle, drawTriangle, drawRectangle, drawShape, drawText, drawGradient; createFlag, addField, addStructure, addSeals, addRing, addEmblems)
+|   |- images
+|      |- banner.png
+|      |- icon.png
+|      |- j.png
+|      |- logo.png
+|      |- x.png
 |
 |- home
 |   |- logic.js (createGame, createPlayer; joinGame)
 |   |- index.html
 |   |- stylesheet.css
-|   |- script.js (createGame, joinGame)
+|   |- script.js (createGame, joinGame; updateBackground, moveFlags, cycleColors)
 |
 |- about
 |   |- index.html
 |   |- stylesheet.css
-|   |- script.js (submitFeedback)
+|   |- script.js (submitFeedback; createFlags, cycleColors)
 |
 |- game
-    |- logic.js (addPlayer, removePlayer; submitStart, submitRecall, submitIssue, submitOption, submitTally, submitCampaign; selectIssue, selectOption; enactStart, enactRecall, enactTally, enactConsequences, enactCampaign, enactElection, enactEnd; getIdeology, getApproval; updateTime, updateRatings, updateRebellions, updateOverthrow, updateMembers, updateFuture, updateIssues)
+    |- logic.js (addPlayer, removePlayer; submitStart, submitRecall, submitIssue, submitOption, submitTally, submitCampaign; selectIssue, selectOption; enactStart, enactRecall, enactTally, enactConsequences, enactCampaign, enactElection, enactEnd; getIdeology, getApproval, getAttributes; updateTime, updateMessages, updateRatings, updateRebellions, updateOverthrow, updateMembers, updateFuture, updateIssues)
     |- index.html
     |- stylesheet.css
-    |- script.js (createSocket, checkLoop; submitStart, submitRecall, submitIssue, submitOption, submitTally, submitCampaign; receivePost, receiveStart; createIssue, createGovernment, createMember; updateIssues, updateGovernment, updateMember, updateButtons)
+    |- script.js (createSocket, checkLoop; selectCouncil, selectDistrict; submitStart, submitRecall, submitIssue, submitOption, submitTally, submitCampaign; receivePost, receiveStart; createIssue, createGovernment, createMember; updateIssues, updateGovernment, updateMember, updateButtons)
 </pre>
