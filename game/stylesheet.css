@@ -130,6 +130,7 @@
 		#submit-campaign {
 			margin-left: 4px;
 			margin-right: 8px;
+			float: right;
 		}
 
 		#action-bar:not([showRecall]) #submit-recall {
@@ -390,7 +391,8 @@
 	#members {
 		float: left;
 		height: calc(100vh - 250px);
-		padding: 170px 20px 80px 20px;
+		padding: 20px 20px 80px 20px;
+		margin-top: 150px;
 		user-select: none;
 		-moz-user-select: none;
 		-webkit-user-select: none;
@@ -409,7 +411,8 @@
 			height: auto;
 			overflow-y: hidden;
 			width: calc(100% - 40px);
-			padding: 20px 20px 0px 20px;
+			padding: 20px 20px 20px 20px;
+			margin-top: 0px;
 			background-color: var(--black-2);
 		}
 
@@ -584,8 +587,9 @@
 	#issues {
 		float: left;
 		height: calc(100vh - 250px);
-		padding: 170px 20px 80px 20px;
+		padding: 20px 20px 80px 20px;
 		width: calc(100% - 40px);
+		margin-top: 150px;
 		user-select: none;
 		-moz-user-select: none;
 		-webkit-user-select: none;
@@ -602,7 +606,7 @@
 		float: left;
 		width: calc(100% - 20px);
 		padding: 10px;
-		background-color: var(--black-1);
+		background-color: var(--black-0);
 		border-radius: var(--borderRadius);
 		margin-bottom: 20px;
 		box-shadow: 0px 0px 10px var(--black-2);
@@ -632,20 +636,24 @@
 			background-color: var(--purple-1);
 		}
 
+		.issue[type="repeal"] {
+			background-color: var(--blue-1);
+		}
+
+		.issue[type="effect"] {
+			background-color: var(--green-1);
+		}
+
 		.issue[type="austerity"] {
 			background-color: var(--yellow-1);
 		}
 
-		.issue[type="violence"] {
+		.issue[type="protest"] {
 			background-color: var(--orange-1);
 		}
 
 		.issue[type="rebellion"] {
 			background-color: var(--red-1);
-		}
-
-		.issue[type="repeal"] {
-			background-color: var(--blue-1);
 		}
 		
 	/* info */

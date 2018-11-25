@@ -454,10 +454,10 @@
 						// populations & approval ratings
 							for (var c in member.constituents) {
 								member.constituents[c].population = (Math.floor(Math.random() * 4) * 1000) + 1000
-								member.constituents[c].approval   = (Math.floor(Math.random() * 7) - 3) * 5 + 40
+								member.constituents[c].approval   = (Math.floor(Math.random() * 7) - 3) * 5 + 45
 
 								if (c == member.race.short) {
-									member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + 20))
+									member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + 15))
 								}
 							}
 					}
@@ -562,9 +562,10 @@
 						}
 					}
 
+
 				// special event types
 					// rebellion: insufficient funds
-						if (issue.type == "rebellion" && (request.game.state.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
+						if (issue.type == "rebellion" && winningOptions.ids.length && (request.game.data.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
@@ -572,7 +573,7 @@
 						}
 
 					// rebellion: insufficient military
-						else if (issue.type == "rebellion" && (request.game.state.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
+						else if (issue.type == "rebellion" && winningOptions.ids.length && (request.game.data.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
@@ -580,7 +581,7 @@
 						}
 
 					// protest: insufficient funds
-						if (issue.type == "protest" && (request.game.state.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
+						if (issue.type == "protest" && winningOptions.ids.length && (request.game.data.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
@@ -588,7 +589,7 @@
 						}
 
 					// protest: insufficient military
-						else if (issue.type == "protest" && (request.game.state.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
+						else if (issue.type == "protest" && winningOptions.ids.length && (request.game.data.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
@@ -596,7 +597,7 @@
 						}
 
 					// austerity: insufficient s
-						else if (issue.type == "austerity" && (request.game.state.agencies.s + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.s) < 0)) {
+						else if (issue.type == "austerity" && winningOptions.ids.length && (request.game.data.agencies.s + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.s) < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
@@ -604,7 +605,7 @@
 						}
 
 					// austerity: insufficient r
-						else if (issue.type == "austerity" && (request.game.state.agencies.r + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.r) < 0)) {
+						else if (issue.type == "austerity" && winningOptions.ids.length && (request.game.data.agencies.r + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.r) < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
@@ -612,7 +613,7 @@
 						}
 
 					// austerity: insufficient t
-						else if (issue.type == "austerity" && (request.game.state.agencies.t + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.t) < 0)) {
+						else if (issue.type == "austerity" && winningOptions.ids.length && (request.game.data.agencies.t + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.t) < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
@@ -620,7 +621,7 @@
 						}
 
 					// austerity: insufficient m
-						else if (issue.type == "austerity" && (request.game.state.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
+						else if (issue.type == "austerity" && winningOptions.ids.length && (request.game.data.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
@@ -629,7 +630,7 @@
 
 				// special rules
 					// rule: balanced-budget
-						else if (request.game.data.rules.includes("balanced-budget") && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury < 0) && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury + request.game.data.treasury < 0)) {
+						else if (request.game.data.rules.includes("balanced-budget") && winningOptions.ids.length && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury < 0) && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury + request.game.data.treasury < 0)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
@@ -653,7 +654,7 @@
 						}
 
 					// rule: majority-threshold
-						else if (request.game.data.rules.includes("majority-threshold") && (winningOption.ids.length <= totalVotes / 2)) {
+						else if (request.game.data.rules.includes("majority-threshold") && winningOptions.ids.length && (winningOption.ids.length <= totalVotes / 2)) {
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
@@ -809,12 +810,13 @@
 								}
 
 							// update "tally" button
-								for (var m in request.game.data.members) {
-									if (request.game.data.state.leader == m) {
-										callback(m, {success: true, showTally: true})
+								var ids = Object.keys(request.game.data.members)
+								for (var i in ids) {
+									if (request.game.data.state.leader == ids[i]) {
+										callback([ids[i]], {success: true, showTally: true})
 									}
 									else {
-										callback(m, {success: true, showTally: false})
+										callback([ids[i]], {success: true, showTally: false})
 									}
 								}
 						}
