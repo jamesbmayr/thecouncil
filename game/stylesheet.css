@@ -189,7 +189,7 @@
 /*** observer - columns ***/
 	#column-left {
 		float: left;
-		width: 35%;
+		width: 500px;
 		height: 100vh;
 		overflow-x: hidden;
 		overflow-y: scroll;
@@ -197,7 +197,7 @@
 
 	#column-right {
 		float: left;
-		width: 65%;
+		width: calc(100vw - 500px);
 		height: 100vh;
 		overflow-x: hidden;
 		overflow-y: scroll;
@@ -290,24 +290,33 @@
 			float: left;
 			width: 100%;
 			border-radius: 4px;
-			height: 4px;
+			height: 25px;
 			z-index: 1;
 			opacity: 1;
 			margin: 25px 0px 25px 0px;
+			text-align: center;
+		}
+
+		.government-agencies-label {
+			font-size: 20px;
+			line-height: 1;
+			margin-top: 2px;
+			color: var(--black-2);
 		}
 
 		.government-agencies-s, .government-agencies-r, .government-agencies-t, .government-agencies-m {
 			position: relative;
-			transform: translateX(-50%) translateY(-50%);
+			transform: translateX(-50%) translateY(calc(-50% - 10px));
 			border-radius: 100%;
-			height: 20px;
+			height: 40px;
 			width: 40px;
 			z-index: 2;
 			color: var(--white-4);
-			font-size: 15px;
+			font-size: 25px;
 			text-align: center;
-			padding: 10px 0px 10px 0px;
+			padding: 5px;
 			overflow: hidden;
+			opacity: 0.85;
 		}
 
 		.government-agencies-s {
@@ -355,7 +364,8 @@
 			text-align: center;
 			bottom: 0px;
 			border-radius: var(--borderRadius) var(--borderRadius) 0px 0px;
-			font-size: 20px;
+			font-size: 15px;
+			color: var(--black-4);
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
@@ -565,6 +575,7 @@
 			z-index: 1;
 			transform: rotate(0deg);
 			opacity: 0.65;
+			margin-bottom: 5px;
 		}
 
 		.member-ideology-s, .member-ideology-dot-s {

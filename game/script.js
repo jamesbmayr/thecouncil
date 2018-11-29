@@ -353,9 +353,18 @@
 						line.className = "government-agencies-line"
 					agencies.appendChild(line)
 
+					var label = document.createElement("div")
+						label.className = "government-agencies-label"
+						label.innerText = (a == "s") ? "Social Services" : (a == "r") ? "Regulation" : (a == "t") ? "Tech & Education" : "Military"
+					line.appendChild(label)
+
 					var dot = document.createElement("div")
 						dot.className = "government-agencies-" + a
 					line.appendChild(dot)
+
+					var span = document.createElement("span")
+						span.className = "government-agencies-numbers-" + a
+					dot.appendChild(span)					
 				}
 
 			// constituents
@@ -370,7 +379,7 @@
 				for (var c in data.constituents) {
 					var element = document.createElement("div")
 						element.className = "government-constituents-" + c
-						element.innerText = c
+						element.innerText = (c == "d") ? "dwarves" : (c == "e") ? "elves" : (c == "f") ? "fairies" : (c == "g") ? "goblins" : "lizardfolk"
 					constituents.appendChild(element)
 
 					var span = document.createElement("span")
@@ -538,13 +547,13 @@
 					government.querySelector(".government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
 
 				// agencies
-					var arr = ["r", "s", "t", "m"]
-					arr.forEach(function(a) {
-						document.querySelectorAll(".government-agencies-" + a).forEach(function (dot) {
+					for (var a in data.agencies) {
+						var dot = government.querySelector(".government-agencies-" + a)
 							dot.style.left = data.agencies[a] + "%"
-							dot.innerText = a + "" + data.agencies[a]
-						})
-					})
+
+						var span = government.querySelector(".government-agencies-numbers-" + a)
+							span.innerText = data.agencies[a]
+					}
 
 				// population
 					var population = 0
@@ -596,9 +605,7 @@
 				// ideologies
 					var arr = ["r", "s", "t", "m"]
 					arr.forEach(function(a) {
-						document.querySelectorAll(".member-ideology-dot-" + a).forEach(function (dot) {
-							dot.style.left = government.agencies[a] + "%"
-						})
+						document.querySelector(".member-ideology-dot-" + a).style.left = government.agencies[a] + "%"
 					})
 
 				// leader
