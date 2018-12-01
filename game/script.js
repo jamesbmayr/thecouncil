@@ -577,6 +577,26 @@
 		function updateMember(government, data, rules) {
 			var member = document.getElementById("member-" + data.id)
 			if (member) {
+				// campaigning ?
+					try {
+						if (data.state.campaign) {
+							document.getElementById("submit-campaign").setAttribute("campaigning", true)
+						}
+						else {
+							document.getElementById("submit-campaign").removeAttribute("campaigning")
+						}
+					} catch (error) {}
+
+				// recalling ?
+					try {
+						if (!government.state.leader) {
+							document.getElementById("submit-recall").setAttribute("recalling", true)
+						}
+						else {
+							document.getElementById("submit-recall").removeAttribute("recalling")
+						}
+					} catch (error) {}
+
 				// funds
 					member.querySelector(".member-funds").innerText = data.funds
 					if (window.id == data.id || rules.includes("financial-disclosure")) {

@@ -180,7 +180,7 @@
 				else if (request.game.data.state.cooldown) {
 					callback([request.session.id], {success: false, message: "Something else is happening."})
 				}
-				else if (!request.game.data.state.leader || !request.game.data.state.leader.id == request.session.id) {
+				else if (!request.game.data.state.leader || request.game.data.state.leader !== request.session.id) {
 					callback([request.session.id], {success: false, message: "Not the leader."})
 				}
 				else if (request.game.data.members[request.session.id].state.campaign && !request.game.data.rules.includes("absentee-voting")) { // rule: absentee-voting
@@ -321,7 +321,7 @@
 				else if (request.game.past.length < 3) {
 					callback([request.session.id], {success: false, message: "Not enough issues to campaign on."})
 				}
-				else if (request.game.data.members[request.session.id].state.funds < 1000) {
+				else if (request.game.data.members[request.session.id].funds < 1000) {
 					callback([request.session.id], {success: false, message: "Campaigning requires 1000 in funds."})
 				}
 				else {
@@ -1294,12 +1294,14 @@
 						}
 
 					// donations vs. protest
-						for (var c in member.constituents) {
-							if (member.constituents[c].approval >= 75 && !request.game.data.rules.includes("donation-ban")) { // rule: donation-ban
-								member.funds = Math.min(0, member.funds + Math.floor(member.constituents[c].population / 100))
-							}
-							else if (member.constituents[c].approval <= 25 && !request.game.data.issues.find(function(i) { return i.type == "protest" })) {
-								request.game.data.issues.push(getAttributes(main.getSchema("issue"), main.chooseRandom(issues.protest), callback))
+						if (request.game.data.state.time % 5000 == 0) {
+							for (var c in member.constituents) {
+								if (member.constituents[c].approval >= 75 && !request.game.data.rules.includes("donation-ban")) { // rule: donation-ban
+									member.funds = Math.min(0, member.funds + Math.floor(member.constituents[c].population / 100))
+								}
+								else if (member.constituents[c].approval <= 25 && !request.game.data.issues.find(function(i) { return i.type == "protest" })) {
+									request.game.data.issues.push(getAttributes(main.getSchema("issue"), main.chooseRandom(issues.protest), callback))
+								}
 							}
 						}
 				}
