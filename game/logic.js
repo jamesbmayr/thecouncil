@@ -21,6 +21,7 @@
 						if (request.game.players[request.session.id]) {
 							request.game.players[request.session.id].connected  = true
 							request.game.players[request.session.id].connection = request.connection
+							callback(Object.keys(request.game.observers), {success: true, names: [request.game.players[request.session.id].name]})
 						}
 
 					// add observer
@@ -40,13 +41,14 @@
 						}
 						else {
 							callback([request.session.id], {success: true,
-								start:   request.game.data.state.start,
-								showTally: (request.game.data.members[request.session.id] && request.game.data.members[request.session.id].state.leader) ? true : false,
-								showRecall: request.game.past.length > 4 ? true : false,
+								start:        request.game.data.state.start,
+								names:       (request.game.data.state.start && Object.keys(request.game.players).length && !request.game.players[request.session.id]) ? Object.keys(request.game.players).map(function(id) { return request.game.players[id].name }) : null,
+								showTally:   (request.game.data.members[request.session.id] && request.game.data.members[request.session.id].state.leader) ? true : false,
+								showRecall:   request.game.past.length > 4 ? true : false,
 								showCampaign: request.game.past.length > 2 ? true : false,
-								id:      request.game.id,
-								data:    request.game.data,
-								message: "Rejoined game!"
+								id:           request.game.id,
+								data:         request.game.data,
+								message:      "Rejoined game!"
 							})
 						}
 				}
@@ -1188,10 +1190,13 @@
 		module.exports.updateRebellions = updateRebellions
 		function updateRebellions(request, callback) {
 			try {
-				// rebellions
+				// rebellions & protest
 					for (var c in request.game.data.constituents) {
-						if (request.game.data.constituents[c].approval <= 25 && !request.game.data.issues.find(function(i) { return i.type == "rebellion" })) {
+						if (request.game.data.constituents[c].approval <= 10 && !request.game.data.issues.find(function(i) { return i.type == "rebellion" })) {
 							request.game.data.issues.push(getAttributes(main.getSchema("issue"), issues.rebellion[0], callback))
+						}
+						else if (request.game.data.constituents[c].approval <= 20 && !request.game.data.issues.find(function(i) { return i.type == "protest" })) {
+							request.game.data.issues.push(getAttributes(main.getSchema("issue"), main.chooseRandom(issues.protest), callback))
 						}
 					}
 
@@ -1293,14 +1298,11 @@
 							member.state.campaign = false
 						}
 
-					// donations vs. protest
+					// donations
 						if (request.game.data.state.time % 5000 == 0) {
 							for (var c in member.constituents) {
-								if (member.constituents[c].approval >= 75 && !request.game.data.rules.includes("donation-ban")) { // rule: donation-ban
+								if (member.constituents[c].approval >= 80 && !request.game.data.rules.includes("donation-ban")) { // rule: donation-ban
 									member.funds = Math.min(0, member.funds + Math.floor(member.constituents[c].population / 100))
-								}
-								else if (member.constituents[c].approval <= 25 && !request.game.data.issues.find(function(i) { return i.type == "protest" })) {
-									request.game.data.issues.push(getAttributes(main.getSchema("issue"), main.chooseRandom(issues.protest), callback))
 								}
 							}
 						}
@@ -1356,7 +1358,7 @@
 					}
 
 				// random new issue
-					if (request.game.past.length > 1 && request.game.data.issues.length < 5) { // not until 1st leader and 1st real issue are resolved
+					if (request.game.past.length > 1 && request.game.data.issues.length < 4) { // not until 1st leader and 1st real issue are resolved
 						var addIssue = false
 						var type = main.chooseRandom(["small", "small", "small", "medium", "medium", "large"])
 						if ((request.game.data.issues.length < 2)

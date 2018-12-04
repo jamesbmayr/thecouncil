@@ -167,6 +167,11 @@
 				if (data.start) {
 					receiveStart(data)
 				}
+				else if (data.names) {
+					for (var n in data.names) {
+						createNameFlag(data.names[n])
+					}
+				}
 				else if (data.showRecall !== undefined || data.showTally !== undefined || data.showCampaign !== undefined) {
 					updateButtons(data)
 				}
@@ -196,8 +201,7 @@
 
 			// observers
 				if (!data.data.members[window.id]) {
-					document.getElementById("submit-start").setAttribute("hidden", true)
-					document.getElementById("submit-start-pole").setAttribute("hidden", true)					
+					document.getElementById("start").setAttribute("hidden", true)
 					createGovernment(data.data)
 					
 					for (var m in data.data.members) {
@@ -492,6 +496,26 @@
 				updateMember(government, data, rules)
 		}
 
+	/* createNameFlag */
+		function createNameFlag(name) {
+			var flagCount = Array.from(document.querySelectorAll("#flags-background .flag-outer")).length || 0
+
+			var flagOuter = document.createElement("div")
+				flagOuter.className = "flag-outer"
+				flagOuter.style.left = ((flags.length % 4) * (window.innerWidth / 4) + (window.innerWidth / 8)) + "px"
+				flagOuter.style.bottom = (Math.floor(flags.length / 4) * (window.innerHeight / 8) + (window.innerHeight / 8)) + "px"
+			document.getElementById("flags-background").appendChild(flagOuter)
+
+			var flag = document.createElement("div")
+				flag.className = "flag-text"
+				flag.innerText = name
+			flagOuter.appendChild(flag)
+
+			var pole = document.createElement("div")
+				pole.className = "flag-pole"
+			flagOuter.appendChild(flag)
+		}
+
 /*** updates ***/
 	/* updateIssues */
 		function updateIssues(data) {
@@ -648,7 +672,10 @@
 
 	/* updateButtons */
 		function updateButtons(data) {
-			var actionBar = document.getElementById("action-bar")
+			// elements
+				document.getElementById("mode-bar").setAttribute("showCouncil",  true)
+				document.getElementById("mode-bar").setAttribute("showDistrict", true)
+				var actionBar = document.getElementById("action-bar")
 
 			// recall
 				if (data.showRecall == true) {

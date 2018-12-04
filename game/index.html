@@ -33,13 +33,19 @@
 					"</div>" +
 					"<div id='members'></div>" + 
 					"<div id='issues' hidden></div>" +
-					"<div id='background'>" + request.game.id + "</div>"
+					"<div id='background'>" +
+						"<div id='background-id'>" + request.game.id + "</div>" +
+						"<div id='background-message'>Waiting for other players...</div>" +
+					"</div>"
 				}
 				else {
-					"<div id='submit-start-pole'" + (request.game.data.state.start ? " hidden" : "") + "></div>" +
-					"<button id='submit-start'" + (request.game.data.state.start ? " hidden" : "") + ">" +
-						"<span id='submit-start-inner'>launch [" + request.game.id + "]</span>" +
-					"</button>" +
+					"div id='start'>" +
+						"<div id='submit-start-pole'" + (request.game.data.state.start ? " hidden" : "") + "></div>" +
+						"<button id='submit-start'" + (request.game.data.state.start ? " hidden" : "") + ">" +
+							"<span id='submit-start-inner'>launch [" + request.game.id + "]</span>" +
+						"</button>" +
+						"<div id='flags-background'></div>"
+					"</div>" +
 					"<div id='column-left'>" +
 						"<div id='government'></div>" +
 						"<div id='members'></div>" +
