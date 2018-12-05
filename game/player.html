@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>The Council</title>
+		<script node> getAsset("meta") </script>node>
+		<script node> getAsset("google fonts") </script>node>
+		<link rel="shortcut icon" type="image/png" href="icon.png"/>
+		<link rel="stylesheet" type="text/css" href="game/player.css"/>
+		<script type="text/javascript" src="game/player.js"></script>
+		<script>window.id = "<script node>request.session.id</script>node>"</script>
+	</head>
+	<body>
+		<div id="message" class="hidden"></div>
+		<div id="container">
+			<div id='header'>
+				<div id='mode-bar'>
+					<div id='select-council'>
+						<canvas height='1000' width='1500'></canvas>
+						<span>Council</span>
+					</div>
+					<div id='select-district' selected>
+						<canvas height='1000' width='1500'></canvas>
+						<span>District</span>
+					</div>
+				</div>
+				<div id='action-bar'>
+					<button id='submit-recall'>recall</button>
+					<button id='submit-tally'>tally</button>
+					<button id='submit-campaign'>campaign</button>
+				</div>
+			</div>
+			<div id='members'></div>
+			<div id='issues' hidden></div>
+			<div id='background'>
+				<div id='background-id'><script node>request.game.id</script>node></div>
+				<div id='background-message'>Waiting for other players...</div>
+			</div>
+		</div>
+	</body>
+</html>

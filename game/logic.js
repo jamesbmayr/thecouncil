@@ -34,7 +34,7 @@
 
 					// message
 						if (!request.game.data.state.start) {
-							callback([request.session.id], {success: true, message: "Waiting..."})
+							callback([request.session.id], {success: true})
 						}
 						else if (request.game.data.state.end) {
 							callback([request.session.id], {success: true, location: "../../../../"})
@@ -47,8 +47,7 @@
 								showRecall:   request.game.past.length > 4 ? true : false,
 								showCampaign: request.game.past.length > 2 ? true : false,
 								id:           request.game.id,
-								data:         request.game.data,
-								message:      "Rejoined game!"
+								data:         request.game.data
 							})
 						}
 				}
@@ -156,8 +155,8 @@
 					callback([request.session.id], {success: false, message: "Rule: leaders serve for 5+ minutes."})
 				}
 				else {
+					callback(Object.keys(request.game.observers), {success: true, recall: true, message: request.game.data.members[request.session.id].name + " calls for new leadership!"})
 					enactRecall(request, callback)
-					callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, recall: true, message: request.game.data.members[request.session.id].name + " calls for new leadership!"})
 				}
 			}
 			catch (error) {
@@ -324,7 +323,7 @@
 					callback([request.session.id], {success: false, message: "Not enough issues to campaign on."})
 				}
 				else if (request.game.data.members[request.session.id].funds < 1000) {
-					callback([request.session.id], {success: false, message: "Campaigning requires 1000 in funds."})
+					callback([request.session.id], {success: false, message: "Campaigning requires 1000 from funds."})
 				}
 				else {
 					enactCampaign(request, callback)
@@ -353,7 +352,7 @@
 					if (request.game.data.rules.includes("quick-voting")) {
 						var issue = request.game.data.issues.find(function (i) { return i.id == request.post.selection })
 							issue.timeout = Math.min(60000, issue.timeout)
-						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: false, message: "Rule: 60-second voting period."})
+						callback(Object.keys(request.game.observers), {success: false, message: "Rule: 60-second voting period."})
 					}
 			}
 			catch (error) {
@@ -571,7 +570,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Not enough treasury to meet the rebels' demands!"})
+							callback(Object.keys(request.game.observers), {success: true, message: "Not enough treasury to meet the rebels' demands!"})
 						}
 
 					// rebellion: insufficient military
@@ -579,7 +578,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "The military is too weak to stop the rebels!"})
+							callback(Object.keys(request.game.observers), {success: true, message: "The military is too weak to stop the rebels!"})
 						}
 
 					// protest: insufficient funds
@@ -587,7 +586,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Not enough treasury to meet the protestors' demands!"})
+							callback(Object.keys(request.game.observers), {success: true, message: "Not enough treasury to meet the protestors' demands!"})
 						}
 
 					// protest: insufficient military
@@ -595,7 +594,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "The military is too weak to suppress the protest!"})
+							callback(Object.keys(request.game.observers), {success: true, message: "The military is too weak to suppress the protest!"})
 						}
 
 					// austerity: insufficient s
@@ -603,7 +602,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Cutbacks to social services are not enough!"})
+							callback(Object.keys(request.game.observers), {success: true, message: "Cutbacks to social services are not enough!"})
 						}
 
 					// austerity: insufficient r
@@ -611,7 +610,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Cutbacks to regulation are not enough!"})
+							callback(Object.keys(request.game.observers), {success: true, message: "Cutbacks to regulation are not enough!"})
 						}
 
 					// austerity: insufficient t
@@ -619,7 +618,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Cutbacks to tech & research are not enough!"})
+							callback(Object.keys(request.game.observers), {success: true, message: "Cutbacks to tech & research are not enough!"})
 						}
 
 					// austerity: insufficient m
@@ -627,7 +626,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Cutbacks to military are not enough!"})
+							callback(Object.keys(request.game.observers), {success: true, message: "Cutbacks to military are not enough!"})
 						}
 
 				// special rules
@@ -636,7 +635,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Rule: the treasury must become and stay positive."})
+							callback(Object.keys(request.game.observers), {success: true, message: "Rule: the treasury must become and stay positive."})
 						}
 
 					// rule: executive-decision
@@ -644,7 +643,7 @@
 							issue.options.find(function(o) {
 								return o.state.votes.includes(request.game.data.state.leader)
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Rule: the leader can make executive decisions on urgent issues."})
+							callback(Object.keys(request.game.observers), {success: true, message: "Rule: the leader can make executive decisions on urgent issues."})
 						}
 
 					// rule: tiebreaker-leader
@@ -652,7 +651,7 @@
 							issue.options.find(function(o) {
 								return winningOptions.ids.includes(o.id) && o.state.votes.includes(request.game.data.state.leader)
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Rule: in the event of a tie, the leader's choice carries."})
+							callback(Object.keys(request.game.observers), {success: true, message: "Rule: in the event of a tie, the leader's choice carries."})
 						}
 
 					// rule: majority-threshold
@@ -660,7 +659,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Rule: options must have an outright majority."})
+							callback(Object.keys(request.game.observers), {success: true, message: "Rule: options must have an outright majority."})
 						}
 
 				// otherwise
@@ -669,7 +668,7 @@
 							issue.options.find(function(o) {
 								return o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "No option had a plurality of votes."})
+							callback(Object.keys(request.game.observers), {success: true, message: "No option had a plurality of votes."})
 						}
 
 					// outright winner
@@ -677,7 +676,7 @@
 							issue.options.find(function(o) {
 								return o.id == winningOptions.ids[0]
 							}).state.selected = true
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "A plurality has decided."})
+							callback(Object.keys(request.game.observers), {success: true, message: "A plurality has decided."})
 						}
 
 				// reset & enact consequences
@@ -705,11 +704,11 @@
 					// first issue?
 						if (request.game.past.length == 0) {
 							setTimeout(function() {
-								callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Issues affect government agencies: Social services, Regulation, Technology/education, and Military."})
-							}, 12000)
+								callback(Object.keys(request.game.observers), {success: true, message: "Issues affect government agencies: Social services, Regulation, Tech & education, and Military."})
+							}, 15000)
 							setTimeout(function() {
-								callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Make the agencies match your secret ideology to win."})
-							}, 16000)
+								callback(Object.keys(request.game.observers), {success: true, message: "Make the agencies match your secret ideology to win."})
+							}, 20000)
 
 							winningOption.issues.push({name: main.chooseRandom(issues.small ).name, type: "small" , delay: 15000})
 							winningOption.issues.push({name: main.chooseRandom(issues.medium).name, type: "medium", delay: 15000})
@@ -719,18 +718,18 @@
 					// third issue?
 						else if (request.game.past.length == 2) {
 							setTimeout(function() {
-								callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, showCampaign: true, message: "Low approval ratings? Campaign on the most recent issues to double their effect."})
-							}, 12000)
+								callback(Object.keys(request.game.observers), {success: true, showCampaign: true, message: "Low approval ratings? Campaign on the most recent issues to double their effect."})
+							}, 15000)
 							setTimeout(function() {
-								callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Campaigns last 30 seconds - you cannot vote while you're away."})
-							}, 16000)
+								callback(Object.keys(request.game.observers), {success: true, message: "Campaigns last 30 seconds - you cannot vote while you're away."})
+							}, 20000)
 						}
 
 					// fifth issue?
 						else if (request.game.past.length == 4) {
 							setTimeout(function() {
-								callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, showRecall: true, message: "Unhappy with the leader? Anyone can recall the leader for a new one."})
-							}, 12000)
+								callback(Object.keys(request.game.observers), {success: true, showRecall: true, message: "Unhappy with the leader? Anyone can recall the leader for a new one."})
+							}, 15000)
 						}
 
 				// consequences
@@ -834,10 +833,10 @@
 						request.game.data.state.cooldown = 10000
 						
 						setTimeout(function() {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Time's up!<br><br>An unresolved issue is resolving itself..."})
+							callback(Object.keys(request.game.observers), {success: true, message: "Time's up!<br><br>An unresolved issue is resolving itself..."})
 						}, 0)
 						setTimeout(function() {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " &rarr; " + winningOption.name)})
+							callback(Object.keys(request.game.observers), {success: true, message: (issue.name + " &rarr; " + winningOption.name)})
 						}, 5000)
 					}
 					else {
@@ -861,14 +860,15 @@
 						message = message.substring(0, message.length - 4)
 
 						setTimeout(function() {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: message})
+							callback(Object.keys(request.game.observers), {success: true, message: message})
 						}, 3000)
 						setTimeout(function() {
-							callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: (issue.name + " &rarr; " + winningOption.name)})
+							callback(Object.keys(request.game.observers), {success: true, message: (issue.name + " &rarr; " + winningOption.name)})
 						}, 8000)
 					}
 
 				// move issue to the past
+					request.game.data.last = main.duplicateObject(issue)
 					request.game.past.push(issue)
 					for (var i in request.game.data.issues) {
 						if (request.game.data.issues[i].id == issue.id) {
@@ -1086,7 +1086,7 @@
 							// rule: term-limits
 								if (request.game.data.state.exists && request.game.data.rules.includes("term-limits") && !request.game.data.state.cooldown && request.game.data.state.term >= 300000) {
 									enactRecall(request, callback)
-									callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "Rule: 5-minute term limit."})
+									callback(Object.keys(request.game.observers), {success: true, message: "Rule: 5-minute term limit."})
 								}
 
 							// send data
@@ -1107,20 +1107,20 @@
 				// time
 					var time = request.game.data.state.time
 					var election = request.game.data.state.election
-					var ids = Object.keys(request.game.players).concat(Object.keys(request.game.observers))
+					var ids = Object.keys(request.game.observers)
 				
 				// start
 					if (time == 5000) {
 						callback(ids, {success: true, message: "Welcome to the council of " + request.game.data.state.name[0] + "!"})
 					}
 					else if (time == 10000) {
-						callback(ids, {success: true, message: "When the session ends, get reelected - that's 50%+ approval overall."})
+						callback(ids, {success: true, message: "Get reelected - that's 50%+ approval at the end."})
 					}
 					else if (time == 15000) {
-						callback(ids, {success: true, message: "Keep your ratings up amongst dwarves, elves, fairies, goblins, & lizardfolk."})
+						callback(ids, {success: true, message: "Keep your approvals up with dwarves, elves, fairies, goblins, & lizardfolk."})
 					}
 					else if (time == 20000) {
-						callback(ids, {success: true, message: "Decide issues on behalf of your constituents."})
+						callback(ids, {success: true, message: "Decide issues for your constituents."})
 					}
 					else if (time == 25000) {
 						callback(ids, {success: true, recall: true, message: "First, choose a council leader to select which issues are debated."})
@@ -1240,7 +1240,7 @@
 						fascist.state.reelected = true
 						fascist.state.achieved  = true
 						request.game.data.state.exists = false
-						callback(Object.keys(request.game.players).concat(request.game.observers), {success: true, message: fascist.name + ", the fascist, has overthrown the government!"})
+						callback(Object.keys(request.game.observers), {success: true, message: fascist.name + ", the fascist, has overthrown the government!"})
 					}
 
 				// anarchist
@@ -1248,7 +1248,7 @@
 						anarchist.state.reelected = true
 						anarchist.state.achieved  = true
 						request.game.data.state.exists = false
-						callback(Object.keys(request.game.players).concat(request.game.observers), {success: true, message: anarchist.name + ", the anarchist, has overthrown the government!"})
+						callback(Object.keys(request.game.observers), {success: true, message: anarchist.name + ", the anarchist, has overthrown the government!"})
 					}
 
 				// populist
@@ -1256,7 +1256,7 @@
 						populist.state.reelected = true
 						populist.state.achieved  = true
 						request.game.data.state.exists = false
-						callback(Object.keys(request.game.players).concat(request.game.observers), {success: true, message: populist.name + ", the populist, has overthrown the government!"})
+						callback(Object.keys(request.game.observers), {success: true, message: populist.name + ", the populist, has overthrown the government!"})
 					}
 
 				// crook
@@ -1264,12 +1264,12 @@
 						crook.state.reelected = true
 						crook.state.achieved  = true
 						request.game.data.state.exists = false
-						callback(Object.keys(request.game.players).concat(request.game.observers), {success: true, message: crook.name + ", the crook, has overthrown the government!"})
+						callback(Object.keys(request.game.observers), {success: true, message: crook.name + ", the crook, has overthrown the government!"})
 					}
 
 				// rebellion
 					else if (!request.game.data.state.exists) {
-						callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, message: "The rebellion has taken down the government!"})
+						callback(Object.keys(request.game.observers), {success: true, message: "The rebellion has taken down the government!"})
 					}
 
 				// end ?

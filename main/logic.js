@@ -787,6 +787,7 @@
 								},
 								members: {},
 								rules:   [],
+								last:    null,
 								issues:  []
 							},
 							past:   [],

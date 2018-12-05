@@ -37,7 +37,7 @@
 
 /*** select ***/
 	/* selectCouncil */
-		try { document.getElementById("select-council").addEventListener(on.click, selectCouncil) } catch (error) {}
+		document.getElementById("select-council").addEventListener(on.click, selectCouncil)
 		function selectCouncil(event) {
 			document.getElementById("select-council").setAttribute("selected", true)
 			document.getElementById("select-district").removeAttribute("selected")
@@ -47,7 +47,7 @@
 		}
 
 	/* selectDistrict */
-		try { document.getElementById("select-district").addEventListener(on.click, selectDistrict) } catch (error) {}
+		document.getElementById("select-district").addEventListener(on.click, selectDistrict)
 		function selectDistrict(event) {
 			document.getElementById("select-district").setAttribute("selected", true)
 			document.getElementById("select-council").removeAttribute("selected")
@@ -57,18 +57,8 @@
 		}
 
 /*** submit ***/
-	/* submitStart */
-		try { document.getElementById("submit-start").addEventListener(on.click, submitStart) } catch (error) {}
-		function submitStart(event) {
-			if (event.target.id == "submit-start") {
-				socket.send(JSON.stringify({
-					action: "submitStart"
-				}))
-			}
-		}
-
 	/* submitRecall */
-		try { document.getElementById("submit-recall").addEventListener(on.click, submitRecall) } catch (error) {}
+		document.getElementById("submit-recall").addEventListener(on.click, submitRecall)
 		function submitRecall(event) {
 			if (event.target.id == "submit-recall") {
 				socket.send(JSON.stringify({
@@ -78,7 +68,7 @@
 		}
 
 	/* submitCampaign */
-		try { document.getElementById("submit-campaign").addEventListener(on.click, submitCampaign) } catch (error) {}
+		document.getElementById("submit-campaign").addEventListener(on.click, submitCampaign)
 		function submitCampaign(event) {
 			if (event.target.id == "submit-campaign") {
 				socket.send(JSON.stringify({
@@ -88,7 +78,7 @@
 		}
 
 	/* submitTally */
-		try { document.getElementById("submit-tally").addEventListener(on.click, submitTally) } catch (error) {}
+		document.getElementById("submit-tally").addEventListener(on.click, submitTally)
 		function submitTally(event) {
 			if (event.target.id == "submit-tally") {
 				socket.send(JSON.stringify({
@@ -167,11 +157,6 @@
 				if (data.start) {
 					receiveStart(data)
 				}
-				else if (data.names) {
-					for (var n in data.names) {
-						createNameFlag(data.names[n])
-					}
-				}
 				else if (data.showRecall !== undefined || data.showTally !== undefined || data.showCampaign !== undefined) {
 					updateButtons(data)
 				}
@@ -182,41 +167,21 @@
 				}
 
 			// new data
-				if (data.data && data.data.members[window.id]) {
+				if (data.data) {
 					updateIssues(data.data)
 					updateMember(data.data, data.data.members[window.id], data.data.rules)
-				}
-				else if (data.data) {
-					updateGovernment(data.data)
-					updateIssues(data.data)
-					for (var m in data.data.members) {
-						updateMember(data.data, data.data.members[m], data.data.rules)
-					}
 				}
 		}
 
 	/* receiveStart */
 		function receiveStart(data) {
 			document.getElementById("container").setAttribute("gameplay", true)
+			
+			createMember(data.data, data.data.members[window.id], data.data.rules)
+			createFlag(document.querySelector("#select-council canvas" ), data.data.state.flag)
+			createFlag(document.querySelector("#select-district canvas"), data.data.members[window.id].state.flag)
 
-			// observers
-				if (!data.data.members[window.id]) {
-					document.getElementById("start").setAttribute("hidden", true)
-					createGovernment(data.data)
-					
-					for (var m in data.data.members) {
-						createMember(data.data, data.data.members[m], data.data.rules)
-					}
-				}
-
-			// members
-				else {
-					createMember(data.data, data.data.members[window.id], data.data.rules)
-					createFlag(document.querySelector("#select-council canvas" ), data.data.state.flag)
-					createFlag(document.querySelector("#select-district canvas"), data.data.members[window.id].state.flag)
-
-					updateButtons(data)
-				}
+			updateButtons(data)
 		}
 
 /*** creates ***/
@@ -314,87 +279,6 @@
 				}
 		}
 
-	/* createGovernment */
-		function createGovernment(data) {
-			// container
-				var government = document.getElementById("government")
-
-			// flag
-				var flag = document.createElement("canvas")
-					flag.className = "government-flag"
-					flag.setAttribute("height", 1000)
-					flag.setAttribute("width",  1500)
-				createFlag(flag, data.state.flag)
-				government.appendChild(flag)
-
-			// text
-				var name = document.createElement("div")
-					name.className = "government-name"
-				government.appendChild(name)
-
-			// election
-				var election = document.createElement("div")
-					election.className = "government-election"
-				government.appendChild(election)
-
-			// leader
-				var leader = document.createElement("div")
-					leader.className = "government-leader"
-				government.appendChild(leader)
-
-			// treasury
-				var treasury = document.createElement("div")
-					treasury.className = "government-treasury"
-				government.appendChild(treasury)
-
-			// agencies
-				var agencies = document.createElement("div")
-					agencies.className = "government-agencies"
-				government.appendChild(agencies)
-
-				for (var a in data.agencies) {
-					var line = document.createElement("div")
-						line.className = "government-agencies-line"
-					agencies.appendChild(line)
-
-					var label = document.createElement("div")
-						label.className = "government-agencies-label"
-						label.innerText = (a == "s") ? "Social Services" : (a == "r") ? "Regulation" : (a == "t") ? "Tech & Education" : "Military"
-					line.appendChild(label)
-
-					var dot = document.createElement("div")
-						dot.className = "government-agencies-" + a
-					line.appendChild(dot)
-
-					var span = document.createElement("span")
-						span.className = "government-agencies-numbers-" + a
-					dot.appendChild(span)					
-				}
-
-			// constituents
-				var line = document.createElement("div")
-					line.className = "government-constituents-line"
-				government.appendChild(line)
-
-				var constituents = document.createElement("div")
-					constituents.className = "government-constituents"
-				government.appendChild(constituents)
-
-				for (var c in data.constituents) {
-					var element = document.createElement("div")
-						element.className = "government-constituents-" + c
-						element.innerText = (c == "d") ? "dwarves" : (c == "e") ? "elves" : (c == "f") ? "fairies" : (c == "g") ? "goblins" : "lizardfolk"
-					constituents.appendChild(element)
-
-					var span = document.createElement("span")
-						span.className = "government-constituents-numbers-" + c
-					element.appendChild(span)
-				}
-
-			// data
-				updateGovernment(data)
-		}
-
 	/* createMember */
 		function createMember(government, data, rules) {
 			// container
@@ -436,9 +320,6 @@
 
 				var constituents = document.createElement("div")
 					constituents.className = "member-constituents"
-				if (!window.id || window.id !== data.id) {
-					constituents.setAttribute("hidden", true)
-				}
 				member.appendChild(constituents)
 
 				for (var c in data.constituents) {
@@ -455,9 +336,7 @@
 			// ideology
 				var ideology = document.createElement("div")
 					ideology.className = "member-ideology"
-				if (!window.id || window.id !== data.id) {
 					ideology.setAttribute("hidden", true)
-				}
 				member.appendChild(ideology)
 
 				var name = document.createElement("div")
@@ -494,26 +373,6 @@
 
 			// data
 				updateMember(government, data, rules)
-		}
-
-	/* createNameFlag */
-		function createNameFlag(name) {
-			var flagCount = Array.from(document.querySelectorAll("#flags-background .flag-outer")).length || 0
-
-			var flagOuter = document.createElement("div")
-				flagOuter.className = "flag-outer"
-				flagOuter.style.left = ((flags.length % 4) * (window.innerWidth / 4) + (window.innerWidth / 8)) + "px"
-				flagOuter.style.bottom = (Math.floor(flags.length / 4) * (window.innerHeight / 8) + (window.innerHeight / 8)) + "px"
-			document.getElementById("flags-background").appendChild(flagOuter)
-
-			var flag = document.createElement("div")
-				flag.className = "flag-text"
-				flag.innerText = name
-			flagOuter.appendChild(flag)
-
-			var pole = document.createElement("div")
-				pole.className = "flag-pole"
-			flagOuter.appendChild(flag)
 		}
 
 /*** updates ***/
@@ -559,115 +418,66 @@
 				}
 		}
 
-	/* updateGovernment */
-		function updateGovernment(data) {
-			var government = document.getElementById("government") || false
-			if (government) {
-				// stats
-					government.querySelector(".government-name"    ).innerText = data.rules.includes("alternate-name") ? data.state.name[1] : data.state.name[0]
-					government.querySelector(".government-election").innerText = Math.round((data.state.election - data.state.time) / 1000)
-					government.querySelector(".government-leader"  ).innerText = "leader: " + (data.state.leader ? data.members[data.state.leader].name : "?")
-					government.querySelector(".government-treasury").innerText = data.treasury
-					government.querySelector(".government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
-
-				// agencies
-					for (var a in data.agencies) {
-						var dot = government.querySelector(".government-agencies-" + a)
-							dot.style.left = data.agencies[a] + "%"
-
-						var span = government.querySelector(".government-agencies-numbers-" + a)
-							span.innerText = data.agencies[a]
-					}
-
-				// population
-					var population = 0
-					for (var c in data.constituents) {
-						population += data.constituents[c].population
-					}
-
-				// constituents
-					for (var c in data.constituents) {
-						var element = government.querySelector(".government-constituents-" + c)
-							element.style.height = (data.constituents[c].approval) + "%"
-							element.style.width  = (data.constituents[c].population / population * 100) + "%"
-
-						var span = government.querySelector(".government-constituents-numbers-" + c)
-							span.innerText = data.constituents[c].approval + "% x" + data.constituents[c].population
-					}
-			}
-		}
-
 	/* updateMember */
 		function updateMember(government, data, rules) {
 			var member = document.getElementById("member-" + data.id)
-			if (member) {
-				// campaigning ?
-					try {
-						if (data.state.campaign) {
-							document.getElementById("submit-campaign").setAttribute("campaigning", true)
-						}
-						else {
-							document.getElementById("submit-campaign").removeAttribute("campaigning")
-						}
-					} catch (error) {}
 
-				// recalling ?
-					try {
-						if (!government.state.leader) {
-							document.getElementById("submit-recall").setAttribute("recalling", true)
-						}
-						else {
-							document.getElementById("submit-recall").removeAttribute("recalling")
-						}
-					} catch (error) {}
+			// campaigning ?
+				if (data.state.campaign) {
+					document.getElementById("submit-campaign").setAttribute("campaigning", true)
+				}
+				else {
+					document.getElementById("submit-campaign").removeAttribute("campaigning")
+				}
 
-				// funds
-					member.querySelector(".member-funds").innerText = data.funds
-					if (window.id == data.id || rules.includes("financial-disclosure")) {
-						member.querySelector(".member-funds").removeAttribute("hidden")
-					}
-					else {
-						member.querySelector(".member-funds").setAttribute("hidden", true)
-					}
+			// recalling ?
+				if (!government.state.leader) {
+					document.getElementById("submit-recall").setAttribute("recalling", true)
+				}
+				else {
+					document.getElementById("submit-recall").removeAttribute("recalling")
+				}
 
-				// population
-					var population = 0
-					for (var c in data.constituents) {
-						population += data.constituents[c].population
-					}
+			// funds
+				member.querySelector(".member-funds").innerText = data.funds
 
-				// constituents
-					for (var c in data.constituents) {
-						var element = member.querySelector(".member-constituents-" + c)
-							element.style.height = (data.constituents[c].approval) + "%"
-							element.style.width  = (data.constituents[c].population / population * 100) + "%"
+			// population
+				var population = 0
+				for (var c in data.constituents) {
+					population += data.constituents[c].population
+				}
 
-						var span = member.querySelector(".member-constituents-numbers-" + c)
-							span.innerText = data.constituents[c].approval + "% x" + data.constituents[c].population
-					}
+			// constituents
+				for (var c in data.constituents) {
+					var element = member.querySelector(".member-constituents-" + c)
+						element.style.height = (data.constituents[c].approval) + "%"
+						element.style.width  = (data.constituents[c].population / population * 100) + "%"
 
-				// ideologies
-					var arr = ["r", "s", "t", "m"]
-					arr.forEach(function(a) {
-						document.querySelector(".member-ideology-dot-" + a).style.left = government.agencies[a] + "%"
-					})
+					var span = member.querySelector(".member-constituents-numbers-" + c)
+						span.innerText = data.constituents[c].approval + "% x" + data.constituents[c].population
+				}
 
-				// leader
-					if (data.state.leader) {
-						member.setAttribute("leader", true)
-					}
-					else {
-						member.removeAttribute("leader")
-					}
+			// ideologies
+				var arr = ["r", "s", "t", "m"]
+				arr.forEach(function(a) {
+					document.querySelector(".member-ideology-dot-" + a).style.left = government.agencies[a] + "%"
+				})
 
-				// campaign
-					if (data.state.campaign) {
-						member.setAttribute("campaign", true)
-					}
-					else {
-						member.removeAttribute("campaign")
-					}
-			}
+			// leader
+				if (data.state.leader) {
+					member.setAttribute("leader", true)
+				}
+				else {
+					member.removeAttribute("leader")
+				}
+
+			// campaign
+				if (data.state.campaign) {
+					member.setAttribute("campaign", true)
+				}
+				else {
+					member.removeAttribute("campaign")
+				}
 		}
 
 	/* updateButtons */

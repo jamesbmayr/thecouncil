@@ -1,0 +1,615 @@
+/*** page ***/
+	/* container */
+		#container {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			margin: 0px;
+			padding: 0px;
+			border: 0px;
+			width: 100%;
+			height: 100%;
+			text-align: left;
+			overflow-x: hidden;
+			overflow-y: hidden;
+			z-index: 2;
+		}
+
+/* pre-play */
+	#background {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		text-align: center;
+	}
+
+	#background-id {
+		font-size: 100px;
+		color: var(--black-4);
+		margin-bottom: 10px;
+	}
+
+	#background-message {
+		font-size: 20px;
+		color: var(--black-2);
+	}
+
+	#container[gameplay] #background {
+		display: none;
+	}
+
+/*** header ***/
+	#header {
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		width: 100vw;
+		height: 150px;
+		z-index: 5;
+	}
+
+	/* mode-bar */
+		#mode-bar {
+			float: left;
+			width: 100%;
+			height: 100px;
+			background-color: var(--black-4);
+			color: var(--white-4);
+			user-select: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-o-user-select: none;
+			cursor: pointer;
+		}
+
+		#mode-bar div {
+			float: left;
+			width: 50%;
+			height: 100%;
+		}
+
+		#mode-bar canvas {
+			width: 100%;
+			height: 100px;
+			float: left;
+		}
+
+		#mode-bar span {
+			width: 50%;
+			height: 40px;
+			font-size: 25px;
+			position: absolute;
+			top: 30px;
+			text-align: center;
+			color: var(--black-4);
+			text-shadow: 0px 0px 10px var(--white-4);
+			font-weight: normal;
+		}
+
+	/* council / district buttons */
+		#select-council span {
+			left: 0%;
+		}
+
+		#select-district span {
+			left: 50%;
+		}
+
+		#mode-bar:not([showCouncil]) #select-council {
+			display: none;
+		}
+
+		#mode-bar:not([showDistrict]) #select-district {
+			display: none;
+		}
+
+		#mode-bar div[selected] span {
+			font-weight: bold;
+		}		
+
+	/* action-bar */
+		#action-bar {
+			float: left;
+			width: 100%;
+			height: 50px;
+			background-color: var(--black-1);
+			color: var(--white-4);
+			text-align: center;
+			user-select: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-o-user-select: none;
+			cursor: pointer;
+		}
+
+		#action-bar button {
+			width: calc(50% - 12px);
+			height: calc(100% - 16px);
+			font-size: 20px;
+			text-align: center;
+			border: 0px;
+			background-color: var(--black-4);
+			margin-top: 8px;
+			margin-bottom: 8px;
+		}
+
+		#submit-recall, #submit-tally {
+			float: left;
+			margin-left: 8px;
+			margin-right: 4px;
+		}
+
+		#submit-campaign {
+			margin-left: 4px;
+			margin-right: 8px;
+			float: right;
+		}
+
+		#submit-campaign[campaigning], #submit-recall[recalling] {
+			background-color: var(--black-2);
+			color: var(--black-1);
+			cursor: not-allowed;
+		}
+
+		#action-bar:not([showRecall]) #submit-recall {
+			display: none;
+		}
+
+		#action-bar:not([showTally]) #submit-tally {
+			display: none;
+		}
+
+		#action-bar[showTally] #submit-recall {
+			display: none;
+		}
+
+		#action-bar:not([showCampaign]) #submit-campaign {
+			display: none;
+		}
+
+/*** members ***/
+	#members {
+		float: left;
+		height: calc(100vh - 250px);
+		padding: 20px 20px 80px 20px;
+		margin-top: 150px;
+		user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-o-user-select: none;
+		width: calc(100% - 40px);
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
+
+	#container:not([gameplay]) #members {
+		visibility: hidden;
+	}
+
+	/* sections */
+		.member-info, .member-funds, .member-constituents, .member-ideology {
+			float: left;
+			width: calc(100% - 20px);
+			padding: 10px;
+			background-color: var(--black-0);
+			border-radius: var(--borderRadius);
+			margin-bottom: 10px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+	/* info */
+		.member-name {
+			height: 50px;
+			font-size: 40px;
+		}
+
+		.member-district {
+			height: 30px;
+			font-size: 20px;
+		}
+
+		.member-race {
+			height: 30px;
+			font-size: 20px;
+		}
+
+	/* funds */
+		.member-funds {
+			height: 40px;
+			font-size: 30px;
+			text-align: right;
+		}
+
+		.member-funds:before {
+			content: "$ ";
+		}
+
+	/* constituents */
+		.member-constituents-line {
+			background-color: var(--black-4);
+			float: left;
+			height: 2px;
+			border-radius: 2px;
+			z-index: 2;
+			width: calc(100% - 10px);
+			transform: translateY(61px);
+			margin-left: 5px;
+			opacity: 0.5;
+		}
+
+		.member-constituents {
+			height: 100px;
+			margin-top: -1px;
+			display: flex;
+		}
+
+		.member-constituents div {
+			align-self: flex-end;
+			text-align: center;
+			bottom: 0px;
+			border-radius: var(--borderRadius) var(--borderRadius) 0px 0px;
+			font-size: 20px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.member-constituents-d {
+			background-color: var(--race-d);
+			border-radius: var(--borderRadius) var(--borderRadius) 0px var(--borderRadius) !important;
+		}
+
+		.member-constituents-e {
+			background-color: var(--race-e);
+		}
+
+		.member-constituents-f {
+			background-color: var(--race-f);
+		}
+
+		.member-constituents-g {
+			background-color: var(--race-g);
+		}
+
+		.member-constituents-l {
+			background-color: var(--race-l);
+			border-radius: var(--borderRadius) var(--borderRadius) var(--borderRadius) 0px !important;
+		}
+
+		.member-constituents div span {
+			display: block;
+			font-size: 10px;
+		}
+
+	/* ideology */
+		.member-ideology-name {
+			height: 30px;
+			font-size: 20px;
+			text-transform: capitalize;
+		}
+
+		.member-ideology-description {
+			font-size: 15px;
+			margin-bottom: 15px;
+		}
+
+		.member-ideology-line {
+			background-color: var(--black-4);
+			float: left;
+			width: 100%;
+			border-radius: 4px;
+			height: 2px;
+			z-index: 1;
+			opacity: 1;
+			transform: translateY(12px);
+		}
+
+		.member-ideology-dot-s, .member-ideology-dot-r, .member-ideology-dot-t, .member-ideology-dot-m {
+			position: absolute;
+			transform: translateX(-4px) translateY(-4px);
+			border-radius: 100%;
+			height: 10px;
+			width: 10px;
+			z-index: 2;
+		}
+
+		.member-ideology-s, .member-ideology-r, .member-ideology-t, .member-ideology-m {
+			text-align: center;
+			color: var(--white-4);
+			height: 25px;
+			font-size: 15px;
+			border-radius: var(--borderRadius);
+			z-index: 1;
+			transform: rotate(0deg);
+			opacity: 0.65;
+			margin-bottom: 5px;
+		}
+
+		.member-ideology-s, .member-ideology-dot-s {
+			background-color: var(--agency-s);
+		}
+
+		.member-ideology-r, .member-ideology-dot-r {
+			background-color: var(--agency-r);
+		}
+
+		.member-ideology-t, .member-ideology-dot-t {
+			background-color: var(--agency-t);
+		}
+
+		.member-ideology-m, .member-ideology-dot-m {
+			background-color: var(--agency-m);
+		}
+
+/*** issues ***/
+	#issues {
+		float: left;
+		height: calc(100vh - 250px);
+		padding: 20px 30px 80px 30px;
+		width: calc(100% - 60px);
+		margin-top: 150px;
+		user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-o-user-select: none;
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
+
+	#container:not([gameplay]) #issues {
+		visibility: hidden;
+	}
+
+	.issue {
+		float: left;
+		width: calc(100% - 40px);
+		padding: 20px;
+		background-color: var(--black-0);
+		border-radius: var(--borderRadius);
+		margin-bottom: 20px;
+		box-shadow: 0px 0px 10px var(--black-2);
+	}
+
+	.issue:hover, .issue:focus, .issue[selected] {
+		box-shadow: 0px 0px 20px var(--black-4);
+	}
+
+	/* colors */
+		.issue[type="leader"] {
+			background-color: var(--purple-1);
+		}
+
+		.issue[type="repeal"] {
+			background-color: var(--blue-1);
+		}
+
+		.issue[type="effect"] {
+			background-color: var(--green-1);
+		}
+
+		.issue[type="austerity"] {
+			background-color: var(--yellow-1);
+		}
+
+		.issue[type="protest"] {
+			background-color: var(--orange-1);
+		}
+
+		.issue[type="rebellion"] {
+			background-color: var(--red-1);
+		}
+		
+	/* info */
+		.issue-timeout {
+			float: right;
+			margin-top: -20px;
+			margin-right: -20px;
+			background-color: var(--black-4);
+			border-radius: var(--borderRadius);
+			color: var(--white-4);
+			padding: 5px;
+			font-size: 20px;
+			opacity: 1;
+		}
+
+		.issue-name {
+			font-size: 20px;
+			margin-bottom: 10px;
+			pointer-events: none;
+		}		
+
+	/* option info */
+		.issue:not([selected]) .option {
+			display: none;
+		}
+
+		.option {
+			width: calc(100% - 20px);
+			float: left;
+			padding: 10px;
+			background-color: var(--black-0);
+			border-radius: var(--borderRadius);
+			margin-bottom: 10px;
+			cursor: pointer;
+			box-shadow: 0px 0px 10px var(--black-2);
+		}
+
+		.option:hover, .option:focus, .option[selected] {
+			box-shadow: 0px 0px 20px var(--black-4);
+		}
+
+		.option[selected] {
+			background-color: var(--black-2);
+		}
+
+		.option-name {
+			font-size: 20px;
+			margin-bottom: 10px;
+			pointer-events: none;
+		}
+
+	/* option money */
+		.option-treasury {
+			float: left;
+			width: 50%;
+			height: 40px;
+			font-size: 30px;
+			text-align: right;
+			pointer-events: none;
+			margin-bottom: 10px;
+		}
+
+		.option-treasury:before {
+			content: "$ ";
+		}
+
+		.option-funds {
+			float: right;
+			width: 50%;
+			height: 40px;
+			font-size: 20px;
+			text-align: right;
+			line-height: 2.5;
+			pointer-events: none;
+			margin-bottom: 10px;
+		}
+
+		.option-funds:before {
+			content: "($ ";
+		}
+
+		.option-funds:after {
+			content: " )";
+		}
+
+	/* option agencies */
+		.option-agencies {
+			float: left;
+			width: 100%;
+			height: 50px;
+			margin-right: 2.5px;
+			pointer-events: none;
+		}
+
+		.issue[type="leader"] .option-agencies {
+			display: none;
+		}
+
+		.option-agencies div {
+			height: 25px;
+			width: calc(25% - 20px);
+			margin: 10px;
+			float: left;
+			border-radius: var(--borderRadius);
+			color: var(--white-4);
+			font-size: 15px;
+			text-align: center;
+		}
+
+		.option-agencies-s {
+			background-color: var(--agency-s);
+		}
+
+		.option-agencies-r {
+			background-color: var(--agency-r);
+		}
+
+		.option-agencies-t {
+			background-color: var(--agency-t);
+		}
+
+		.option-agencies-m {
+			background-color: var(--agency-m);
+		}
+
+		.option-agencies div[direction="none"] {
+			opacity: 0.2;
+		}
+
+		.option-agencies div[direction="down"]:before {
+			color: var(--white-4);
+			content: "← ";
+		}
+
+		.option-agencies div[direction="up"]:after {
+			color: var(--white-4);
+			content: " →";
+		}
+
+		.option-agencies div[accuracy="low"] span {
+			display: none;
+		}
+
+		.option-agencies div[accuracy="high"] span {
+			margin-left: 5px;
+		}
+
+	/* option constituents */
+		.option-constituents {
+			float: left;
+			width: calc(100%);
+			height: 50px;
+			margin-left: 2.5px;
+			pointer-events: none;
+		}
+
+		.option-constituents div {
+			height: 50px;
+			width: 20%;
+			float: left;
+			border-radius: var(--borderRadius) var(--borderRadius) 0px 0px;
+			color: var(--white-4);
+			font-size: 15px;
+			text-align: center;
+		}
+
+		.option-constituents div:first-child {
+			border-radius: var(--borderRadius) var(--borderRadius) 0px var(--borderRadius);
+		}
+
+		.option-constituents div:last-child {
+			border-radius: var(--borderRadius) var(--borderRadius) var(--borderRadius) 0px;
+		}
+
+		.option-constituents-d {
+			background-color: var(--race-d);
+		}
+
+		.option-constituents-e {
+			background-color: var(--race-e);
+		}
+
+		.option-constituents-f {
+			background-color: var(--race-f);
+		}
+
+		.option-constituents-g {
+			background-color: var(--race-g);
+		}
+
+		.option-constituents-l {
+			background-color: var(--race-l);
+		}
+
+		.option-constituents div[direction="none"] {
+			opacity: 0.2;
+		}
+
+		.option-constituents div[direction="down"]:before {
+			color: var(--white-4);
+			content: "↓ ";
+		}
+
+		.option-constituents div[direction="up"]:after {
+			color: var(--white-4);
+			content: " ↑";
+		}
+
+		.option-constituents div[accuracy="low"] span {
+			display: none;
+		}
+
+		.option-constituents div[accuracy="high"] span {
+			margin-left: 5px;
+		}

@@ -15,165 +15,7 @@
 			z-index: 2;
 		}
 
-		#container-inner {
-			width: 100%;
-			max-width: 800px;
-			margin-left: auto;
-			margin-right: auto;
-		}
-
-		#background {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translateX(-50%) translateY(-50%);
-			text-align: center;
-		}
-
-		#background-id {
-			font-size: 100px;
-			color: var(--black-4);
-			margin-bottom: 10px;
-		}
-
-		#background-message {
-			font-size: 20px;
-			color: var(--black-2);
-		}
-
-		#container[gameplay] #background {
-			display: none;
-		}
-
-/*** player - header ***/
-	#header {
-		position: fixed;
-		top: 0px;
-		left: 0px;
-		width: 100vw;
-		height: 150px;
-		z-index: 5;
-	}
-
-	/* mode-bar */
-		#mode-bar {
-			float: left;
-			width: 100%;
-			height: 100px;
-			background-color: var(--black-4);
-			color: var(--white-4);
-			user-select: none;
-			-moz-user-select: none;
-			-webkit-user-select: none;
-			-o-user-select: none;
-			cursor: pointer;
-		}
-
-		#mode-bar div {
-			float: left;
-			width: 50%;
-			height: 100%;
-		}
-
-		#mode-bar canvas {
-			width: 100%;
-			height: 100px;
-			float: left;
-		}
-
-		#mode-bar span {
-			width: 50%;
-			height: 40px;
-			font-size: 25px;
-			position: absolute;
-			top: 30px;
-			text-align: center;
-			color: var(--black-4);
-			text-shadow: 0px 0px 10px var(--white-4);
-			font-weight: normal;
-		}
-
-		#select-council span {
-			left: 0%;
-		}
-
-		#select-district span {
-			left: 50%;
-		}
-
-		#mode-bar:not([showCouncil]) #select-council {
-			display: none;
-		}
-
-		#mode-bar:not([showDistrict]) #select-district {
-			display: none;
-		}
-
-		#mode-bar div[selected] span {
-			font-weight: bold;
-		}		
-
-	/* action-bar */
-		#action-bar {
-			float: left;
-			width: 100%;
-			height: 50px;
-			background-color: var(--black-1);
-			color: var(--white-4);
-			text-align: center;
-			user-select: none;
-			-moz-user-select: none;
-			-webkit-user-select: none;
-			-o-user-select: none;
-			cursor: pointer;
-		}
-
-		#action-bar button {
-			width: calc(50% - 12px);
-			height: calc(100% - 16px);
-			font-size: 20px;
-			text-align: center;
-			border: 0px;
-			background-color: var(--black-4);
-			margin-top: 8px;
-			margin-bottom: 8px;
-		}
-
-		#submit-recall, #submit-tally {
-			float: left;
-			margin-left: 8px;
-			margin-right: 4px;
-		}
-
-		#submit-campaign {
-			margin-left: 4px;
-			margin-right: 8px;
-			float: right;
-		}
-
-		#submit-campaign[campaigning], #submit-recall[recalling] {
-			background-color: var(--black-2);
-			color: var(--black-1);
-			cursor: not-allowed;
-		}
-
-		#action-bar:not([showRecall]) #submit-recall {
-			display: none;
-		}
-
-		#action-bar:not([showTally]) #submit-tally {
-			display: none;
-		}
-
-		#action-bar[showTally] #submit-recall {
-			display: none;
-		}
-
-		#action-bar:not([showCampaign]) #submit-campaign {
-			display: none;
-		}
-
-/*** observer - start ***/
+/*** start ***/
 	#submit-start {
 		position: absolute;
 		top: 50%;
@@ -210,62 +52,62 @@
 		box-shadow: 0px 0px 20px var(--black-4);
 	}
 
-	/* name flags */
-		#flags-background {
-			position: absolute;
-			top: 0px;
-			left: 0px;
-			width: 100%;
-			height: 100%;
-			pointer-events: none;
-			z-index: -1;
-			filter: blur(1.5px);
-		}
+/*** name flags ***/
+	#flags-background {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		z-index: -1;
+		filter: blur(1.5px);
+	}
 
-		#flags-background .flag-outer {
-			position: absolute;
-			width: 150px;
-			height: 100px;
-			background-color: var(--black-4);
-			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			user-select: none;
-			-moz-user-select: none;
-			-webkit-user-select: none;
-			-o-user-select: none;
-			cursor: default;
-			opacity: 0;
-			animation: fadein 2s;
-		}
+	#flags-background .flag-outer {
+		position: absolute;
+		width: 150px;
+		height: 100px;
+		background-color: var(--black-4);
+		border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-o-user-select: none;
+		cursor: default;
+		opacity: 0;
+		animation: fadein 2s;
+	}
 
-		#flags-background .flag-text {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translateX(-50%) translateY(-50%);
-			text-align: center;
-			color: var(--white-4);
-			font-size: 30px;
-		}
+	#flags-background .flag-text {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		text-align: center;
+		color: var(--white-4);
+		font-size: 30px;
+	}
 
-		#flags-background .flag-pole {
-			position: absolute;
-			left: -10px;
-			top: -5px;
-			width: 10px;
-			border-radius: 5px;
-			background-color: var(--black-4);
-			height: 150vh;
-			box-shadow: 0px 0px 10px var(--black-4);
-		}
+	#flags-background .flag-pole {
+		position: absolute;
+		left: -10px;
+		top: -5px;
+		width: 10px;
+		border-radius: 5px;
+		background-color: var(--black-4);
+		height: 150vh;
+		box-shadow: 0px 0px 10px var(--black-4);
+	}
 
-		@keyframes fadein {
-			0% { opacity: 0; }
-			100% { opacity: 1; }
-		}
+	@keyframes fadein {
+		0% { opacity: 0; }
+		100% { opacity: 1; }
+	}
 
-/*** observer - columns ***/
+/*** columns ***/
 	#column-left {
 		float: left;
 		width: 500px;
@@ -363,7 +205,6 @@
 			padding-top: 30px;
 		}
 
-	/* agencies */
 		.government-agencies-line {
 			background-color: var(--black-4);
 			float: left;
@@ -479,44 +320,34 @@
 /*** members ***/
 	#members {
 		float: left;
-		height: calc(100vh - 250px);
-		padding: 20px 20px 80px 20px;
-		margin-top: 150px;
+		height: auto;
+		padding: 20px 20px 20px 20px;
 		user-select: none;
 		-moz-user-select: none;
 		-webkit-user-select: none;
 		-o-user-select: none;
 		width: calc(100% - 40px);
+		background-color: var(--black-2);
 		overflow-x: hidden;
-		overflow-y: scroll;
+		overflow-y: hidden;
+	}
+
+	#members[hidden] {
+		display: block;
 	}
 
 	#container:not([gameplay]) #members {
 		visibility: hidden;
 	}
 
-	/* desktop */
-		#column-left #members {
-			height: auto;
-			overflow-y: hidden;
-			width: calc(100% - 40px);
-			padding: 20px 20px 20px 20px;
-			margin-top: 0px;
-			background-color: var(--black-2);
-		}
-
-		#column-left #members[hidden] {
-			display: block;
-		}
-
-		#column-left .member {
-			float: left;
-			padding: 10px 10px 0px 10px;
-			background-color: var(--black-3);
-			border-radius: var(--borderRadius);
-			margin-bottom: 20px;
-			width: calc(100% - 20px);
-		}
+	.member {
+		float: left;
+		padding: 10px 10px 0px 10px;
+		background-color: var(--black-3);
+		border-radius: var(--borderRadius);
+		margin-bottom: 20px;
+		width: calc(100% - 20px);
+	}
 
 	/* sections */
 		.member-info, .member-funds, .member-constituents, .member-ideology {
@@ -613,79 +444,37 @@
 			font-size: 10px;
 		}
 
-	/* ideology */
-		.member-ideology-name {
-			height: 30px;
-			font-size: 20px;
-			text-transform: capitalize;
-		}
-
-		.member-ideology-description {
-			font-size: 15px;
-			margin-bottom: 15px;
-		}
-
-		.member-ideology-line {
-			background-color: var(--black-4);
-			float: left;
-			width: 100%;
-			border-radius: 4px;
-			height: 2px;
-			z-index: 1;
-			opacity: 1;
-			transform: translateY(12px);
-		}
-
-		.member-ideology-dot-s, .member-ideology-dot-r, .member-ideology-dot-t, .member-ideology-dot-m {
-			position: absolute;
-			transform: translateX(-4px) translateY(-4px);
-			border-radius: 100%;
-			height: 10px;
-			width: 10px;
-			z-index: 2;
-		}
-
-		.member-ideology-s, .member-ideology-r, .member-ideology-t, .member-ideology-m {
-			text-align: center;
-			color: var(--white-4);
-			height: 25px;
-			font-size: 15px;
-			border-radius: var(--borderRadius);
-			z-index: 1;
-			transform: rotate(0deg);
-			opacity: 0.65;
-			margin-bottom: 5px;
-		}
-
-		.member-ideology-s, .member-ideology-dot-s {
-			background-color: var(--agency-s);
-		}
-
-		.member-ideology-r, .member-ideology-dot-r {
-			background-color: var(--agency-r);
-		}
-
-		.member-ideology-t, .member-ideology-dot-t {
-			background-color: var(--agency-t);
-		}
-
-		.member-ideology-m, .member-ideology-dot-m {
-			background-color: var(--agency-m);
-		}
-
-/*** issues ***/
-	#issues {
+/*** results ***/
+	#results {
 		float: left;
-		height: calc(100vh - 250px);
-		padding: 20px 30px 80px 30px;
-		width: calc(100% - 60px);
-		margin-top: 150px;
+		height: auto;
+		padding: 20px;
+		width: calc(100% - 40px);
 		user-select: none;
 		-moz-user-select: none;
 		-webkit-user-select: none;
 		-o-user-select: none;
 		overflow-x: hidden;
-		overflow-y: scroll;
+		overflow-y: hidden;
+		background-color: var(--black-2);
+	}
+
+	#container:not([gameplay]) #results {
+		visibility: hidden;
+	}
+
+/*** issues ***/
+	#issues {
+		float: left;
+		height: auto;
+		padding: 20px;
+		width: calc(100% - 40px);
+		user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-o-user-select: none;
+		overflow-x: hidden;
+		overflow-y: hidden;
 	}
 
 	#container:not([gameplay]) #issues {
@@ -694,8 +483,8 @@
 
 	.issue {
 		float: left;
-		width: calc(100% - 40px);
-		padding: 20px;
+		width: calc(100% - 20px);
+		padding: 10px 10px 0px 10px;
 		background-color: var(--black-0);
 		border-radius: var(--borderRadius);
 		margin-bottom: 20px;
@@ -705,21 +494,6 @@
 	.issue:hover, .issue:focus, .issue[selected] {
 		box-shadow: 0px 0px 20px var(--black-4);
 	}
-
-	/* desktop */
-		#column-right #issues {
-			margin-top: 0px;
-			height: auto;
-			overflow-y: hidden;
-			padding: 20px;
-		}
-
-		#column-right .issue {
-			float: left;
-			padding: 10px 10px 0px 10px;
-			border-radius: var(--borderRadius);
-			margin-bottom: 20px;
-		}
 
 	/* colors */
 		.issue[type="leader"] {
@@ -781,12 +555,8 @@
 			box-shadow: 0px 0px 10px var(--black-2);
 		}
 
-		.option:hover, .option:focus, .option[selected] {
+		.option:hover, .option:focus {
 			box-shadow: 0px 0px 20px var(--black-4);
-		}
-
-		.option[selected] {
-			background-color: var(--black-2);
 		}
 
 		.option-name {

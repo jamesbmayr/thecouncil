@@ -149,7 +149,7 @@
 											fs.readFile("./main/stylesheet.css", "utf8", function (error, data) {
 												if (error) {_404(error)}
 												else {
-													fs.readFile("./" + request.path[1] + "/stylesheet.css", "utf8", function (error, file) {
+													fs.readFile("./" + request.path[1] + "/" + request.path[2] + ".css", "utf8", function (error, file) {
 														if (error) { _404(error) }
 														else {
 															response.end(main.getAsset("css variables") + "\n\n" + data + "\n\n" + file)
@@ -171,7 +171,7 @@
 													fs.readFile("./main/draw.js", "utf8", function (error, draw) {
 														if (error) {_404(error)}
 														else {
-															fs.readFile("./" + request.path[1] + "/script.js", "utf8", function (error, file) {
+															fs.readFile("./" + request.path[1] + "/" + request.path[2] + ".js", "utf8", function (error, file) {
 																if (error) { _404(error) }
 																else {
 																	response.end("window.addEventListener('load', function() {\n\n" + data + "\n\n" + draw + "\n\n" + file + "\n\n})")
@@ -229,8 +229,13 @@
 											if (!request.game) {
 												_302("../../")
 											}
+											else if (request.game.players[request.session.id]) {
+												main.renderHTML(request, "./game/player.html", function (html) {
+													response.end(html)
+												})
+											}
 											else {
-												main.renderHTML(request, "./game/index.html", function (html) {
+												main.renderHTML(request, "./game/main.html", function (html) {
 													response.end(html)
 												})
 											}
