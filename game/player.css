@@ -15,8 +15,8 @@
 			z-index: 2;
 		}
 
-/* pre-play */
-	#background {
+/*** start ***/
+	#start {
 		position: absolute;
 		top: 50%;
 		left: 50%;
@@ -24,18 +24,18 @@
 		text-align: center;
 	}
 
-	#background-id {
+	#start-id {
 		font-size: 100px;
 		color: var(--black-4);
 		margin-bottom: 10px;
 	}
 
-	#background-message {
+	#start-message {
 		font-size: 20px;
 		color: var(--black-2);
 	}
 
-	#container[gameplay] #background {
+	#container[gameplay] #start, #container[gameover] #start {
 		display: none;
 	}
 
@@ -47,6 +47,10 @@
 		width: 100vw;
 		height: 150px;
 		z-index: 5;
+	}
+
+	#container:not([gameplay]) #header {
+		visibility: hidden;
 	}
 
 	/* mode-bar */
@@ -94,14 +98,6 @@
 
 		#select-district span {
 			left: 50%;
-		}
-
-		#mode-bar:not([showCouncil]) #select-council {
-			display: none;
-		}
-
-		#mode-bar:not([showDistrict]) #select-district {
-			display: none;
 		}
 
 		#mode-bar div[selected] span {
@@ -613,3 +609,8 @@
 		.option-constituents div[accuracy="high"] span {
 			margin-left: 5px;
 		}
+
+/*** end ***/
+	#container:not([gameover]) #end {
+		display: none;
+	}

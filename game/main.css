@@ -15,114 +15,119 @@
 			z-index: 2;
 		}
 
+	/* columns */
+		#column-left {
+			float: left;
+			width: 500px;
+			height: 100vh;
+			overflow-x: hidden;
+			overflow-y: scroll;
+		}
+
+		#column-right {
+			float: left;
+			width: calc(100vw - 500px);
+			height: 100vh;
+			overflow-x: hidden;
+			overflow-y: scroll;
+		}
+
 /*** start ***/
-	#submit-start {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
-		height: 400px;
-		width: 600px;
-		font-size: 80px;
-		background-image: url("banner.png");
-		background-position: center center;
-		background-size: cover;
-		background-repeat: no-repeat;
-		border: 0px;
-		border-radius: 0px calc(var(--borderRadius) * 4) calc(var(--borderRadius) * 4) 0px;
+	#container[gameplay] #start, #container[gameover] #start {
+		display: none;
 	}
 
-	#submit-start-inner {
-		font-size: 60px;
-		background-color: var(--white-4);
-		color: var(--cerulean-4);
-		padding: 5px 50px 5px 50px;
-		line-height: 2;
-	}
+	/* button flag */
+		#submit-start {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			height: 400px;
+			width: 600px;
+			font-size: 80px;
+			background-image: url("banner.png");
+			background-position: center center;
+			background-size: cover;
+			background-repeat: no-repeat;
+			border: 0px;
+			border-radius: 0px calc(var(--borderRadius) * 4) calc(var(--borderRadius) * 4) 0px;
+		}
 
-	#submit-start-pole {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translateX(-310px) translateY(-210px);
-		background-color: var(--black-4);
-		width: 10px;
-		height: 100vh;
-		border-radius: var(--borderRadius);
-		box-shadow: 0px 0px 20px var(--black-4);
-	}
+		#submit-start-inner {
+			font-size: 60px;
+			background-color: var(--white-4);
+			color: var(--cerulean-4);
+			padding: 5px 50px 5px 50px;
+			line-height: 2;
+		}
 
-/*** name flags ***/
-	#flags-background {
-		position: absolute;
-		top: 0px;
-		left: 0px;
-		width: 100%;
-		height: 100%;
-		pointer-events: none;
-		z-index: -1;
-		filter: blur(1.5px);
-	}
+		#submit-start-pole {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translateX(-310px) translateY(-210px);
+			background-color: var(--black-4);
+			width: 10px;
+			height: 100vh;
+			border-radius: var(--borderRadius);
+			box-shadow: 0px 0px 20px var(--black-4);
+		}
 
-	#flags-background .flag-outer {
-		position: absolute;
-		width: 150px;
-		height: 100px;
-		background-color: var(--black-4);
-		border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		user-select: none;
-		-moz-user-select: none;
-		-webkit-user-select: none;
-		-o-user-select: none;
-		cursor: default;
-		opacity: 0;
-		animation: fadein 2s;
-	}
+	/* name flags */
+		#flags-background {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: -1;
+			filter: blur(1.5px);
+		}
 
-	#flags-background .flag-text {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
-		text-align: center;
-		color: var(--white-4);
-		font-size: 30px;
-	}
+		#flags-background .flag-outer {
+			position: absolute;
+			width: 150px;
+			height: 100px;
+			background-color: var(--black-4);
+			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			user-select: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-o-user-select: none;
+			cursor: default;
+			opacity: 0;
+			animation: fadein 2s;
+		}
 
-	#flags-background .flag-pole {
-		position: absolute;
-		left: -10px;
-		top: -5px;
-		width: 10px;
-		border-radius: 5px;
-		background-color: var(--black-4);
-		height: 150vh;
-		box-shadow: 0px 0px 10px var(--black-4);
-	}
+		#flags-background .flag-text {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			text-align: center;
+			color: var(--white-4);
+			font-size: 30px;
+		}
 
-	@keyframes fadein {
-		0% { opacity: 0; }
-		100% { opacity: 1; }
-	}
+		#flags-background .flag-pole {
+			position: absolute;
+			left: -10px;
+			top: -5px;
+			width: 10px;
+			border-radius: 5px;
+			background-color: var(--black-4);
+			height: 150vh;
+			box-shadow: 0px 0px 10px var(--black-4);
+		}
 
-/*** columns ***/
-	#column-left {
-		float: left;
-		width: 500px;
-		height: 100vh;
-		overflow-x: hidden;
-		overflow-y: scroll;
-	}
-
-	#column-right {
-		float: left;
-		width: calc(100vw - 500px);
-		height: 100vh;
-		overflow-x: hidden;
-		overflow-y: scroll;
-	}
+		@keyframes fadein {
+			0% { opacity: 0; }
+			100% { opacity: 1; }
+		}
 
 /*** government ***/
 	#government {
@@ -137,7 +142,7 @@
 	}
 
 	#container:not([gameplay]) #government {
-		display: none;
+		visibility: hidden;
 	}
 
 	/* flag */
@@ -729,3 +734,9 @@
 		.option-constituents div[accuracy="high"] span {
 			margin-left: 5px;
 		}
+
+/*** end ***/
+	#container:not([gameover]) #end {
+		display: none;
+	}
+	

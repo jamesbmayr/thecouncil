@@ -12,21 +12,25 @@
 	<body>
 		<div id="message" class="hidden"></div>
 		<div id="container">
-			<div id='start' <script node>request.game.data.state.start ? " hidden" : ""</script>node>>
-				<div id='submit-start-pole'></div>
-				<button id='submit-start'>
-					<span id='submit-start-inner'>launch [<script node>request.game.id</script>node>]</span>
+			<div id="start">
+				<div id="submit-start-pole"></div>
+				<button id="submit-start">
+					<span id="submit-start-inner">launch [<script node>request.game.id</script>node>]</span>
 				</button>
-				<div id='flags-background'></div>
+				<div id="flags-background"></div>
 			</div>
-			<div id='column-left'>
-				<div id='government'></div>
-				<div id='members'></div>
+			<div id="column-left">
+				<div id="government"></div>
+				<div id="members"></div>
 			</div>
-			<div id='column-right'>
-				<div id='results'></div>
-				<div id='issues'></div>
+			<div id="column-right">
+				<div id="results">
+					<div id="results-name"></div>
+					<div id="results-options"></div>
+				</div>
+				<div id="issues"></div>
 			</div>
+			<div id="end"></div>
 		</div>
 	</body>
 </html>

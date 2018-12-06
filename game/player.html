@@ -12,29 +12,30 @@
 	<body>
 		<div id="message" class="hidden"></div>
 		<div id="container">
-			<div id='header'>
-				<div id='mode-bar'>
-					<div id='select-council'>
-						<canvas height='1000' width='1500'></canvas>
+			<div id="start">
+				<div id="start-id"><script node>request.game.id</script>node></div>
+				<div id="start-message">Waiting for other players...</div>
+			</div>
+			<div id="header">
+				<div id="mode-bar">
+					<div id="select-council">
+						<canvas height="1000" width="1500"></canvas>
 						<span>Council</span>
 					</div>
-					<div id='select-district' selected>
-						<canvas height='1000' width='1500'></canvas>
+					<div id="select-district" selected>
+						<canvas height="1000" width="1500"></canvas>
 						<span>District</span>
 					</div>
 				</div>
-				<div id='action-bar'>
-					<button id='submit-recall'>recall</button>
-					<button id='submit-tally'>tally</button>
-					<button id='submit-campaign'>campaign</button>
+				<div id="action-bar">
+					<button id="submit-recall">recall</button>
+					<button id="submit-tally">tally</button>
+					<button id="submit-campaign">campaign</button>
 				</div>
 			</div>
-			<div id='members'></div>
-			<div id='issues' hidden></div>
-			<div id='background'>
-				<div id='background-id'><script node>request.game.id</script>node></div>
-				<div id='background-message'>Waiting for other players...</div>
-			</div>
+			<div id="members"></div>
+			<div id="issues" hidden></div>
+			<div id="end"></div>
 		</div>
 	</body>
 </html>

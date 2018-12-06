@@ -166,6 +166,11 @@
 					selectCouncil()
 				}
 
+			// end
+				else if (data.end) {
+					receiveEnd(data)
+				}
+
 			// new data
 				if (data.data) {
 					updateIssues(data.data)
@@ -182,6 +187,14 @@
 			createFlag(document.querySelector("#select-district canvas"), data.data.members[window.id].state.flag)
 
 			updateButtons(data)
+		}
+
+	/* receiveEnd */
+		function receiveEnd(data) {
+			document.getElementById("container").removeAttribute("gameplay")
+			document.getElementById("container").setAttribute("gameover", true)
+
+			createEndMember(data.data.members[window.id])
 		}
 
 /*** creates ***/
@@ -375,6 +388,35 @@
 				updateMember(government, data, rules)
 		}
 
+	/* createEndMember */
+		function createEndMember(data) {
+			// container
+				var member = document.createElement("div")
+					member.className = "end-member"
+					member.id = "end-member-" + data.id
+				document.getElementById("end").appendChild(member)
+
+			// name	
+				var name = document.createElement("div")
+					name.className = "end-member-name"
+					name.innerText = data.name
+				member.appendChild(name)
+
+			// ideology
+				var ideology = document.createElement("div")
+					ideology.className = "end-member-ideology"
+					ideology.innerText = data.ideology.name
+				if (data.state.achieved) { ideology.setAttribute("achieved", true) }
+				member.appendChild(ideology)
+			
+			// reelection
+				var reelection = document.createElement("div")
+					reelection.className = "end-member-reelection"
+					reelection.innerText = "reelected"
+				if (data.state.reelected) { reelection.setAttribute("reelected", true) }
+				member.appendChild(reelection)
+		}
+
 /*** updates ***/
 	/* updateIssues */
 		function updateIssues(data) {
@@ -483,8 +525,6 @@
 	/* updateButtons */
 		function updateButtons(data) {
 			// elements
-				document.getElementById("mode-bar").setAttribute("showCouncil",  true)
-				document.getElementById("mode-bar").setAttribute("showDistrict", true)
 				var actionBar = document.getElementById("action-bar")
 
 			// recall

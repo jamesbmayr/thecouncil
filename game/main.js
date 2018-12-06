@@ -69,6 +69,11 @@
 					}
 				}
 
+			// ending
+				else if (data.end) {
+					receiveEnd(data)
+				}
+
 			// new data
 				if (data.data) {
 					updateGovernment(data.data)
@@ -82,7 +87,6 @@
 	/* receiveStart */
 		function receiveStart(data) {
 			document.getElementById("container").setAttribute("gameplay", true)
-			document.getElementById("start").setAttribute("hidden", true)
 			createGovernment(data.data)
 			
 			for (var m in data.data.members) {
@@ -90,7 +94,37 @@
 			}
 		}
 
+	/* receiveEnd */
+		function receiveEnd(data) {
+			document.getElementById("container").removeAttribute("gameplay")
+			document.getElementById("container").setAttribute("gameover", true)
+
+			for (var m in data.data.members) {
+				createEndMember(data.data.members[m])
+			}
+		}
+
 /*** creates ***/
+	/* createNameFlag */
+		function createNameFlag(name) {
+			var flagCount = Array.from(document.querySelectorAll("#flags-background .flag-outer")).length || 0
+
+			var flagOuter = document.createElement("div")
+				flagOuter.className = "flag-outer"
+				flagOuter.style.left = ((flags.length % 4) * (window.innerWidth / 4) + (window.innerWidth / 8)) + "px"
+				flagOuter.style.bottom = (Math.floor(flags.length / 4) * (window.innerHeight / 8) + (window.innerHeight / 8)) + "px"
+			document.getElementById("flags-background").appendChild(flagOuter)
+
+			var flag = document.createElement("div")
+				flag.className = "flag-text"
+				flag.innerText = name
+			flagOuter.appendChild(flag)
+
+			var pole = document.createElement("div")
+				pole.className = "flag-pole"
+			flagOuter.appendChild(flag)
+		}
+
 	/* createIssue */
 		function createIssue(data, rules) {
 			// container
@@ -323,24 +357,33 @@
 				updateMember(government, data, rules)
 		}
 
-	/* createNameFlag */
-		function createNameFlag(name) {
-			var flagCount = Array.from(document.querySelectorAll("#flags-background .flag-outer")).length || 0
+	/* createEndMember */
+		function createEndMember(data) {
+			// container
+				var member = document.createElement("div")
+					member.className = "end-member"
+					member.id = "end-member-" + data.id
+				document.getElementById("end").appendChild(member)
 
-			var flagOuter = document.createElement("div")
-				flagOuter.className = "flag-outer"
-				flagOuter.style.left = ((flags.length % 4) * (window.innerWidth / 4) + (window.innerWidth / 8)) + "px"
-				flagOuter.style.bottom = (Math.floor(flags.length / 4) * (window.innerHeight / 8) + (window.innerHeight / 8)) + "px"
-			document.getElementById("flags-background").appendChild(flagOuter)
+			// name	
+				var name = document.createElement("div")
+					name.className = "end-member-name"
+					name.innerText = data.name
+				member.appendChild(name)
 
-			var flag = document.createElement("div")
-				flag.className = "flag-text"
-				flag.innerText = name
-			flagOuter.appendChild(flag)
-
-			var pole = document.createElement("div")
-				pole.className = "flag-pole"
-			flagOuter.appendChild(flag)
+			// ideology
+				var ideology = document.createElement("div")
+					ideology.className = "end-member-ideology"
+					ideology.innerText = data.ideology.name
+				if (data.state.achieved) { ideology.setAttribute("achieved", true) }
+				member.appendChild(ideology)
+			
+			// reelection
+				var reelection = document.createElement("div")
+					reelection.className = "end-member-reelection"
+					reelection.innerText = "reelected"
+				if (data.state.reelected) { reelection.setAttribute("reelected", true) }
+				member.appendChild(reelection)
 		}
 
 /*** updates ***/
@@ -380,6 +423,37 @@
 			// remove old issues
 				for (var i in ids) {
 					document.getElementById(ids[i]).remove()
+				}
+
+			// update last issue
+				document.getElementById("results-name").innerText = data.last.name
+				document.getElementById("results-options").innerHTML = ""
+				for (var o in data.last.options) {
+					// option
+						var option = document.createElement("div")
+							option.className = "results-option"
+						document.getElementById("results-options").appendChild(option)
+
+					// name
+						var name = document.createElement("div")
+							name.className = "results-option-name"
+							name.innerText = data.last.options[o].name
+						option.appendChild(name)
+
+					// voters
+						var voters = document.createElement("div")
+							voters.className = "results-option-voters"
+							var list = []
+							for (var v in data.last.options[o].state.votes) {
+								list.push(data.members[data.last.options[o].state.votes[v]].name)
+							}
+							voters.innerText = list.join(", ")
+						option.appendChild(voters)
+					
+					// selected
+						if (data.last.options[o].state.selected) {
+							option.setAttribute("selected", true)
+						}
 				}
 		}
 

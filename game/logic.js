@@ -700,6 +700,8 @@
 						return o.state.default
 					})
 
+					winningOption.state.selected = true
+
 				// special numbers
 					// first issue?
 						if (request.game.past.length == 0) {
@@ -961,6 +963,8 @@
 				request.game.data.state.term     = 0
 				request.game.data.state.issue    = null
 				request.game.data.state.cooldown = 60000
+
+				callback(Object.keys(request.game.players).concat(Object.keys(request.game.observers)), {success: true, end: true, data: request.game.data})
 			}
 			catch (error) {
 				main.logError(error)
