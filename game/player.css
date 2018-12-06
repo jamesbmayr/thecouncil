@@ -611,6 +611,68 @@
 		}
 
 /*** end ***/
+	#end {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		background-color: var(--black-4);
+		border-radius: var(--borderRadius);
+		opacity: 0.85;
+		color: var(--white-4);
+		padding: 10px;
+		width: 60vw;
+		box-shadow: 0px 0px 10px var(--black-4);
+	}
+
 	#container:not([gameover]) #end {
 		display: none;
 	}
+
+	/* end-member */
+		.end-member {
+			float: left;
+			width: calc(100% - 20px);
+			background-color: var(--black-3);
+			padding: 10px;
+			border-radius: var(--borderRadius);
+		}
+
+		.end-member-name {
+			width: 100%;
+			font-size: 25px;
+			float: left;
+			text-align: center;
+			color: var(--black-4);
+		}
+
+		.end-member-name[winner] {
+			color: var(--white-4);
+			text-shadow: 0px 0px 10px var(--white-4);
+		}
+
+		.end-member-ideology {
+			float: left;
+			width: 100%;
+			font-size: 25px;
+			text-align: center;
+			color: var(--black-4);
+		}
+
+		.end-member-ideology[achieved] {
+			color: var(--white-4);
+			text-shadow: 0px 0px 10px var(--white-4);
+		}
+
+		.end-member-reelection {
+			float: left;
+			width: 100%;
+			font-size: 25px;
+			text-align: center;
+			color: var(--black-4);
+		}
+
+		.end-member-reelection[reelected] {
+			color: var(--white-4);
+			text-shadow: 0px 0px 10px var(--white-4);
+		}

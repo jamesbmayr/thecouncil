@@ -349,7 +349,6 @@
 			// ideology
 				var ideology = document.createElement("div")
 					ideology.className = "member-ideology"
-					ideology.setAttribute("hidden", true)
 				member.appendChild(ideology)
 
 				var name = document.createElement("div")

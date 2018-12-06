@@ -20,16 +20,23 @@
 			float: left;
 			width: 500px;
 			height: 100vh;
-			overflow-x: hidden;
-			overflow-y: scroll;
+			overflow: hidden;
 		}
 
 		#column-right {
 			float: left;
 			width: calc(100vw - 500px);
 			height: 100vh;
-			overflow-x: hidden;
-			overflow-y: scroll;
+			overflow: hidden;
+		}
+
+	/* message */
+		#message {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			padding: 50px;
 		}
 
 /*** start ***/
@@ -90,17 +97,14 @@
 			position: absolute;
 			width: 150px;
 			height: 100px;
-			background-color: var(--black-4);
 			border-radius: 0px var(--borderRadius) var(--borderRadius) 0px;
-			overflow: hidden;
-			text-overflow: ellipsis;
 			user-select: none;
 			-moz-user-select: none;
 			-webkit-user-select: none;
 			-o-user-select: none;
 			cursor: default;
-			opacity: 0;
 			animation: fadein 2s;
+			box-shadow: 0px 0px 5px var(--black-4);
 		}
 
 		#flags-background .flag-text {
@@ -111,6 +115,9 @@
 			text-align: center;
 			color: var(--white-4);
 			font-size: 30px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			text-shadow: 0px 0px 10px var(--black-4);
 		}
 
 		#flags-background .flag-pole {
@@ -139,6 +146,9 @@
 		-moz-user-select: none;
 		-webkit-user-select: none;
 		-o-user-select: none;
+		width: calc(100% - 20px);
+		height: 400px;
+		opacity: 0.85;
 	}
 
 	#container:not([gameplay]) #government {
@@ -147,10 +157,14 @@
 
 	/* flag */
 		.government-flag {
-			float: left;
 			width: 100%;
-			height: auto;
+			height: 100%;
 			border-radius: var(--borderRadius);
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			z-index: -1;
+			filter: blur(5px);
 		}
 
 	/* text */
@@ -158,7 +172,7 @@
 			float: left;
 			text-align: left;
 			width: calc(100% - 10px - 60px);
-			padding: 10px 10px 10px 0px;
+			padding: 0px 10px 10px 0px;
 			font-size: 30px;
 			height: 40px;
 			overflow: hidden;
@@ -167,7 +181,6 @@
 
 		.government-election {
 			float: left;
-			margin-top: 10px;
 			height: 30px;
 			text-align: center;
 			background-color: var(--black-4);
@@ -207,7 +220,7 @@
 		.government-agencies {
 			float: left;
 			width: 100%;
-			padding-top: 30px;
+			padding-top: 10px;
 		}
 
 		.government-agencies-line {
@@ -215,15 +228,15 @@
 			float: left;
 			width: 100%;
 			border-radius: 4px;
-			height: 25px;
+			height: 20px;
 			z-index: 1;
 			opacity: 1;
-			margin: 25px 0px 25px 0px;
+			margin: 10px 0px 10px 0px;
 			text-align: center;
 		}
 
 		.government-agencies-label {
-			font-size: 20px;
+			font-size: 15px;
 			line-height: 1;
 			margin-top: 2px;
 			color: var(--black-2);
@@ -231,17 +244,17 @@
 
 		.government-agencies-s, .government-agencies-r, .government-agencies-t, .government-agencies-m {
 			position: relative;
-			transform: translateX(-50%) translateY(calc(-50% - 10px));
+			transform: translateX(-50%) translateY(calc(-50% - 7.5px));
 			border-radius: 100%;
-			height: 40px;
-			width: 40px;
+			height: 30px;
+			width: 30px;
 			z-index: 2;
 			color: var(--white-4);
-			font-size: 25px;
+			font-size: 20px;
 			text-align: center;
 			padding: 5px;
 			overflow: hidden;
-			opacity: 0.85;
+			opacity: 0.75;
 		}
 
 		.government-agencies-s {
@@ -261,11 +274,6 @@
 		}
 
 	/* constituents */
-		.government-constituents {
-			float: left;
-			width: 100%;
-		}
-
 		.government-constituents-line {
 			background-color: var(--black-4);
 			float: left;
@@ -279,9 +287,11 @@
 		}
 
 		.government-constituents {
-			height: 200px;
+			height: 150px;
 			margin-top: -1px;
 			display: flex;
+			float: left;
+			width: 100%;
 		}
 
 		.government-constituents div {
@@ -322,156 +332,61 @@
 			font-size: 10px;
 		}
 
-/*** members ***/
-	#members {
-		float: left;
-		height: auto;
-		padding: 20px 20px 20px 20px;
-		user-select: none;
-		-moz-user-select: none;
-		-webkit-user-select: none;
-		-o-user-select: none;
-		width: calc(100% - 40px);
-		background-color: var(--black-2);
-		overflow-x: hidden;
-		overflow-y: hidden;
-	}
-
-	#members[hidden] {
-		display: block;
-	}
-
-	#container:not([gameplay]) #members {
-		visibility: hidden;
-	}
-
-	.member {
-		float: left;
-		padding: 10px 10px 0px 10px;
-		background-color: var(--black-3);
-		border-radius: var(--borderRadius);
-		margin-bottom: 20px;
-		width: calc(100% - 20px);
-	}
-
-	/* sections */
-		.member-info, .member-funds, .member-constituents, .member-ideology {
-			float: left;
-			width: calc(100% - 20px);
-			padding: 10px;
-			background-color: var(--black-0);
-			border-radius: var(--borderRadius);
-			margin-bottom: 10px;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-
-	/* info */
-		.member-name {
-			height: 50px;
-			font-size: 40px;
-		}
-
-		.member-district {
-			height: 30px;
-			font-size: 20px;
-		}
-
-		.member-race {
-			height: 30px;
-			font-size: 20px;
-		}
-
-	/* funds */
-		.member-funds {
-			height: 40px;
-			font-size: 30px;
-			text-align: right;
-		}
-
-		.member-funds:before {
-			content: "$ ";
-		}
-
-	/* constituents */
-		.member-constituents-line {
-			background-color: var(--black-4);
-			float: left;
-			height: 2px;
-			border-radius: 2px;
-			z-index: 2;
-			width: calc(100% - 10px);
-			transform: translateY(61px);
-			margin-left: 5px;
-			opacity: 0.5;
-		}
-
-		.member-constituents {
-			height: 100px;
-			margin-top: -1px;
-			display: flex;
-		}
-
-		.member-constituents div {
-			align-self: flex-end;
-			text-align: center;
-			bottom: 0px;
-			border-radius: var(--borderRadius) var(--borderRadius) 0px 0px;
-			font-size: 20px;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-
-		.member-constituents-d {
-			background-color: var(--race-d);
-			border-radius: var(--borderRadius) var(--borderRadius) 0px var(--borderRadius) !important;
-		}
-
-		.member-constituents-e {
-			background-color: var(--race-e);
-		}
-
-		.member-constituents-f {
-			background-color: var(--race-f);
-		}
-
-		.member-constituents-g {
-			background-color: var(--race-g);
-		}
-
-		.member-constituents-l {
-			background-color: var(--race-l);
-			border-radius: var(--borderRadius) var(--borderRadius) var(--borderRadius) 0px !important;
-		}
-
-		.member-constituents div span {
-			display: block;
-			font-size: 10px;
-		}
-
 /*** results ***/
 	#results {
 		float: left;
-		height: auto;
-		padding: 20px;
-		width: calc(100% - 40px);
+		height: calc(100vh - 440px);
+		padding: 10px;
+		width: calc(100% - 20px);
 		user-select: none;
 		-moz-user-select: none;
 		-webkit-user-select: none;
 		-o-user-select: none;
 		overflow-x: hidden;
-		overflow-y: hidden;
-		background-color: var(--black-2);
+		overflow-y: scroll;
+		background-color: var(--black-4);
 	}
 
 	#container:not([gameplay]) #results {
 		visibility: hidden;
 	}
 
+	/* text */
+		#results-name {
+			float: left;
+			font-size: 15px;
+			color: var(--black-2);
+			text-align: center;
+		}
+
+	/* options */
+		.results-option {
+			float: left;
+			background-color: var(--black-2);
+			color: var(--black-3);
+			border-radius: var(--borderRadius);
+			padding: 10px;
+			width: calc(100% - 20px);
+			margin: 5px 0px 5px 0px;
+			font-size: 10px;
+		}
+
+		.results-option[selected] {
+			background-color: var(--black-0);
+		}
+
+		.results-option-name {
+			text-align: left;
+		}
+
+		.results-option-voters {
+			text-align: right;
+		}
+
 /*** issues ***/
 	#issues {
 		float: left;
-		height: auto;
+		height: calc(100vh - 40px);
 		padding: 20px;
 		width: calc(100% - 40px);
 		user-select: none;
@@ -479,7 +394,7 @@
 		-webkit-user-select: none;
 		-o-user-select: none;
 		overflow-x: hidden;
-		overflow-y: hidden;
+		overflow-y: scroll;
 	}
 
 	#container:not([gameplay]) #issues {
@@ -736,7 +651,68 @@
 		}
 
 /*** end ***/
+	#end {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		background-color: var(--black-4);
+		border-radius: var(--borderRadius);
+		opacity: 0.85;
+		color: var(--white-4);
+		padding: 10px;
+		width: 60vw;
+		box-shadow: 0px 0px 10px var(--black-4);
+	}
+
 	#container:not([gameover]) #end {
 		display: none;
 	}
-	
+
+	/* end-member */
+		.end-member {
+			float: left;
+			width: calc(100% - 20px);
+			background-color: var(--black-3);
+			padding: 10px;
+			border-radius: var(--borderRadius);
+		}
+
+		.end-member-name {
+			width: 40%;
+			font-size: 25px;
+			float: left;
+			text-align: left;
+			color: var(--black-4);
+		}
+
+		.end-member-name[winner] {
+			color: var(--white-4);
+			text-shadow: 0px 0px 10px var(--white-4);
+		}
+
+		.end-member-ideology {
+			float: left;
+			width: 35%;
+			font-size: 25px;
+			text-align: center;
+			color: var(--black-4);
+		}
+
+		.end-member-ideology[achieved] {
+			color: var(--white-4);
+			text-shadow: 0px 0px 10px var(--white-4);
+		}
+
+		.end-member-reelection {
+			float: left;
+			width: 25%;
+			font-size: 25px;
+			text-align: center;
+			color: var(--black-4);
+		}
+
+		.end-member-reelection[reelected] {
+			color: var(--white-4);
+			text-shadow: 0px 0px 10px var(--white-4);
+		}

@@ -143,13 +143,13 @@
 									break
 
 								// stylesheet
-									case (/\/stylesheet[.]css$/).test(request.url):
+									case (/\/(stylesheet|main|player)[.]css$/).test(request.url):
 										try {
 											response.writeHead(200, {"Content-Type": "text/css"})
 											fs.readFile("./main/stylesheet.css", "utf8", function (error, data) {
 												if (error) {_404(error)}
 												else {
-													fs.readFile("./" + request.path[1] + "/" + request.path[2] + ".css", "utf8", function (error, file) {
+													fs.readFile("./" + request.path[1] + "/" + request.path[2], "utf8", function (error, file) {
 														if (error) { _404(error) }
 														else {
 															response.end(main.getAsset("css variables") + "\n\n" + data + "\n\n" + file)
@@ -162,7 +162,7 @@
 									break
 
 								// script
-									case (/\/script[.]js$/).test(request.url):
+									case (/\/(script|main|player)[.]js$/).test(request.url):
 										try {
 											response.writeHead(200, {"Content-Type": "text/javascript"})
 											fs.readFile("./main/script.js", "utf8", function (error, data) {
@@ -171,7 +171,7 @@
 													fs.readFile("./main/draw.js", "utf8", function (error, draw) {
 														if (error) {_404(error)}
 														else {
-															fs.readFile("./" + request.path[1] + "/" + request.path[2] + ".js", "utf8", function (error, file) {
+															fs.readFile("./" + request.path[1] + "/" + request.path[2], "utf8", function (error, file) {
 																if (error) { _404(error) }
 																else {
 																	response.end("window.addEventListener('load', function() {\n\n" + data + "\n\n" + draw + "\n\n" + file + "\n\n})")
@@ -456,7 +456,6 @@
 									break
 
 									default:
-										console.log(request.post.action)
 										_400("invalid action")
 									break
 								}

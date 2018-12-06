@@ -33,8 +33,10 @@
 		}
 
 		#title {
-			height: 36vh;
-			width: 54vh;
+			height: 40vh;
+			width: 60vh;
+			max-height: 50vw;
+			max-width: 75vw;
 			background-color: var(--cerulean-3);
 			user-select: none;
 			cursor: pointer;

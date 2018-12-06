@@ -35,6 +35,39 @@
 			}
 		}, 5000)
 
+/*** background ***/
+	/* cycleColors */
+		var backgroundLoop = setInterval(cycleColors, 100)
+		cycleColors()
+		function cycleColors() {
+			// get color & direction
+				var colors = document.body.style["background-color"]
+					colors = colors ? colors.replace("rgb(", "").replace(")", "").split(",").map(function(c) { return Number(c) }) : [Math.floor(Math.random() * 100) + 50, Math.floor(Math.random() * 100) + 100, Math.floor(Math.random() * 100) + 150]
+				var r = Number(document.body.getAttribute("r"))
+				var g = Number(document.body.getAttribute("g"))
+				var b = Number(document.body.getAttribute("b"))
+
+				if (!r) { r = 1 }
+				if (!g) { g = 1 }
+				if (!b) { b = 1 }
+
+			// set colors
+				colors[0] = (r == 1) ? (colors[0] + (Math.floor(Math.random() * 2) + 1)) : (colors[0] - (Math.floor(Math.random() * 2) + 1))
+				colors[1] = (g == 1) ? (colors[1] + (Math.floor(Math.random() * 2) + 1)) : (colors[1] - (Math.floor(Math.random() * 2) + 1))
+				colors[2] = (b == 1) ? (colors[2] + (Math.floor(Math.random() * 2) + 1)) : (colors[2] - (Math.floor(Math.random() * 2) + 1))
+
+			// set direction
+				r = (colors[0] <  50) ? 1 : (colors[0] > 150) ? -1 : r
+				g = (colors[1] < 100) ? 1 : (colors[1] > 200) ? -1 : g
+				b = (colors[2] < 150) ? 1 : (colors[2] > 250) ? -1 : b
+
+			// update values
+				document.body.style["background-color"] = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")"
+				document.body.setAttribute("r", r)
+				document.body.setAttribute("g", g)
+				document.body.setAttribute("b", b)
+		}
+
 /*** submit ***/
 	/* submitStart */
 		document.getElementById("submit-start").addEventListener(on.click, submitStart)
@@ -64,8 +97,15 @@
 					receiveStart(data)
 				}
 				else if (data.names) {
-					for (var n in data.names) {
-						createNameFlag(data.names[n])
+					if (data.names[0]) {
+						for (var n in data.names) {
+							createNameFlag(data.names[n])
+						}
+					}
+					else {
+						for (var n in data.names) {
+							updateNameFlag(data.names[n])
+						}
 					}
 				}
 
@@ -78,20 +118,14 @@
 				if (data.data) {
 					updateGovernment(data.data)
 					updateIssues(data.data)
-					for (var m in data.data.members) {
-						updateMember(data.data, data.data.members[m], data.data.rules)
-					}
 				}
 		}
 
 	/* receiveStart */
 		function receiveStart(data) {
+			clearInterval(backgroundLoop)
 			document.getElementById("container").setAttribute("gameplay", true)
 			createGovernment(data.data)
-			
-			for (var m in data.data.members) {
-				createMember(data.data, data.data.members[m], data.data.rules)
-			}
 		}
 
 	/* receiveEnd */
@@ -107,22 +141,39 @@
 /*** creates ***/
 	/* createNameFlag */
 		function createNameFlag(name) {
-			var flagCount = Array.from(document.querySelectorAll("#flags-background .flag-outer")).length || 0
+			var firstOpenSlot = 0
+			Array.from(document.querySelectorAll("#flags-background .flag-outer")).forEach(function(f) {
+				if (f && f.getAttribute("slot") == firstOpenSlot) {
+					firstOpenSlot++
+				}
+			})
 
-			var flagOuter = document.createElement("div")
-				flagOuter.className = "flag-outer"
-				flagOuter.style.left = ((flags.length % 4) * (window.innerWidth / 4) + (window.innerWidth / 8)) + "px"
-				flagOuter.style.bottom = (Math.floor(flags.length / 4) * (window.innerHeight / 8) + (window.innerHeight / 8)) + "px"
-			document.getElementById("flags-background").appendChild(flagOuter)
+			// flag
+				var flagOuter = document.createElement("div")
+					flagOuter.id = "flag-outer-" + name
+					flagOuter.setAttribute("slot", firstOpenSlot)
+					flagOuter.className = "flag-outer"
+					flagOuter.style.backgroundColor = "var(--" + chooseRandom(Object.keys(colors)) + "-3)"
+					if (firstOpenSlot % 4 < 2) {
+						flagOuter.style.left = "calc((" + (firstOpenSlot % 4) + " * 12.5vw) + 2vw)"
+					}
+					else {
+						flagOuter.style.left = "calc((" + (firstOpenSlot % 4) + " * 12.5vw) + 50vw)"
+					}
+					flagOuter.style.bottom = "calc((" + Math.floor(firstOpenSlot / 4) + " * 20vh) + 10vh)"
+					
+				document.getElementById("flags-background").appendChild(flagOuter)
 
-			var flag = document.createElement("div")
-				flag.className = "flag-text"
-				flag.innerText = name
-			flagOuter.appendChild(flag)
+			// name
+				var text = document.createElement("div")
+					text.className = "flag-text"
+					text.innerText = name
+				flagOuter.appendChild(text)
 
-			var pole = document.createElement("div")
-				pole.className = "flag-pole"
-			flagOuter.appendChild(flag)
+			// pole
+				var pole = document.createElement("div")
+					pole.className = "flag-pole"
+				flagOuter.appendChild(pole)
 		}
 
 	/* createIssue */
@@ -219,16 +270,16 @@
 
 	/* createGovernment */
 		function createGovernment(data) {
-			// container
-				var government = document.getElementById("government")
-
 			// flag
 				var flag = document.createElement("canvas")
 					flag.className = "government-flag"
 					flag.setAttribute("height", 1000)
 					flag.setAttribute("width",  1500)
 				createFlag(flag, data.state.flag)
-				government.appendChild(flag)
+				document.getElementById("container").appendChild(flag)
+
+			// container
+				var government = document.getElementById("government")
 
 			// text
 				var name = document.createElement("div")
@@ -298,65 +349,6 @@
 				updateGovernment(data)
 		}
 
-	/* createMember */
-		function createMember(government, data, rules) {
-			// container
-				var member = document.createElement("div")
-					member.className = "member"
-					member.id = "member-" + data.id
-				document.getElementById("members").appendChild(member)
-
-			// info
-				var info = document.createElement("div")
-					info.className = "member-info"
-				member.appendChild(info)
-				
-				var name = document.createElement("div")
-					name.className = "member-name"
-					name.innerText = data.name
-				info.appendChild(name)
-
-				var district = document.createElement("div")
-					district.className = "member-district"
-					district.innerText = "District " + data.district
-				info.appendChild(district)
-
-				var race = document.createElement("div")
-					race.className = "member-race"
-					race.innerText = data.race.singular
-					race.style.color = "var(--race-" + data.race.short + ")"
-				info.appendChild(race)
-
-			// funds
-				var funds = document.createElement("div")
-					funds.className = "member-funds"
-				member.appendChild(funds)
-
-			// constituents
-				var line = document.createElement("div")
-					line.className = "member-constituents-line"
-				member.appendChild(line)
-
-				var constituents = document.createElement("div")
-					constituents.className = "member-constituents"
-					constituents.setAttribute("hidden", true)
-				member.appendChild(constituents)
-
-				for (var c in data.constituents) {
-					var element = document.createElement("div")
-						element.className = "member-constituents-" + c
-						element.innerText = c
-					constituents.appendChild(element)
-
-					var span = document.createElement("span")
-						span.className = "member-constituents-numbers-" + c
-					element.appendChild(span)
-				}
-
-			// data
-				updateMember(government, data, rules)
-		}
-
 	/* createEndMember */
 		function createEndMember(data) {
 			// container
@@ -369,6 +361,7 @@
 				var name = document.createElement("div")
 					name.className = "end-member-name"
 					name.innerText = data.name
+				if (data.state.achieved && data.state.reelected) { name.setAttribute("winner", true) }
 				member.appendChild(name)
 
 			// ideology
@@ -387,6 +380,16 @@
 		}
 
 /*** updates ***/
+	/* updateNameFlag */
+		function updateNameFlag(name) {
+			if (name) {
+				var flag = document.getElementById("flag-outer-" + name)
+				if (flag) {
+					flag.remove()
+				}
+			}
+		}
+
 	/* updateIssues */
 		function updateIssues(data) {
 			// get existing issues
@@ -491,54 +494,6 @@
 
 						var span = government.querySelector(".government-constituents-numbers-" + c)
 							span.innerText = data.constituents[c].approval + "% x" + data.constituents[c].population
-					}
-			}
-		}
-
-	/* updateMember */
-		function updateMember(government, data, rules) {
-			var member = document.getElementById("member-" + data.id)
-			if (member) {
-				// funds
-					if (rules.includes("financial-disclosure")) {
-						member.querySelector(".member-funds").removeAttribute("hidden")
-						member.querySelector(".member-funds").innerText = data.funds
-					}
-					else {
-						member.querySelector(".member-funds").setAttribute("hidden", true)
-						member.querySelector(".member-funds").innerText = ""
-					}
-
-				// population
-					var population = 0
-					for (var c in data.constituents) {
-						population += data.constituents[c].population
-					}
-
-				// constituents
-					for (var c in data.constituents) {
-						var element = member.querySelector(".member-constituents-" + c)
-							element.style.height = (data.constituents[c].approval) + "%"
-							element.style.width  = (data.constituents[c].population / population * 100) + "%"
-
-						var span = member.querySelector(".member-constituents-numbers-" + c)
-							span.innerText = data.constituents[c].approval + "% x" + data.constituents[c].population
-					}
-
-				// leader
-					if (data.state.leader) {
-						member.setAttribute("leader", true)
-					}
-					else {
-						member.removeAttribute("leader")
-					}
-
-				// campaign
-					if (data.state.campaign) {
-						member.setAttribute("campaign", true)
-					}
-					else {
-						member.removeAttribute("campaign")
 					}
 			}
 		}

@@ -34,7 +34,10 @@
 
 					// message
 						if (!request.game.data.state.start) {
-							callback([request.session.id], {success: true})
+							callback([request.session.id], {success: true,
+								id:           request.game.id,
+								names:        Object.keys(request.game.players).length ? Object.keys(request.game.players).map(function(id) { return request.game.players[id].name }) : []
+							})
 						}
 						else if (request.game.data.state.end) {
 							callback([request.session.id], {success: true, location: "../../../../"})
@@ -42,7 +45,6 @@
 						else {
 							callback([request.session.id], {success: true,
 								start:        request.game.data.state.start,
-								names:       (request.game.data.state.start && Object.keys(request.game.players).length && !request.game.players[request.session.id]) ? Object.keys(request.game.players).map(function(id) { return request.game.players[id].name }) : null,
 								showTally:   (request.game.data.members[request.session.id] && request.game.data.members[request.session.id].state.leader) ? true : false,
 								showRecall:   request.game.past.length > 4 ? true : false,
 								showCampaign: request.game.past.length > 2 ? true : false,
@@ -67,12 +69,14 @@
 					// remove player or observer
 						if (request.game.data.state.end || !request.game.data.state.start) {
 							if (request.game.players[request.session.id]) {
+								var name = request.game.players[request.session.id].name
 								delete request.game.players[request.session.id]
 							}
 							else if (request.game.observers[request.session.id]) {
 								delete request.game.observers[request.session.id]
 							}
 							callback([request.session.id], {success: true, location: "../../../../"})
+							callback(Object.keys(request.game.observers), {success: true, names: [false, name]})
 						}
 
 					// disable connection
@@ -720,7 +724,8 @@
 					// third issue?
 						else if (request.game.past.length == 2) {
 							setTimeout(function() {
-								callback(Object.keys(request.game.observers), {success: true, showCampaign: true, message: "Low approval ratings? Campaign on the most recent issues to double their effect."})
+								callback(Object.keys(request.game.players), {success: true, showCampaign: true})
+								callback(Object.keys(request.game.observers), {success: true, message: "Low approval ratings? Campaign on the most recent issues to double their effect."})
 							}, 15000)
 							setTimeout(function() {
 								callback(Object.keys(request.game.observers), {success: true, message: "Campaigns last 30 seconds - you cannot vote while you're away."})
@@ -730,7 +735,8 @@
 					// fifth issue?
 						else if (request.game.past.length == 4) {
 							setTimeout(function() {
-								callback(Object.keys(request.game.observers), {success: true, showRecall: true, message: "Unhappy with the leader? Anyone can recall the leader for a new one."})
+								callback(Object.keys(request.game.players), {success: true, showRecall: true})
+								callback(Object.keys(request.game.observers), {success: true, message: "Unhappy with the leader? Anyone can recall the leader for a new one."})
 							}, 15000)
 						}
 
