@@ -426,15 +426,15 @@
 			background-color: var(--purple-1);
 		}
 
-		.issue[type="repeal"] {
+		.issue[type="repeal"], .issue[type="enact"] {
 			background-color: var(--blue-1);
 		}
 
-		.issue[type="effect"] {
+		.issue[type="austerity"] {
 			background-color: var(--green-1);
 		}
 
-		.issue[type="austerity"] {
+		.issue[type="effect"] {
 			background-color: var(--yellow-1);
 		}
 

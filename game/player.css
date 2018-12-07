@@ -297,7 +297,6 @@
 			border-radius: 4px;
 			height: 2px;
 			z-index: 1;
-			opacity: 1;
 			transform: translateY(12px);
 		}
 
@@ -376,15 +375,15 @@
 			background-color: var(--purple-1);
 		}
 
-		.issue[type="repeal"] {
+		.issue[type="repeal"], .issue[type="enact"] {
 			background-color: var(--blue-1);
 		}
 
-		.issue[type="effect"] {
+		.issue[type="austerity"] {
 			background-color: var(--green-1);
 		}
 
-		.issue[type="austerity"] {
+		.issue[type="effect"] {
 			background-color: var(--yellow-1);
 		}
 
@@ -406,7 +405,6 @@
 			color: var(--white-4);
 			padding: 5px;
 			font-size: 20px;
-			opacity: 1;
 		}
 
 		.issue-name {
