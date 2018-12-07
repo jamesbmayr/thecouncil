@@ -467,7 +467,7 @@
 				// stats
 					government.querySelector(".government-name"    ).innerText = data.rules.includes("alternate-name") ? data.state.name[1] : data.state.name[0]
 					government.querySelector(".government-election").innerText = Math.round((data.state.election - data.state.time) / 1000)
-					government.querySelector(".government-leader"  ).innerText = "leader: " + (data.state.leader ? data.members[data.state.leader].name : "?")
+					government.querySelector(".government-leader"  ).innerText = "leader: " + (data.state.leader ? data.members[data.state.leader].name + (data.rules.includes("financial-disclosure") ? (" ($" + data.members[data.state.leader].funds + ")") : "") : "?")
 					government.querySelector(".government-treasury").innerText = data.treasury
 					government.querySelector(".government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
 

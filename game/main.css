@@ -216,6 +216,10 @@
 			content: "$ ";
 		}
 
+		.government-treasury[direction="down"] {
+			color: var(--red-2);
+		}
+
 	/* agencies */
 		.government-agencies {
 			float: left;
