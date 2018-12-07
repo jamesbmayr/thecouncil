@@ -165,7 +165,7 @@
 		}
 
 /*** members ***/
-	#members {
+	#member {
 		float: left;
 		height: calc(100vh - 250px);
 		padding: 20px 20px 80px 20px;
@@ -179,12 +179,12 @@
 		overflow-y: scroll;
 	}
 
-	#container:not([gameplay]) #members {
+	#container:not([gameplay]) #member {
 		visibility: hidden;
 	}
 
 	/* sections */
-		.member-info, .member-funds, .member-constituents, .member-ideology {
+		#member-info, #member-funds, #member-constituents, #member-ideology {
 			float: left;
 			width: calc(100% - 20px);
 			padding: 10px;
@@ -196,34 +196,34 @@
 		}
 
 	/* info */
-		.member-name {
+		#member-name {
 			height: 50px;
 			font-size: 40px;
 		}
 
-		.member-district {
+		#member-district {
 			height: 30px;
 			font-size: 20px;
 		}
 
-		.member-race {
+		#member-race {
 			height: 30px;
 			font-size: 20px;
 		}
 
 	/* funds */
-		.member-funds {
+		#member-funds {
 			height: 40px;
 			font-size: 30px;
 			text-align: right;
 		}
 
-		.member-funds:before {
+		#member-funds:before {
 			content: "$ ";
 		}
 
 	/* constituents */
-		.member-constituents-line {
+		#member-constituents-line {
 			background-color: var(--black-4);
 			float: left;
 			height: 2px;
@@ -235,13 +235,13 @@
 			opacity: 0.5;
 		}
 
-		.member-constituents {
+		#member-constituents {
 			height: 100px;
 			margin-top: -1px;
 			display: flex;
 		}
 
-		.member-constituents div {
+		#member-constituents div {
 			align-self: flex-end;
 			text-align: center;
 			bottom: 0px;
@@ -251,41 +251,41 @@
 			text-overflow: ellipsis;
 		}
 
-		.member-constituents-d {
+		#member-constituents-d {
 			background-color: var(--race-d);
 			border-radius: var(--borderRadius) var(--borderRadius) 0px var(--borderRadius) !important;
 		}
 
-		.member-constituents-e {
+		#member-constituents-e {
 			background-color: var(--race-e);
 		}
 
-		.member-constituents-f {
+		#member-constituents-f {
 			background-color: var(--race-f);
 		}
 
-		.member-constituents-g {
+		#member-constituents-g {
 			background-color: var(--race-g);
 		}
 
-		.member-constituents-l {
+		#member-constituents-l {
 			background-color: var(--race-l);
 			border-radius: var(--borderRadius) var(--borderRadius) var(--borderRadius) 0px !important;
 		}
 
-		.member-constituents div span {
+		#member-constituents div span {
 			display: block;
 			font-size: 10px;
 		}
 
 	/* ideology */
-		.member-ideology-name {
+		#member-ideology-name {
 			height: 30px;
 			font-size: 20px;
 			text-transform: capitalize;
 		}
 
-		.member-ideology-description {
+		#member-ideology-description {
 			font-size: 15px;
 			margin-bottom: 15px;
 		}
@@ -301,7 +301,7 @@
 			transform: translateY(12px);
 		}
 
-		.member-ideology-dot-s, .member-ideology-dot-r, .member-ideology-dot-t, .member-ideology-dot-m {
+		#member-ideology-dot-s, #member-ideology-dot-r, #member-ideology-dot-t, #member-ideology-dot-m {
 			position: absolute;
 			transform: translateX(-4px) translateY(-4px);
 			border-radius: 100%;
@@ -310,7 +310,7 @@
 			z-index: 2;
 		}
 
-		.member-ideology-s, .member-ideology-r, .member-ideology-t, .member-ideology-m {
+		#member-ideology-s, #member-ideology-r, #member-ideology-t, #member-ideology-m {
 			text-align: center;
 			color: var(--white-4);
 			height: 25px;
@@ -322,19 +322,19 @@
 			margin-bottom: 5px;
 		}
 
-		.member-ideology-s, .member-ideology-dot-s {
+		#member-ideology-s, #member-ideology-dot-s {
 			background-color: var(--agency-s);
 		}
 
-		.member-ideology-r, .member-ideology-dot-r {
+		#member-ideology-r, #member-ideology-dot-r {
 			background-color: var(--agency-r);
 		}
 
-		.member-ideology-t, .member-ideology-dot-t {
+		#member-ideology-t, #member-ideology-dot-t {
 			background-color: var(--agency-t);
 		}
 
-		.member-ideology-m, .member-ideology-dot-m {
+		#member-ideology-m, #member-ideology-dot-m {
 			background-color: var(--agency-m);
 		}
 
@@ -450,7 +450,7 @@
 			float: left;
 			width: 50%;
 			height: 40px;
-			font-size: 30px;
+			font-size: 25px;
 			text-align: right;
 			pointer-events: none;
 			margin-bottom: 10px;
@@ -464,7 +464,7 @@
 			float: right;
 			width: 50%;
 			height: 40px;
-			font-size: 20px;
+			font-size: 15px;
 			text-align: right;
 			line-height: 2.5;
 			pointer-events: none;
@@ -630,7 +630,7 @@
 	}
 
 	/* end-member */
-		.end-member {
+		#end-member {
 			float: left;
 			width: calc(100% - 20px);
 			background-color: var(--black-3);
@@ -638,7 +638,7 @@
 			border-radius: var(--borderRadius);
 		}
 
-		.end-member-name {
+		#end-member-name {
 			width: 100%;
 			font-size: 25px;
 			float: left;
@@ -646,12 +646,12 @@
 			color: var(--black-4);
 		}
 
-		.end-member-name[winner] {
+		#end-member-name[winner] {
 			color: var(--white-4);
 			text-shadow: 0px 0px 10px var(--white-4);
 		}
 
-		.end-member-ideology {
+		#end-member-ideology {
 			float: left;
 			width: 100%;
 			font-size: 25px;
@@ -659,12 +659,12 @@
 			color: var(--black-4);
 		}
 
-		.end-member-ideology[achieved] {
+		#end-member-ideology[achieved] {
 			color: var(--white-4);
 			text-shadow: 0px 0px 10px var(--white-4);
 		}
 
-		.end-member-reelection {
+		#end-member-reelection {
 			float: left;
 			width: 100%;
 			font-size: 25px;
@@ -672,7 +672,7 @@
 			color: var(--black-4);
 		}
 
-		.end-member-reelection[reelected] {
+		#end-member-reelection[reelected] {
 			color: var(--white-4);
 			text-shadow: 0px 0px 10px var(--white-4);
 		}

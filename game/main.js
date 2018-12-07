@@ -92,11 +92,8 @@
 					displayMessage(data.message)
 				}
 
-			// starting
-				if (data.start) {
-					receiveStart(data)
-				}
-				else if (data.names) {
+			// pre-start
+				if (data.names) {
 					if (data.names[0]) {
 						for (var n in data.names) {
 							createNameFlag(data.names[n])
@@ -109,15 +106,25 @@
 					}
 				}
 
-			// ending
-				else if (data.end) {
-					receiveEnd(data)
+			// start
+				if (data.start) {
+					receiveStart(data)
+				}
+				if (data.show) {
+					for (var s in data.show) {
+						document.getElementById(data.show[s]).className = ""
+					}
 				}
 
 			// new data
 				if (data.data) {
 					updateGovernment(data.data)
 					updateIssues(data.data)
+				}
+
+			// ending
+				if (data.end) {
+					receiveEnd(data)
 				}
 		}
 
@@ -126,6 +133,12 @@
 			clearInterval(backgroundLoop)
 			document.getElementById("container").setAttribute("gameplay", true)
 			createGovernment(data.data)
+
+			if (data.data.state.time < 60000) {
+				["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l", "government-election", "government-leader"].forEach(function(id) {
+					document.getElementById(id).className = "hidden"
+				})
+			}
 		}
 
 	/* receiveEnd */
@@ -272,7 +285,7 @@
 		function createGovernment(data) {
 			// flag
 				var flag = document.createElement("canvas")
-					flag.className = "government-flag"
+					flag.id = "nation-flag"
 					flag.setAttribute("height", 1000)
 					flag.setAttribute("width",  1500)
 				createFlag(flag, data.state.flag)
@@ -283,27 +296,27 @@
 
 			// text
 				var name = document.createElement("div")
-					name.className = "government-name"
+					name.id = "government-name"
 				government.appendChild(name)
 
 			// election
 				var election = document.createElement("div")
-					election.className = "government-election"
+					election.id = "government-election"
 				government.appendChild(election)
 
 			// leader
 				var leader = document.createElement("div")
-					leader.className = "government-leader"
+					leader.id = "government-leader"
 				government.appendChild(leader)
 
 			// treasury
 				var treasury = document.createElement("div")
-					treasury.className = "government-treasury"
+					treasury.id = "government-treasury"
 				government.appendChild(treasury)
 
 			// agencies
 				var agencies = document.createElement("div")
-					agencies.className = "government-agencies"
+					agencies.id = "government-agencies"
 				government.appendChild(agencies)
 
 				for (var a in data.agencies) {
@@ -317,31 +330,31 @@
 					line.appendChild(label)
 
 					var dot = document.createElement("div")
-						dot.className = "government-agencies-" + a
+						dot.id = "government-agencies-" + a
 					line.appendChild(dot)
 
 					var span = document.createElement("span")
-						span.className = "government-agencies-numbers-" + a
+						span.id = "government-agencies-numbers-" + a
 					dot.appendChild(span)					
 				}
 
 			// constituents
 				var line = document.createElement("div")
-					line.className = "government-constituents-line"
+					line.id = "government-constituents-line"
 				government.appendChild(line)
 
 				var constituents = document.createElement("div")
-					constituents.className = "government-constituents"
+					constituents.id = "government-constituents"
 				government.appendChild(constituents)
 
 				for (var c in data.constituents) {
 					var element = document.createElement("div")
-						element.className = "government-constituents-" + c
+						element.id = "government-constituents-" + c
 						element.innerText = (c == "d") ? "dwarves" : (c == "e") ? "elves" : (c == "f") ? "fairies" : (c == "g") ? "goblins" : "lizardfolk"
 					constituents.appendChild(element)
 
 					var span = document.createElement("span")
-						span.className = "government-constituents-numbers-" + c
+						span.id = "government-constituents-numbers-" + c
 					element.appendChild(span)
 				}
 
@@ -465,18 +478,18 @@
 			var government = document.getElementById("government") || false
 			if (government) {
 				// stats
-					government.querySelector(".government-name"    ).innerText = data.rules.includes("alternate-name") ? data.state.name[1] : data.state.name[0]
-					government.querySelector(".government-election").innerText = Math.round((data.state.election - data.state.time) / 1000)
-					government.querySelector(".government-leader"  ).innerText = "leader: " + (data.state.leader ? data.members[data.state.leader].name + (data.rules.includes("financial-disclosure") ? (" ($" + data.members[data.state.leader].funds + ")") : "") : "?")
-					government.querySelector(".government-treasury").innerText = data.treasury
-					government.querySelector(".government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
+					document.getElementById("government-name"    ).innerText = data.rules.includes("alternate-name") ? data.state.name[1] : data.state.name[0]
+					document.getElementById("government-election").innerText = Math.round((data.state.election - data.state.time) / 1000)
+					document.getElementById("government-leader"  ).innerText = "leader: " + (data.state.leader ? data.members[data.state.leader].name + (data.rules.includes("financial-disclosure") ? (" ($" + data.members[data.state.leader].funds + ")") : "") : "?")
+					document.getElementById("government-treasury").innerText = data.treasury
+					document.getElementById("government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
 
 				// agencies
 					for (var a in data.agencies) {
-						var dot = government.querySelector(".government-agencies-" + a)
+						var dot = document.getElementById("government-agencies-" + a)
 							dot.style.left = data.agencies[a] + "%"
 
-						var span = government.querySelector(".government-agencies-numbers-" + a)
+						var span = document.getElementById("government-agencies-numbers-" + a)
 							span.innerText = data.agencies[a]
 					}
 
@@ -488,11 +501,11 @@
 
 				// constituents
 					for (var c in data.constituents) {
-						var element = government.querySelector(".government-constituents-" + c)
+						var element = document.getElementById("government-constituents-" + c)
 							element.style.height = (data.constituents[c].approval) + "%"
 							element.style.width  = (data.constituents[c].population / population * 100) + "%"
 
-						var span = government.querySelector(".government-constituents-numbers-" + c)
+						var span = document.getElementById("government-constituents-numbers-" + c)
 							span.innerText = data.constituents[c].approval + "% x" + data.constituents[c].population
 					}
 			}

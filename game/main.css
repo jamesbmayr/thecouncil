@@ -21,6 +21,8 @@
 			width: 500px;
 			height: 100vh;
 			overflow: hidden;
+			background-color: var(--black-3);
+			opacity: 0.85;
 		}
 
 		#column-right {
@@ -28,6 +30,10 @@
 			width: calc(100vw - 500px);
 			height: 100vh;
 			overflow: hidden;
+		}
+
+		#container:not([gameplay]) #column-left, #container:not([gameplay]) #column-right {
+			visibility: hidden;
 		}
 
 	/* message */
@@ -136,27 +142,8 @@
 			100% { opacity: 1; }
 		}
 
-/*** government ***/
-	#government {
-		background-color: var(--black-3);
-		color: var(--white-4);
-		padding: 10px;
-		float: left;
-		user-select: none;
-		-moz-user-select: none;
-		-webkit-user-select: none;
-		-o-user-select: none;
-		width: calc(100% - 20px);
-		height: 400px;
-		opacity: 0.85;
-	}
-
-	#container:not([gameplay]) #government {
-		visibility: hidden;
-	}
-
-	/* flag */
-		.government-flag {
+	/* nation flag */
+		#nation-flag {
 			width: 100%;
 			height: 100%;
 			border-radius: var(--borderRadius);
@@ -167,8 +154,25 @@
 			filter: blur(5px);
 		}
 
+/*** government ***/
+	#government {
+		color: var(--white-4);
+		padding: 10px;
+		float: left;
+		user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-o-user-select: none;
+		width: calc(100% - 20px);
+		height: 400px;
+	}
+
+	#container:not([gameplay]) #government {
+		visibility: hidden;
+	}
+
 	/* text */
-		.government-name {
+		#government-name {
 			float: left;
 			text-align: left;
 			width: calc(100% - 10px - 60px);
@@ -179,8 +183,8 @@
 			text-overflow: ellipsis;
 		}
 
-		.government-election {
-			float: left;
+		#government-election {
+			float: right;
 			height: 30px;
 			text-align: center;
 			background-color: var(--black-4);
@@ -188,13 +192,12 @@
 			color: var(--white-4);
 			padding: 5px;
 			font-size: 20px;
-			opacity: 1;
 			width: 50px;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
 
-		.government-leader {
+		#government-leader {
 			float: left;
 			width: 60%;
 			font-size: 20px;
@@ -203,8 +206,8 @@
 			text-overflow: ellipsis;
 		}
 
-		.government-treasury {
-			float: left;
+		#government-treasury {
+			float: right;
 			width: 40%;
 			font-size: 20px;
 			text-align: right;
@@ -212,16 +215,16 @@
 			text-overflow: ellipsis;
 		}
 
-		.government-treasury:before {
+		#government-treasury:before {
 			content: "$ ";
 		}
 
-		.government-treasury[direction="down"] {
+		#government-treasury[direction="down"] {
 			color: var(--red-2);
 		}
 
 	/* agencies */
-		.government-agencies {
+		#government-agencies {
 			float: left;
 			width: 100%;
 			padding-top: 10px;
@@ -234,7 +237,6 @@
 			border-radius: 4px;
 			height: 20px;
 			z-index: 1;
-			opacity: 1;
 			margin: 10px 0px 10px 0px;
 			text-align: center;
 		}
@@ -246,7 +248,7 @@
 			color: var(--black-2);
 		}
 
-		.government-agencies-s, .government-agencies-r, .government-agencies-t, .government-agencies-m {
+		#government-agencies-s, #government-agencies-r, #government-agencies-t, #government-agencies-m {
 			position: relative;
 			transform: translateX(-50%) translateY(calc(-50% - 7.5px));
 			border-radius: 100%;
@@ -261,24 +263,24 @@
 			opacity: 0.75;
 		}
 
-		.government-agencies-s {
+		#government-agencies-s {
 			background-color: var(--agency-s);
 		}
 
-		.government-agencies-r {
+		#government-agencies-r {
 			background-color: var(--agency-r);
 		}
 
-		.government-agencies-t {
+		#government-agencies-t {
 			background-color: var(--agency-t);
 		}
 
-		.government-agencies-m {
+		#government-agencies-m {
 			background-color: var(--agency-m);
 		}
 
 	/* constituents */
-		.government-constituents-line {
+		#government-constituents-line {
 			background-color: var(--black-4);
 			float: left;
 			height: 2px;
@@ -290,7 +292,7 @@
 			opacity: 0.5;
 		}
 
-		.government-constituents {
+		#government-constituents {
 			height: 150px;
 			margin-top: -1px;
 			display: flex;
@@ -298,7 +300,7 @@
 			width: 100%;
 		}
 
-		.government-constituents div {
+		#government-constituents div {
 			align-self: flex-end;
 			text-align: center;
 			bottom: 0px;
@@ -309,29 +311,29 @@
 			text-overflow: ellipsis;
 		}
 
-		.government-constituents-d {
+		#government-constituents-d {
 			background-color: var(--race-d);
 			border-radius: var(--borderRadius) var(--borderRadius) 0px var(--borderRadius) !important;
 		}
 
-		.government-constituents-e {
+		#government-constituents-e {
 			background-color: var(--race-e);
 		}
 
-		.government-constituents-f {
+		#government-constituents-f {
 			background-color: var(--race-f);
 		}
 
-		.government-constituents-g {
+		#government-constituents-g {
 			background-color: var(--race-g);
 		}
 
-		.government-constituents-l {
+		#government-constituents-l {
 			background-color: var(--race-l);
 			border-radius: var(--borderRadius) var(--borderRadius) var(--borderRadius) 0px !important;
 		}
 
-		.government-constituents div span {
+		#government-constituents div span {
 			display: block;
 			font-size: 10px;
 		}
@@ -454,7 +456,6 @@
 			color: var(--white-4);
 			padding: 5px;
 			font-size: 20px;
-			opacity: 1;
 		}
 
 		.issue-name {
@@ -676,10 +677,13 @@
 	/* end-member */
 		.end-member {
 			float: left;
-			width: calc(100% - 20px);
+			width: calc(100% - 30px);
 			background-color: var(--black-3);
 			padding: 10px;
+			margin: 5px;
 			border-radius: var(--borderRadius);
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 
 		.end-member-name {

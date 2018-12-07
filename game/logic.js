@@ -1073,13 +1073,13 @@
 						updateMessages(request, callback)
 
 					// events
-						if (request.game.data.state.time == 30000) {
+						if (request.game.data.state.time == 60000) {
 							enactRecall(request, callback)
 						}
 						else if (request.game.data.state.time == request.game.data.state.election) {
 							enactElection(request, callback)
 						}
-						else if (!request.game.data.state.end && request.game.data.state.time > 30000) {
+						else if (!request.game.data.state.end && request.game.data.state.time > 60000) {
 							// future issues
 								updateRebellions(request, callback)
 								updateFuture(request, callback)
@@ -1117,45 +1117,97 @@
 				// time
 					var time = request.game.data.state.time
 					var election = request.game.data.state.election
-					var ids = Object.keys(request.game.observers)
+					var observers = Object.keys(request.game.observers)
+					var players = Object.keys(request.game.players)
 				
 				// start
-					if (time == 5000) {
-						callback(ids, {success: true, message: "Welcome to the council of " + request.game.data.state.name[0] + "!"})
+					if (time == 2000) {
+						callback(observers, {success: true, show: ["nation-flag"], message: "Welcome to The Council!"})
+					}
+					else if (time == 5000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name"], message: "In this game, each player represents a District of " + request.game.data.state.name[0] + "."})
 					}
 					else if (time == 10000) {
-						callback(ids, {success: true, message: "Get reelected - that's 50%+ approval at the end."})
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies"], message: "Vote on how to spend the treasury. There are 4 main agencies..."})
 					}
 					else if (time == 15000) {
-						callback(ids, {success: true, message: "Keep your approvals up with dwarves, elves, fairies, goblins, & lizardfolk."})
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s"], message: "Social Services"})
 					}
-					else if (time == 20000) {
-						callback(ids, {success: true, message: "Decide issues for your constituents."})
+					else if (time == 17000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r"], message: "Regulation"})
+					}
+					else if (time == 19000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t"], message: "Tech & Education"})
+					}
+					else if (time == 21000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m"], message: "Military"})
 					}
 					else if (time == 25000) {
-						callback(ids, {success: true, recall: true, message: "First, choose a council leader to select which issues are debated."})
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents"], message: "Every vote affects your approval ratings with..."})
+					}
+					else if (time == 29000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d"], message: "Dwarves"})
+					}
+					else if (time == 30000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e"], message: "Elves"})
+					}
+					else if (time == 31000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f"], message: "Fairies"})
+					}
+					else if (time == 32000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g"], message: "Goblins"})
+					}
+					else if (time == 33000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l"], message: "Lizardfolk"})
+					}
+					else if (time == 35000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l"], message: "Look at your device."})
+						callback(players,   {success: true, show: ["action-bar", "member", "member-info", "member-name", "member-district", "member-race"], message: "..."})
+					}
+					else if (time == 40000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l"], message: "Look at your device."})
+						callback(players,   {success: true, show: ["action-bar", "member", "member-info", "member-name", "member-district", "member-race", "member-ideology"], message: "To win, enact your secret ideology."})
+					}
+					else if (time == 45000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l"], message: "Look at your device."})
+						callback(players,   {success: true, show: ["action-bar", "member", "member-info", "member-name", "member-district", "member-race", "member-ideology", "member-constituents-line", "member-constituents", "member-constituents-d", "member-constituents-e", "member-constituents-f", "member-constituents-g", "member-constituents-l"], message: "You also need to get reelected."})
+					}
+					else if (time == 50000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l"], message: "Look at your device."})
+						callback(players,   {success: true, show: ["action-bar", "member", "member-info", "member-name", "member-district", "member-race", "member-ideology", "member-constituents-line", "member-constituents", "member-constituents-d", "member-constituents-e", "member-constituents-f", "member-constituents-g", "member-constituents-l", "member-funds"], message: "Boost your ratings with campaign funds - more on that later."})
+					}
+					else if (time == 55000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l", "government-election"], message: "The game ends on election day."})
+						callback(players,   {success: true, show: ["action-bar", "member", "member-info", "member-name", "member-district", "member-race", "member-ideology", "member-constituents-line", "member-constituents", "member-constituents-d", "member-constituents-e", "member-constituents-f", "member-constituents-g", "member-constituents-l", "member-funds", "mode-bar"], message: "Look at the main screen."})
+					}
+					else if (time == 60000) {
+						callback(observers, {success: true, show: ["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l", "government-election", "government-leader", "column-right"], message: "First issue: choose a council leader, who selects issues for debate."})
+						callback(players,   {success: true, show: ["action-bar", "member", "member-info", "member-name", "member-district", "member-race", "member-ideology", "member-constituents-line", "member-constituents", "member-constituents-d", "member-constituents-e", "member-constituents-f", "member-constituents-g", "member-constituents-l", "member-funds", "mode-bar"], recall: true})
 					}
 
 				// end
 					else if (time == election) {
-						callback(ids, {success: true, message: "Election day!"})
+						callback(observers, {success: true, message: "Election day!"})
 					}
 					else if (time == election + 3000 && request.game.data.state.exists) {
-						callback(ids, {success: true, message: "The people are voting..."})
+						callback(observers, {success: true, message: "The people are voting..."})
 					}
-					else if (time == election + 6000 && request.game.data.state.exists) {
+					else if (time == election + 5000 && request.game.data.state.exists) {
+						callback(observers, {success: true, message: "Look at your device."})
 						for (var m in request.game.data.members) {
-							callback([m], {success: true, message: request.game.data.members[m].state.reelected ? "...Congratulations on your reelection!" : "...The voters have spoken! you're out!"})
+							callback([m], {success: true, message: request.game.data.members[m].state.reelected ? "You were reelected!" : "You lost the election."})
 						}
 					}
-					else if (time == election + 11000 && request.game.data.state.exists) {
+					else if (time == election + 10000 && request.game.data.state.exists) {
+						callback(observers, {success: true, message: "Look at your device."})
 						for (var m in request.game.data.members) {
-							callback([m], {success: true, message: request.game.data.members[m].state.achieved ? "You have accomplished your policy goals!" : "You have failed to achieve your policy goals."})
+							callback([m], {success: true, message: request.game.data.members[m].state.achieved ? "You achieved your goals!" : "You did not achieve your goals."})
 						}
 					}
 					else if (request.game.data.state.time == request.game.data.state.election + 15000 && request.game.data.state.exists) {
+						callback(observers, {success: true, message: "Game over."})
 						for (var m in request.game.data.members) {
-							callback([m], {success: true, message: request.game.data.members[m].state.reelected && request.game.data.members[m].state.achieved ? "You win!" : "You lose!"})
+							callback([m], {success: true, message: request.game.data.members[m].state.reelected && request.game.data.members[m].state.achieved ? "You win!" : "You lose."})
 						}
 					}
 			}
@@ -1279,7 +1331,9 @@
 
 				// rebellion
 					else if (!request.game.data.state.exists) {
-						callback(Object.keys(request.game.observers), {success: true, message: "The rebellion has taken down the government!"})
+						setTimeout(function() {
+							callback(Object.keys(request.game.observers), {success: true, message: "The rebellion has taken down the government!"})
+						}, 10000)
 					}
 
 				// end ?

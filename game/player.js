@@ -43,7 +43,7 @@
 			document.getElementById("select-district").removeAttribute("selected")
 
 			document.getElementById("issues").removeAttribute("hidden")
-			document.getElementById("members").setAttribute("hidden", true)
+			document.getElementById("member").setAttribute("hidden", true)
 		}
 
 	/* selectDistrict */
@@ -52,7 +52,7 @@
 			document.getElementById("select-district").setAttribute("selected", true)
 			document.getElementById("select-council").removeAttribute("selected")
 
-			document.getElementById("members").removeAttribute("hidden")
+			document.getElementById("member").removeAttribute("hidden")
 			document.getElementById("issues").setAttribute("hidden", true)
 		}
 
@@ -157,24 +157,29 @@
 				if (data.start) {
 					receiveStart(data)
 				}
-				else if (data.showRecall !== undefined || data.showTally !== undefined || data.showCampaign !== undefined) {
+				if (data.show) {
+					for (var s in data.show) {
+						document.getElementById(data.show[s]).className = ""
+					}
+				}
+
+			// recall / leader / campaign
+				if (data.showRecall !== undefined || data.showTally !== undefined || data.showCampaign !== undefined) {
 					updateButtons(data)
 				}
-
-			// recall
-				else if (data.recall) {
+				if (data.recall) {
 					selectCouncil()
-				}
-
-			// end
-				else if (data.end) {
-					receiveEnd(data)
 				}
 
 			// new data
 				if (data.data) {
 					updateIssues(data.data)
 					updateMember(data.data, data.data.members[window.id], data.data.rules)
+				}
+
+			// end
+				if (data.end) {
+					receiveEnd(data)
 				}
 		}
 
@@ -187,6 +192,12 @@
 			createFlag(document.querySelector("#select-district canvas"), data.data.members[window.id].state.flag)
 
 			updateButtons(data)
+
+			if (data.data.state.time < 60000) {
+				["action-bar", "member", "member-info", "member-name", "member-district", "member-race", "member-ideology", "member-constituents-line", "member-constituents", "member-constituents-d", "member-constituents-e", "member-constituents-f", "member-constituents-g", "member-constituents-l", "member-funds", "mode-bar"].forEach(function(id) {
+					document.getElementById(id).className = "hidden"
+				})
+			}
 		}
 
 	/* receiveEnd */
@@ -295,69 +306,66 @@
 	/* createMember */
 		function createMember(government, data, rules) {
 			// container
-				var member = document.createElement("div")
-					member.className = "member"
-					member.id = "member-" + data.id
-				document.getElementById("members").appendChild(member)
+				var member = document.getElementById("member")
 
 			// info
 				var info = document.createElement("div")
-					info.className = "member-info"
+					info.id = "member-info"
 				member.appendChild(info)
 				
 				var name = document.createElement("div")
-					name.className = "member-name"
+					name.id = "member-name"
 					name.innerText = data.name
 				info.appendChild(name)
 
 				var district = document.createElement("div")
-					district.className = "member-district"
+					district.id = "member-district"
 					district.innerText = "District " + data.district
 				info.appendChild(district)
 
 				var race = document.createElement("div")
-					race.className = "member-race"
+					race.id = "member-race"
 					race.innerText = data.race.singular
 					race.style.color = "var(--race-" + data.race.short + ")"
 				info.appendChild(race)
 
 			// funds
 				var funds = document.createElement("div")
-					funds.className = "member-funds"
+					funds.id = "member-funds"
 				member.appendChild(funds)
 
 			// constituents
 				var line = document.createElement("div")
-					line.className = "member-constituents-line"
+					line.id = "member-constituents-line"
 				member.appendChild(line)
 
 				var constituents = document.createElement("div")
-					constituents.className = "member-constituents"
+					constituents.id = "member-constituents"
 				member.appendChild(constituents)
 
 				for (var c in data.constituents) {
 					var element = document.createElement("div")
-						element.className = "member-constituents-" + c
+						element.id = "member-constituents-" + c
 						element.innerText = c
 					constituents.appendChild(element)
 
 					var span = document.createElement("span")
-						span.className = "member-constituents-numbers-" + c
+						span.id = "member-constituents-numbers-" + c
 					element.appendChild(span)
 				}
 
 			// ideology
 				var ideology = document.createElement("div")
-					ideology.className = "member-ideology"
+					ideology.id = "member-ideology"
 				member.appendChild(ideology)
 
 				var name = document.createElement("div")
-					name.className = "member-ideology-name"
+					name.id = "member-ideology-name"
 					name.innerText = data.ideology.name
 				ideology.appendChild(name)
 
 				var description = document.createElement("div")
-					description.className = "member-ideology-description"
+					description.id = "member-ideology-description"
 					description.innerText = data.ideology.description
 				ideology.appendChild(description)
 				if (data.ideology.other) {
@@ -371,11 +379,11 @@
 						ideology.appendChild(line)
 
 						var dot = document.createElement("div")
-							dot.className = "member-ideology-dot-" + i
+							dot.id = "member-ideology-dot-" + i
 						line.appendChild(dot)
 
 						var element = document.createElement("div")
-							element.className = "member-ideology-" + i
+							element.id = "member-ideology-" + i
 							element.innerText = i + ": " + data.ideology[i][0] + "-" + data.ideology[i][1]
 							element.style.width = (data.ideology[i][1] - data.ideology[i][0]) + "%"
 							element.style["margin-left"] = data.ideology[i][0] + "%"
@@ -391,26 +399,25 @@
 		function createEndMember(data) {
 			// container
 				var member = document.createElement("div")
-					member.className = "end-member"
-					member.id = "end-member-" + data.id
+					member.id = "end-member"
 				document.getElementById("end").appendChild(member)
 
 			// name	
 				var name = document.createElement("div")
-					name.className = "end-member-name"
+					name.id = "end-member-name"
 					name.innerText = data.name
 				member.appendChild(name)
 
 			// ideology
 				var ideology = document.createElement("div")
-					ideology.className = "end-member-ideology"
+					ideology.id = "end-member-ideology"
 					ideology.innerText = data.ideology.name
 				if (data.state.achieved) { ideology.setAttribute("achieved", true) }
 				member.appendChild(ideology)
 			
 			// reelection
 				var reelection = document.createElement("div")
-					reelection.className = "end-member-reelection"
+					reelection.id = "end-member-reelection"
 					reelection.innerText = "reelected"
 				if (data.state.reelected) { reelection.setAttribute("reelected", true) }
 				member.appendChild(reelection)
@@ -461,7 +468,7 @@
 
 	/* updateMember */
 		function updateMember(government, data, rules) {
-			var member = document.getElementById("member-" + data.id)
+			var member = document.getElementById("member")
 
 			// campaigning ?
 				if (data.state.campaign) {
@@ -480,7 +487,7 @@
 				}
 
 			// funds
-				member.querySelector(".member-funds").innerText = data.funds
+				document.getElementById("member-funds").innerText = data.funds
 
 			// population
 				var population = 0
@@ -490,18 +497,18 @@
 
 			// constituents
 				for (var c in data.constituents) {
-					var element = member.querySelector(".member-constituents-" + c)
+					var element = document.getElementById("member-constituents-" + c)
 						element.style.height = (data.constituents[c].approval) + "%"
 						element.style.width  = (data.constituents[c].population / population * 100) + "%"
 
-					var span = member.querySelector(".member-constituents-numbers-" + c)
+					var span = document.getElementById("member-constituents-numbers-" + c)
 						span.innerText = data.constituents[c].approval + "% x" + data.constituents[c].population
 				}
 
 			// ideologies
 				var arr = ["r", "s", "t", "m"]
 				arr.forEach(function(a) {
-					document.querySelector(".member-ideology-dot-" + a).style.left = government.agencies[a] + "%"
+					document.getElementById("member-ideology-dot-" + a).style.left = government.agencies[a] + "%"
 				})
 
 			// leader
