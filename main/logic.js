@@ -747,7 +747,7 @@
 									start:    false,
 									end:      false,
 									time:     0,
-									election: 2700000,
+									election: 1800000,
 									name:     [],
 									leader:   null,
 									term:     0,
