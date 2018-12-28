@@ -110,9 +110,9 @@
 
 	/* submitOption */
 		function submitOption(event) {
-			if (event.target.className == "option") {
+			if (event.target.className == "option-circle") {
 				// unselect
-					if (event.target.getAttribute("selected")) {
+					if (event.target.parentNode.getAttribute("selected")) {
 						document.querySelectorAll(".option[selected]").forEach(function(element) {
 							element.removeAttribute("selected")
 						})
@@ -128,11 +128,11 @@
 						document.querySelectorAll(".option[selected]").forEach(function(element) {
 							element.removeAttribute("selected")
 						})
-						event.target.setAttribute("selected", true)
+						event.target.parentNode.setAttribute("selected", true)
 
 						socket.send(JSON.stringify({
 							action:    "submitOption",
-							selection: event.target.id.split("-")[1]
+							selection: event.target.parentNode.id.split("-")[1]
 						}))
 					}
 
@@ -222,7 +222,7 @@
 			// text
 				var timeout = document.createElement("div")
 					timeout.className = "issue-timeout"
-					timeout.innerText = Math.round(data.timeout / 1000)
+					timeout.innerText = Math.max(0, Math.round(data.timeout / 1000))
 				issue.appendChild(timeout)
 
 				var name = document.createElement("div")
@@ -238,8 +238,13 @@
 						var option = document.createElement("div")
 							option.className = "option"
 							option.id = "option-" + subdata.id
-							option.addEventListener(on.click, submitOption)
 						issue.appendChild(option)
+
+					// circle
+						var circle = document.createElement("div")
+							circle.className = "option-circle"
+							circle.addEventListener(on.click, submitOption)
+						option.appendChild(circle)
 
 					// text
 						var name = document.createElement("div")
@@ -440,7 +445,7 @@
 								ids.splice(ids.indexOf(data.issues[i].id), 1)
 
 							// timeout down
-								issue.querySelector(".issue-timeout").innerText = Math.round(data.issues[i].timeout / 1000)
+								issue.querySelector(".issue-timeout").innerText = Math.max(0, Math.round(data.issues[i].timeout / 1000))
 
 							// selected state
 								if (data.issues[i].id == data.state.issue) {

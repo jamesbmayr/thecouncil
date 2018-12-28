@@ -197,7 +197,7 @@
 				else if ( request.game.data.state.issue ==  request.post.selection) {
 					callback([request.session.id], {success: false, message: "Issue already selected."})
 				}
-				else if (!request.game.data.issues.find(function(i) { return i.id == request.post.selection })) {
+				else if (request.post.selection && !request.game.data.issues.find(function(i) { return i.id == request.post.selection })) {
 					callback([request.session.id], {success: false, message: "Issue not found."})
 				}
 				else if (!request.post.selection && request.game.data.rules.includes("no-tabling")) { // rule: no-tabling
@@ -373,15 +373,23 @@
 					request.game.data.members[request.session.id].state.selection = request.post.selection || null
 
 				// all selected?
-					var allSelected = true
-					for (var m in request.game.data.members) {
-						if (!request.game.data.members[m].state.campaign && !request.game.data.members[m].state.selection) {
-							allSelected = false
-						}
-					}
+					if (request.game.data.issues.length && request.game.data.state.issue) {
+						var issue = request.game.data.issues.find(function(i) {
+							return i.id == request.game.data.state.issue
+						})
 
-					if (allSelected) {
-						enactTally(request, callback)
+						if (issue && issue.type == "leader") {
+							var allSelected = true
+							for (var m in request.game.data.members) {
+								if (!request.game.data.members[m].state.campaign && !request.game.data.members[m].state.selection) {
+									allSelected = false
+								}
+							}
+
+							if (allSelected) {
+								enactTally(request, callback)
+							}
+						}
 					}
 			}
 			catch (error) {
@@ -711,10 +719,10 @@
 						if (request.game.past.length == 0) {
 							setTimeout(function() {
 								callback(Object.keys(request.game.observers), {success: true, message: "Issues affect government agencies: Social services, Regulation, Tech & education, and Military."})
-							}, 15000)
+							}, 10000)
 							setTimeout(function() {
 								callback(Object.keys(request.game.observers), {success: true, message: "Make the agencies match your secret ideology to win."})
-							}, 20000)
+							}, 15000)
 
 							winningOption.issues.push({name: main.chooseRandom(issues.small ).name, type: "small" , delay: 15000})
 							winningOption.issues.push({name: main.chooseRandom(issues.medium).name, type: "medium", delay: 15000})
@@ -725,11 +733,11 @@
 						else if (request.game.past.length == 2) {
 							setTimeout(function() {
 								callback(Object.keys(request.game.players), {success: true, showCampaign: true})
-								callback(Object.keys(request.game.observers), {success: true, message: "Low approval ratings? Campaign on the most recent issues to double their effect."})
-							}, 15000)
+								callback(Object.keys(request.game.observers), {success: true, message: "Low approval ratings? Campaign to boost your popularity."})
+							}, 10000)
 							setTimeout(function() {
 								callback(Object.keys(request.game.observers), {success: true, message: "Campaigns last 30 seconds - you cannot vote while you're away."})
-							}, 20000)
+							}, 15000)
 						}
 
 					// fifth issue?
@@ -737,7 +745,7 @@
 							setTimeout(function() {
 								callback(Object.keys(request.game.players), {success: true, showRecall: true})
 								callback(Object.keys(request.game.observers), {success: true, message: "Unhappy with the leader? Anyone can recall the leader for a new one."})
-							}, 15000)
+							}, 10000)
 						}
 
 				// consequences
@@ -836,44 +844,16 @@
 							updateOverthrow(request, callback)
 						}
 
-				// communicate
-					if (issue.id !== request.game.data.state.issue) {
-						request.game.data.state.cooldown = 10000
-						
-						setTimeout(function() {
-							callback(Object.keys(request.game.observers), {success: true, message: "Time's up!<br><br>An unresolved issue is resolving itself..."})
-						}, 0)
-						setTimeout(function() {
-							callback(Object.keys(request.game.observers), {success: true, message: (issue.name + " &rarr; " + winningOption.name)})
-						}, 5000)
-					}
-					else {
-						request.game.data.state.cooldown = 10000
+				// reset
+					request.game.data.state.cooldown = 7000
+					if (issue.id == request.game.data.state.issue) {
 						request.game.data.state.issue = null
-
-						var message = ""
-						for (var o in issue.options) {
-							message += issue.options[o].name + ": "
-							if (issue.options[o].state.votes.length) {
-								for (var v in issue.options[o].state.votes) {
-									message += request.game.data.members[issue.options[o].state.votes[v]].name + ", "
-								}
-								message = message.substring(0, message.length - 2)
-							}
-							else {
-								message += " -"
-							}
-							message += "<br><br>"
-						}
-						message = message.substring(0, message.length - 4)
-
-						setTimeout(function() {
-							callback(Object.keys(request.game.observers), {success: true, message: message})
-						}, 3000)
-						setTimeout(function() {
-							callback(Object.keys(request.game.observers), {success: true, message: (issue.name + " &rarr; " + winningOption.name)})
-						}, 8000)
 					}
+
+				// communicate
+					setTimeout(function() {
+						callback(Object.keys(request.game.observers), {success: true, message: (issue.name + "<br>&darr;<br>" + winningOption.name)})
+					}, 3000)
 
 				// move issue to the past
 					request.game.data.last = main.duplicateObject(issue)
@@ -901,29 +881,15 @@
 						member.funds -= 1000
 
 				// member approvals
-					var latestIssues = request.game.past.slice(request.game.past.length - 3, request.game.past.length)
-					for (var i in latestIssues) {
-						var option = latestIssues[i].options.find(function(o) {
-							return o.state.votes.includes(member.id)
-						})
-
-						if (option && option.state.selected) {
-							for (var c in member.constituents) {
-								member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + option.constituents[c].approval))
-							}
-						}
-						else if (option) {
-							for (var c in member.constituents) {
-								member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + Math.floor(option.constituents[c].approval / 2)))
-							}
-						}
+					for (var c in member.constituents) {
+						member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + main.chooseRandom([5,5,10,10,15,20])))
 					}
 
 				// overall approval ratings
 					updateRatings(request, callback)
 
 				// message
-					callback([request.session.id], {success: true, message: "Campaigning on " + latestIssues.map(function (i) { return i.name }).join(" & ") })
+					callback([request.session.id], {success: true, message: "Campaigning to boost ratings."})
 			}
 			catch (error) {
 				main.logError(error)
@@ -1254,10 +1220,10 @@
 			try {
 				// rebellions & protest
 					for (var c in request.game.data.constituents) {
-						if (request.game.data.constituents[c].approval <= 10 && !request.game.data.issues.find(function(i) { return i.type == "rebellion" })) {
+						if (request.game.data.constituents[c].approval <= 15 && !request.game.data.issues.find(function(i) { return i.type == "rebellion" })) {
 							request.game.data.issues.push(getAttributes(main.getSchema("issue"), issues.rebellion[0], callback))
 						}
-						else if (request.game.data.constituents[c].approval <= 20 && !request.game.data.issues.find(function(i) { return i.type == "protest" })) {
+						else if (request.game.data.constituents[c].approval <= 30 && !request.game.data.issues.find(function(i) { return i.type == "protest" })) {
 							request.game.data.issues.push(getAttributes(main.getSchema("issue"), main.chooseRandom(issues.protest), callback))
 						}
 					}
@@ -1333,7 +1299,7 @@
 					else if (!request.game.data.state.exists) {
 						setTimeout(function() {
 							callback(Object.keys(request.game.observers), {success: true, message: "The rebellion has taken down the government!"})
-						}, 10000)
+						}, 5000)
 					}
 
 				// end ?
@@ -1416,6 +1382,7 @@
 								enactTally(request, callback)
 							}
 							else if (!request.game.data.state.issue) {
+								callback(Object.keys(request.game.observers), {success: true, message: "Time's up!<br><br>An issue is resolving itself..."})
 								enactConsequences(request, callback, request.game.data.issues[i])
 							}
 						}
