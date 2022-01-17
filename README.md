@@ -67,5 +67,5 @@ thecouncil
     |- main.js (createSocket, checkLoop; cycleColors; submitStart; receivePost, receiveStart, receiveEnd; createNameFlag, createIssue, createGovernment, createEndMember; updateNameFlag, updateIssues, updateGovernment)
     |- player.html
     |- player.css
-    |- player.js (createSocket, checkLoop; selectCouncil, selectDistrict; submitRecall, submitIssue, submitOption, submitTally, submitCampaign; receivePost, receiveStart, receiveEnd; createIssue, createMember, createEndMember; updateIssues, updateMember, updateButtons)
+    |- player.js (createSocket, checkLoop; selectCouncil, selectDistrict; submitRecall, submitIssue, submitOption, submitTally, submitCampaign; receivePost, receiveStart, receiveEnd; createIssue, createMember; updateIssues, updateMember, updateButtons)
 </pre>

@@ -219,7 +219,7 @@
 		}
 
 		#member-funds:before {
-			content: "$ ";
+			content: "Funds: $";
 		}
 
 	/* constituents */
@@ -496,7 +496,7 @@
 		}
 
 		.option-funds:after {
-			content: " )";
+			content: " donation)";
 		}
 
 	/* option agencies */
@@ -631,68 +631,86 @@
 		}
 
 /*** end ***/
-	#end {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
-		background-color: var(--black-4);
-		border-radius: var(--borderRadius);
-		opacity: 0.85;
-		color: var(--white-4);
-		padding: 10px;
-		width: 60vw;
-		box-shadow: 0px 0px 10px var(--black-4);
-	}
+	/* header */
+		#container[gameover] #header {
+			visibility: visible !important;
+		}
 
-	#container:not([gameover]) #end {
-		display: none;
-	}
+		#container[gameover] #header #mode-bar {
+			cursor: not-allowed;
+			pointer-events: none;
+		}
 
-	/* end-member */
-		#end-member {
-			float: left;
-			width: calc(100% - 20px);
-			background-color: var(--black-3);
-			padding: 10px;
+		#container[gameover] #header button {
+			display: none !important;
+		}
+
+		#container:not([gameover]) #new-game {
+			display: none;
+		}
+
+		#new-game, #new-game:visited {
+			width: calc(100% - 16px);
+			height: calc(100% - 16px);
+			font-size: 25px;
+			text-align: center;
+			border: 0px;
+			background-color: var(--black-4);
+			margin: 8px;
+			text-decoration: none;
 			border-radius: var(--borderRadius);
-		}
-
-		#end-member-name {
-			width: 100%;
-			font-size: 25px;
-			float: left;
-			text-align: center;
-			color: var(--black-4);
-		}
-
-		#end-member-name[winner] {
+			text-transform: capitalize;
 			color: var(--white-4);
-			text-shadow: 0px 0px 10px var(--white-4);
+			line-height: 1.2;
+			font-weight: normal;
+			display: block;
 		}
 
-		#end-member-ideology {
-			float: left;
-			width: 100%;
-			font-size: 25px;
-			text-align: center;
-			color: var(--black-4);
+		#new-game:hover, #new-game:focus {
+			box-shadow: 0px 0px 20px var(--black-4);
 		}
 
-		#end-member-ideology[achieved] {
-			color: var(--white-4);
-			text-shadow: 0px 0px 10px var(--white-4);
+	/* member */
+		#container[gameover] #member {
+			visibility: visible !important;
 		}
 
-		#end-member-reelection {
-			float: left;
-			width: 100%;
-			font-size: 25px;
-			text-align: center;
-			color: var(--black-4);
+	/* reelection */
+		#container[gameover] #member-constituents {
+			padding-top: 40px;
 		}
 
-		#end-member-reelection[reelected] {
-			color: var(--white-4);
-			text-shadow: 0px 0px 10px var(--white-4);
+		#container[gameover] #member-constituents-line {
+			transform: translateY(91px);
+		}
+
+		#member-constituents[reelected]:before {
+			content: "Reelected";
+			font-size: 20px;
+			font-weight: bold;
+			line-height: 1;
+			margin-top: -30px;
+			width: 0px;
+		}
+
+		#member-constituents[unreelected]:before {
+			content: "Deposed";
+			font-size: 20px;
+			font-weight: bold;
+			line-height: 1;
+			margin-top: -30px;
+			width: 0px;
+		}
+
+	/* ideology */
+		#member-ideology-name[achieved]:after {
+			content: " - Achieved";
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+		#member-ideology-name[unachieved]:after {
+			content: " - Failed";
+			font-size: 20px;
+			font-weight: bold;
 		}

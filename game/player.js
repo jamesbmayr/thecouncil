@@ -205,7 +205,29 @@
 			document.getElementById("container").removeAttribute("gameplay")
 			document.getElementById("container").setAttribute("gameover", true)
 
-			createEndMember(data.data.members[window.id])
+			document.getElementById("select-district").setAttribute("selected", true)
+			document.getElementById("select-council").removeAttribute("selected")
+
+			document.getElementById("member").removeAttribute("hidden")
+			document.getElementById("issues").setAttribute("hidden", true)
+
+			var memberData = data.data.members[window.id]
+
+			// ideology
+				if (memberData.state.achieved) {
+					document.getElementById("member-ideology-name").setAttribute("achieved", true)
+				}
+				else {
+					document.getElementById("member-ideology-name").setAttribute("unachieved", true)	
+				}
+			
+			// reelection
+				if (memberData.state.reelected) {
+					document.getElementById("member-constituents").setAttribute("reelected", true)
+				}
+				else {
+					document.getElementById("member-constituents").setAttribute("unreelected", true)	
+				}
 		}
 
 /*** creates ***/
@@ -398,34 +420,6 @@
 
 			// data
 				updateMember(government, data, rules)
-		}
-
-	/* createEndMember */
-		function createEndMember(data) {
-			// container
-				var member = document.createElement("div")
-					member.id = "end-member"
-				document.getElementById("end").appendChild(member)
-
-			// name	
-				var name = document.createElement("div")
-					name.id = "end-member-name"
-					name.innerText = data.name
-				member.appendChild(name)
-
-			// ideology
-				var ideology = document.createElement("div")
-					ideology.id = "end-member-ideology"
-					ideology.innerText = data.ideology.name
-				if (data.state.achieved) { ideology.setAttribute("achieved", true) }
-				member.appendChild(ideology)
-			
-			// reelection
-				var reelection = document.createElement("div")
-					reelection.id = "end-member-reelection"
-					reelection.innerText = "reelected"
-				if (data.state.reelected) { reelection.setAttribute("reelected", true) }
-				member.appendChild(reelection)
 		}
 
 /*** updates ***/

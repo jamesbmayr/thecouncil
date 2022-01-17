@@ -36,6 +36,14 @@
 			visibility: hidden;
 		}
 
+		#container[gameover] #column-left {
+			visibility: visible !important;
+		}
+
+		#container[gameover] #column-right {
+			width: 0px !important;
+		}
+
 	/* message */
 		#message {
 			position: fixed;
@@ -171,11 +179,15 @@
 		visibility: hidden;
 	}
 
+	#container[gameover] #government {
+		visibility: visible !important;
+	}
+
 	/* text */
 		#government-name {
 			float: left;
 			text-align: left;
-			width: calc(100% - 10px - 60px);
+			width: calc(100% - 10px - 70px);
 			padding: 0px 10px 10px 0px;
 			font-size: 30px;
 			height: 40px;
@@ -185,16 +197,26 @@
 
 		#government-election {
 			float: right;
-			height: 30px;
+			height: 25px;
 			text-align: center;
 			background-color: var(--black-4);
-			border-radius: var(--borderRadius);
+			border-radius: 0 0 var(--borderRadius) var(--borderRadius);
 			color: var(--white-4);
-			padding: 5px;
+			padding: 0px 5px 5px 5px;
 			font-size: 20px;
-			width: 50px;
+			width: 60px;
 			overflow: hidden;
 			text-overflow: ellipsis;
+		}
+
+		#government-election-label {
+			font-size: 10px;
+			float: right;
+			width: 60px;
+			padding: 5px 5px 0px 5px;
+			background: var(--black-4);
+			border-radius: var(--borderRadius) var(--borderRadius) 0px 0px;
+			text-align: center;
 		}
 
 		#government-leader {
@@ -204,6 +226,7 @@
 			text-align: left;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			text-transform: capitalize;
 		}
 
 		#government-treasury {
@@ -216,7 +239,7 @@
 		}
 
 		#government-treasury:before {
-			content: "$ ";
+			content: "Treasury: $";
 		}
 
 		#government-treasury[direction="down"] {
@@ -287,7 +310,7 @@
 			border-radius: 2px;
 			z-index: 2;
 			width: calc(100% + 10px);
-			transform: translateY(101px);
+			transform: translateY(75px);
 			margin-left: -5px;
 			opacity: 0.5;
 		}
@@ -521,7 +544,7 @@
 		}
 
 		.option-funds:after {
-			content: " )";
+			content: " donation)";
 		}
 
 	/* option agencies */
@@ -657,22 +680,51 @@
 
 /*** end ***/
 	#end {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
 		background-color: var(--black-4);
-		border-radius: var(--borderRadius);
 		opacity: 0.85;
 		color: var(--white-4);
-		padding: 10px;
-		width: 60vw;
 		box-shadow: 0px 0px 10px var(--black-4);
+		float: left;
+		width: calc(100vw - 500px);
+		height: 100vh;
+		overflow-x: hidden;
+		overflow-y: scroll;
 	}
 
 	#container:not([gameover]) #end {
 		display: none;
 	}
+
+	/* play again */
+		#container[gameover] #results {
+			display: none !important;
+		}
+
+		#container:not([gameover]) #new-game {
+			display: none;
+		}
+
+		#new-game, #new-game:visited {
+			width: calc(100% - 32px);
+			height: auto;
+			font-size: 50px;
+			text-align: center;
+			border: 0px;
+			background-color: var(--black-4);
+			margin: 8px;
+			text-decoration: none;
+			border-radius: var(--borderRadius);
+			text-transform: capitalize;
+			color: var(--white-4);
+			line-height: 3;
+			font-weight: normal;
+			float: left;
+			padding: 8px;
+		}
+
+		#new-game:hover, #new-game:focus {
+			box-shadow: 0px 0px 20px var(--black-4);
+		}
 
 	/* end-member */
 		.end-member {

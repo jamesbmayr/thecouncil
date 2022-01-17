@@ -135,7 +135,7 @@
 			createGovernment(data.data)
 
 			if (data.data.state.time < 60000) {
-				["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l", "government-election", "government-leader"].forEach(function(id) {
+				["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l", "government-election", "government-election-label", "government-leader"].forEach(function(id) {
 					document.getElementById(id).className = "hidden"
 				})
 			}
@@ -300,6 +300,11 @@
 				government.appendChild(name)
 
 			// election
+				var electionLabel = document.createElement("div")
+					electionLabel.id = "government-election-label"
+					electionLabel.innerText = "Election"
+				government.appendChild(electionLabel)
+
 				var election = document.createElement("div")
 					election.id = "government-election"
 				government.appendChild(election)
