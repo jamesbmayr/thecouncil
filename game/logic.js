@@ -156,10 +156,10 @@
 					callback([request.session.id], {success: false, message: "Leader was just elected."})
 				}
 				else if (request.game.data.rules.includes("term-length") && request.game.data.state.term < 300000) { // rule: term-length
-					callback([request.session.id], {success: false, message: "Rule: leaders serve for 5+ minutes."})
+					callback([request.session.id], {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: leaders serve for 5+ minutes."}) // rule: formal-language
 				}
 				else {
-					callback(Object.keys(request.game.observers), {success: true, recall: true, message: request.game.data.members[request.session.id].name + " calls for new leadership!"})
+					callback(Object.keys(request.game.observers), {success: true, recall: true, message: (request.game.data.rules.includes("formal-language") ? "Motion of no confidence: " : "") + request.game.data.members[request.session.id].name + " calls for new leadership!"}) // rule: formal-language
 					enactRecall(request, callback)
 				}
 			}
@@ -189,7 +189,7 @@
 					callback([request.session.id], {success: false, message: "Not the leader."})
 				}
 				else if (request.game.data.members[request.session.id].state.campaign && !request.game.data.rules.includes("absentee-voting")) { // rule: absentee-voting
-					callback([request.session.id], {success: false, message: "Cannot legislate while campaigning."})
+					callback([request.session.id], {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: Cannot legislate while campaigning."}) // rule: formal-language
 				}
 				else if (!request.game.data.state.issue && !request.post.selection) {
 					callback([request.session.id], {success: false, message: "Cannot unselect - no issue selected."})
@@ -201,7 +201,7 @@
 					callback([request.session.id], {success: false, message: "Issue not found."})
 				}
 				else if (!request.post.selection && request.game.data.rules.includes("no-tabling")) { // rule: no-tabling
-					callback([request.session.id], {success: false, message: "Rule: no tabling issues."})
+					callback([request.session.id], {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: no tabling issues."}) // rule: formal-language
 				}
 				else {
 					selectIssue(request, callback)
@@ -230,10 +230,10 @@
 					callback([request.session.id], {success: false, message: "Something else is happening."})
 				}
 				else if (request.game.data.members[request.session.id].state.leader && request.game.data.rules.includes("impartial-leader")) { // rule: impartial-leader
-					callback([request.session.id], {success: false, message: "Rule: leader cannot vote."})
+					callback([request.session.id], {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: leader cannot vote."}) // rule: formal-language
 				}
 				else if (request.game.data.members[request.session.id].state.campaign && !request.game.data.rules.includes("absentee-voting")) { // rule: absentee-voting
-					callback([request.session.id], {success: false, message: "Cannot legislate while campaigning."})
+					callback([request.session.id], {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: Cannot legislate while campaigning."}) // rule: formal-language
 				}
 				else if (!request.game.data.state.issue) {
 					callback([request.session.id], {success: false, message: "No issue selected."})
@@ -251,7 +251,7 @@
 					callback([request.session.id], {success: false, message: "Option not found."})
 				}
 				else if (request.game.data.issues.find(function(i) { return i.id == request.game.data.state.issue }).type == "leader" && request.game.data.rules.includes("no-self") && request.post.selection == request.session.id) { // rule: no-self
-					callback([request.session.id], {success: false, message: "Rule: cannot elect yourself leader."})	
+					callback([request.session.id], {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: cannot elect yourself leader."}) // rule: formal-language
 				}
 				else {
 					selectOption(request, callback)
@@ -283,10 +283,10 @@
 					callback([request.session.id], {success: false, message: "No issue selected."})
 				}
 				else if (request.game.data.rules.includes("no-abstentions") && Object.keys(request.game.data.members).filter(function(m) { return (!request.game.data.members[m].state.selection && !request.game.data.members[m].state.campaign && !(request.game.data.members[m].state.leader && request.game.data.rules.includes("impartial-leader"))) }).length) { // no-abstentions
-					callback([request.session.id], {success: false, message: "Rule: members cannot abstain from voting."})
+					callback([request.session.id], {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: members cannot abstain from voting."}) // rule: formal-language
 				}
 				else if (request.game.data.members[request.session.id].state.campaign && !request.game.data.rules.includes("absentee-voting")) { // rule: absentee-voting
-					callback([request.session.id], {success: false, message: "Cannot legislate while campaigning."})
+					callback([request.session.id], {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: Cannot legislate while campaigning."}) // rule: formal-language
 				}
 				else {
 					enactTally(request, callback)
@@ -318,10 +318,10 @@
 					callback([request.session.id], {success: false, message: "Already campaigning."})
 				}
 				else if (request.game.data.rules.includes("short-season") && request.game.data.state.election - request.game.data.state.time > 300000) { // rule: short-season
-					callback([request.session.id], {success: false, message: "Rule: no campaigning allowed until last 5 minutes."})
+					callback([request.session.id], {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: no campaigning allowed until last 5 minutes."}) // rule: formal-language
 				}
 				else if (request.game.data.members[request.session.id].state.leader && request.game.data.rules.includes("leader-presence")) { // rule: leader-presence
-					callback([request.session.id], {success: false, message: "Rule: leaders cannot leave to campaign for reelection."})
+					callback([request.session.id], {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: leaders cannot leave to campaign for reelection."}) // rule: formal-language
 				}
 				else if (request.game.past.length < 3) {
 					callback([request.session.id], {success: false, message: "Not enough issues to campaign on."})
@@ -356,7 +356,7 @@
 					if (request.game.data.rules.includes("quick-voting")) {
 						var issue = request.game.data.issues.find(function (i) { return i.id == request.post.selection })
 							issue.timeout = Math.min(60000, issue.timeout)
-						callback(Object.keys(request.game.observers), {success: false, message: "Rule: 60-second voting period."})
+						callback(Object.keys(request.game.observers), {success: false, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: 60-second voting period."}) // rule: formal-language
 					}
 			}
 			catch (error) {
@@ -575,14 +575,13 @@
 						}
 					}
 
-
 				// special event types
 					// rebellion: insufficient funds
 						if (issue.type == "rebellion" && winningOptions.ids.length && (request.game.data.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "Not enough treasury to meet the rebels' demands!"})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "A grave misfortune! " : "") + "Not enough treasury to meet the rebels' demands!"}) // rule: formal-language
 						}
 
 					// rebellion: insufficient military
@@ -590,7 +589,7 @@
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "The military is too weak to stop the rebels!"})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Alas! " : "") + "The military is too weak to stop the rebels!"}) // rule: formal-language
 						}
 
 					// protest: insufficient funds
@@ -598,7 +597,7 @@
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "Not enough treasury to meet the protestors' demands!"})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "A grave misfortune! " : "") + "Not enough treasury to meet the protestors' demands!"}) // rule: formal-language
 						}
 
 					// protest: insufficient military
@@ -606,7 +605,7 @@
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "The military is too weak to suppress the protest!"})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Alas! " : "") + "The military is too weak to suppress the protest!"}) // rule: formal-language
 						}
 
 					// austerity: insufficient s
@@ -614,7 +613,7 @@
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "Cutbacks to social services are not enough!"})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Forsooth! " : "") + "Cutbacks to social services are not enough!"}) // rule: formal-language
 						}
 
 					// austerity: insufficient r
@@ -622,7 +621,7 @@
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "Cutbacks to regulation are not enough!"})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Forsooth! " : "") + "Cutbacks to regulation are not enough!"}) // rule: formal-language
 						}
 
 					// austerity: insufficient t
@@ -630,7 +629,7 @@
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "Cutbacks to tech & research are not enough!"})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Forsooth! " : "") + "Cutbacks to tech & research are not enough!"}) // rule: formal-language
 						}
 
 					// austerity: insufficient m
@@ -638,7 +637,7 @@
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "Cutbacks to military are not enough!"})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Forsooth! " : "") + "Cutbacks to military are not enough!"}) // rule: formal-language
 						}
 
 				// special rules
@@ -647,7 +646,7 @@
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "Rule: the treasury must become and stay positive."})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: the treasury must become and stay positive."}) // rule: formal-language
 						}
 
 					// rule: executive-decision
@@ -655,7 +654,7 @@
 							issue.options.find(function(o) {
 								return o.state.votes.includes(request.game.data.state.leader)
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "Rule: the leader can make executive decisions on urgent issues."})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: the leader can make executive decisions on urgent issues."}) // rule: formal-language
 						}
 
 					// rule: tiebreaker-leader
@@ -663,7 +662,7 @@
 							issue.options.find(function(o) {
 								return winningOptions.ids.includes(o.id) && o.state.votes.includes(request.game.data.state.leader)
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "Rule: in the event of a tie, the leader's choice carries."})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: in the event of a tie, the leader's choice carries."}) // rule: formal-language
 						}
 
 					// rule: majority-threshold
@@ -671,7 +670,7 @@
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "Rule: options must have an outright majority."})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: options must have an outright majority."}) // rule: formal-language
 						}
 
 				// otherwise
@@ -680,7 +679,7 @@
 							issue.options.find(function(o) {
 								return o.state && o.state.default
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "No option had a plurality of votes."})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Be it known: " : "") + "No option had a plurality of votes."}) // rule: formal-language
 						}
 
 					// outright winner
@@ -688,7 +687,7 @@
 							issue.options.find(function(o) {
 								return o.id == winningOptions.ids[0]
 							}).state.selected = true
-							callback(Object.keys(request.game.observers), {success: true, message: "A plurality has decided."})
+							callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Hear ye, hear ye! " : "") + "A plurality has decided."}) // rule: formal-language
 						}
 
 				// reset & enact consequences
@@ -746,7 +745,7 @@
 								callback(Object.keys(request.game.observers), {success: true, message: "Campaigns can boost your popularity."})
 							}, 10000)
 							setTimeout(function() {
-								callback(Object.keys(request.game.observers), {success: true, message: "But campaigns cost money. Some votes will earn... donations."})
+								callback(Object.keys(request.game.observers), {success: true, message: "But campaigns cost money. Build your popularity, or enact policies with... donations."})
 							}, 14000)
 							setTimeout(function() {
 								callback(Object.keys(request.game.observers), {success: true, message: "Spend $1000 to campaign. You won't be able to vote for 30 seconds."})
@@ -821,7 +820,10 @@
 							}
 
 							// change election time
-								if ((rule.name == "snap-elections" && rule.enact) || (rule.name == "delayed-elections" && !rule.enact)) { // rule: snap-elections // rule: delayed-elections
+								if ((rule.name == "immediate-elections" && rule.enact)) {
+									request.game.data.state.election = request.game.data.state.time + 15000
+								}
+								else if ((rule.name == "snap-elections" && rule.enact) || (rule.name == "delayed-elections" && !rule.enact)) { // rule: snap-elections // rule: delayed-elections
 									request.game.data.state.election -= 600000
 								}
 								else if ((rule.name == "snap-elections" && !rule.enact) || (rule.name == "delayed-elections" && rule.enact)) { // rule: snap-elections // rule: delayed-elections
@@ -865,7 +867,10 @@
 
 				// communicate
 					setTimeout(function() {
-						callback(Object.keys(request.game.observers), {success: true, message: (issue.name + "<br>&darr;<br>" + winningOption.name)})
+						callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Resolved: In the case of: " : "") +  // rule: formal-language
+						issue.name + "<br>&darr;<br>" + 
+						(request.game.data.rules.includes("formal-language") ? "The Council has decreed: " : "") + // rule: formal-language
+						winningOption.name})
 					}, 3000)
 
 				// move issue to the past
@@ -1073,9 +1078,9 @@
 								}
 
 							// rule: term-limits
-								if (request.game.data.state.exists && request.game.data.rules.includes("term-limits") && !request.game.data.state.cooldown && request.game.data.state.term >= 300000) {
+								if (request.game.data.state.exists && request.game.data.rules.includes("term-limits") && !request.game.data.state.cooldown && request.game.data.state.term >= 300000) { // rule: term-limits
 									enactRecall(request, callback)
-									callback(Object.keys(request.game.observers), {success: true, message: "Rule: 5-minute term limit."})
+									callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Point of Order: " : "") + "Rule: 5-minute term limit."}) // rule: formal-language
 								}
 
 							// send data
@@ -1340,11 +1345,18 @@
 							member.state.campaign = false
 						}
 
+					// public financing
+						if (request.game.data.rules.includes("public-financing")) { // rule: public financing
+							if (request.game.data.state.time % 120000 == 0) {
+								member.funds = Math.min(0, member.funds + 1000)
+							}
+						}
+
 					// donations
-						if (request.game.data.state.time % 5000 == 0) {
+						else if (request.game.data.state.time % 60000 == 0) {
 							for (var c in member.constituents) {
-								if (member.constituents[c].approval >= 80 && !request.game.data.rules.includes("donation-ban")) { // rule: donation-ban
-									member.funds = Math.min(0, member.funds + Math.floor(member.constituents[c].population / 100))
+								if (member.constituents[c].approval >= 75 && !request.game.data.rules.includes("donation-ban")) { // rule: donation-ban
+									member.funds = Math.min(0, member.funds + member.constituents[c].population)
 								}
 							}
 						}
@@ -1394,7 +1406,7 @@
 								enactTally(request, callback)
 							}
 							else if (!request.game.data.state.issue) {
-								callback(Object.keys(request.game.observers), {success: true, message: "Time's up!<br><br>An issue is resolving itself..."})
+								callback(Object.keys(request.game.observers), {success: true, message: (request.game.data.rules.includes("formal-language") ? "Suspension of normal order! " : "") + "Time's up!<br><br>An issue is resolving itself..."}) // rule: formal-language
 								enactConsequences(request, callback, request.game.data.issues[i])
 							}
 						}
