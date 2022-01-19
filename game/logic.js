@@ -1428,9 +1428,9 @@
 								var issue = main.chooseRandom(issues[type])
 							}
 							while (issue && tryAgain && 
-								(  request.game.past.find(       function (p) { return p.name == issue.name })
-								|| request.game.data.issues.find(function (i) { return i.name == issue.name })
-								|| request.game.future.find(     function (f) { return f.name == issue.name })))
+								(  request.game.past.find(       function (p) { return p.name.trim() == issue.name.trim() })
+								|| request.game.data.issues.find(function (i) { return i.name.trim() == issue.name.trim() })
+								|| request.game.future.find(     function (f) { return f.name.trim() == issue.name.trim() })))
 
 							if (issue) {
 								request.game.data.issues.push(getAttributes(main.getSchema("issue"), issue, callback))
