@@ -784,15 +784,17 @@
 							var rule = winningOption.rules[r]
 
 							if (rule.enact) {
-								REQUEST.game.data.rules.push(rule.name)
+								if (!REQUEST.game.data.rules.includes(rule.name)) {
+									REQUEST.game.data.rules.push(rule.name)
+								}
 							}
 							else if (REQUEST.game.data.rules.includes(rule.name)) {
 								REQUEST.game.data.rules.splice(REQUEST.game.data.rules.indexOf(rule.name), 1)
 							}
 
 							// change election time
-								if ((rule.name == "immediate-elections" && rule.enact)) { // rule: immediate-elections
-									REQUEST.game.data.state.election = REQUEST.game.data.state.time + RULES["immediate-elections"].time
+								if ((rule.name == "immediate-end" && rule.enact)) { // rule: immediate-end
+									REQUEST.game.data.state.election = REQUEST.game.data.state.time + RULES["immediate-end"].time
 								}
 								else if ((rule.name == "snap-elections" && rule.enact) || (rule.name == "delayed-elections" && !rule.enact)) { // rule: snap-elections // rule: delayed-elections
 									REQUEST.game.data.state.election += RULES["snap-elections"].time
@@ -1204,6 +1206,7 @@
 					var monarchist = null
 					var bureaucrat = null
 					var factionalist = null
+					var apocalyptist = null
 
 					for (var m in REQUEST.game.data.members) {
 						if (REQUEST.game.data.members[m].ideology.name == "fascist") {
@@ -1227,15 +1230,27 @@
 						else if (REQUEST.game.data.members[m].ideology.name == "factionalist") {
 							factionalist = REQUEST.game.data.members[m]
 						}
+						else if (REQUEST.game.data.members[m].ideology.name == "apocalyptist") {
+							apocalyptist = REQUEST.game.data.members[m]
+						}
 					}
 
-				// fascist
-					if (fascist && getIdeology(REQUEST, fascist, callback) && fascist.state.leader) {
-						fascist.state.reelected = true
-						fascist.state.achieved  = true
-						fascist.state.victory   = true
+				// apocalyptist
+					if (apocalyptist && getIdeology(REQUEST, apocalyptist, callback) && REQUEST.game.data.rules.includes(IDEOLOGIES["apocalyptist"].rule)) {
+						apocalyptist.state.reelected = true
+						apocalyptist.state.achieved  = true
+						apocalyptist.state.victory   = true
 						REQUEST.game.data.state.exists = false
-						callback(observers, {success: true, message: fascist.name + MESSAGES["overthrow-fascist"]})
+						callback(observers, {success: true, message: apocalyptist.name + MESSAGES["overthrow-apocalyptist"]})
+						enactEnd(REQUEST, callback)
+						return
+					}
+
+				// world ended
+					if (REQUEST.game.data.rules.includes("immediate-end")) {
+						callback(observers, {success: true, message: RULES["immediate-end"].description})
+						enactEnd(REQUEST, callback)
+						return
 					}
 
 				// anarchist
@@ -1245,33 +1260,19 @@
 						anarchist.state.victory   = true
 						REQUEST.game.data.state.exists = false
 						callback(observers, {success: true, message: anarchist.name + MESSAGES["overthrow-anarchist"]})
+						enactEnd(REQUEST, callback)
+						return
 					}
 
-				// populist
-					if (populist && getIdeology(REQUEST, populist, callback) && getApproval(populist, callback) >= IDEOLOGIES["populist"].approval) {
-						populist.state.reelected = true
-						populist.state.achieved  = true
-						populist.state.victory   = true
+				// fascist
+					if (fascist && getIdeology(REQUEST, fascist, callback) && fascist.state.leader) {
+						fascist.state.reelected = true
+						fascist.state.achieved  = true
+						fascist.state.victory   = true
 						REQUEST.game.data.state.exists = false
-						callback(observers, {success: true, message: populist.name + MESSAGES["overthrow-populist"]})
-					}
-
-				// crook
-					if (crook && getIdeology(REQUEST, crook, callback) && crook.funds >= IDEOLOGIES["crook"].funds) {
-						crook.state.reelected = true
-						crook.state.achieved  = true
-						crook.state.victory   = true
-						REQUEST.game.data.state.exists = false
-						callback(observers, {success: true, message: crook.name + MESSAGES["overthrow-crook"]})
-					}
-
-				// bureaucrat
-					if (bureaucrat && getIdeology(REQUEST, bureaucrat, callback) && REQUEST.game.data.rules.length >= IDEOLOGIES["bureaucrat"].rules) {
-						bureaucrat.state.reelected = true
-						bureaucrat.state.achieved  = true
-						bureaucrat.state.victory   = true
-						REQUEST.game.data.state.exists = false
-						callback(observers, {success: true, message: bureaucrat.name + MESSAGES["overthrow-bureaucrat"]})
+						callback(observers, {success: true, message: fascist.name + MESSAGES["overthrow-fascist"]})
+						enactEnd(REQUEST, callback)
+						return
 					}
 
 				// monarchist
@@ -1281,25 +1282,59 @@
 						monarchist.state.victory   = true
 						REQUEST.game.data.state.exists = false
 						callback(observers, {success: true, message: monarchist.name + MESSAGES["overthrow-monarchist"]})
+						enactEnd(REQUEST, callback)
+						return
+					}
+
+				// populist
+					if (populist && getIdeology(REQUEST, populist, callback) && getApproval(populist, callback) >= IDEOLOGIES["populist"].approval) {
+						populist.state.reelected = true
+						populist.state.achieved  = true
+						populist.state.victory   = true
+						REQUEST.game.data.state.exists = false
+						callback(observers, {success: true, message: populist.name + MESSAGES["overthrow-populist"]})
+						enactEnd(REQUEST, callback)
+						return
 					}
 
 				// factionalist
-					if (factionalist && getIdeology(REQUEST, factionalist, callback) && REQUEST.game.data.constituents[factionalist.race.short].approval >= IDEOLOGIES["factionalist"].approval) {
+					else if (factionalist && getIdeology(REQUEST, factionalist, callback) && REQUEST.game.data.constituents[factionalist.race.short].approval >= IDEOLOGIES["factionalist"].approval) {
 						factionalist.state.reelected = true
 						factionalist.state.achieved  = true
 						factionalist.state.victory   = true
 						REQUEST.game.data.state.exists = false
 						callback(observers, {success: true, message: factionalist.name + MESSAGES["overthrow-factionalist"]})
+						enactEnd(REQUEST, callback)
+						return
 					}
 
 				// rebellion
-					else if (!REQUEST.game.data.state.exists) {
+					if (!REQUEST.game.data.state.exists) {
 						enactMessage(observers, {success: true, message: MESSAGES["overthrow-rebellion"]}, CONFIGS.messageDelay, callback)
+						enactEnd(REQUEST, callback)
+						return
 					}
 
-				// end ?
-					if (!REQUEST.game.data.state.exists) {
+				// crook
+					if (crook && getIdeology(REQUEST, crook, callback) && crook.funds >= IDEOLOGIES["crook"].funds) {
+						crook.state.reelected = true
+						crook.state.achieved  = true
+						crook.state.victory   = true
+						REQUEST.game.data.state.exists = false
+						callback(observers, {success: true, message: crook.name + MESSAGES["overthrow-crook"]})
 						enactEnd(REQUEST, callback)
+						return
+					}
+
+				// bureaucrat
+					if (bureaucrat && getIdeology(REQUEST, bureaucrat, callback) && REQUEST.game.data.rules.length >= IDEOLOGIES["bureaucrat"].rules) {
+						bureaucrat.state.reelected = true
+						bureaucrat.state.achieved  = true
+						bureaucrat.state.victory   = true
+						REQUEST.game.data.state.exists = false
+						callback(observers, {success: true, message: bureaucrat.name + MESSAGES["overthrow-bureaucrat"]})
+						enactEnd(REQUEST, callback)
+						return
 					}
 			}
 			catch (error) {

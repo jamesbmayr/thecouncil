@@ -288,8 +288,16 @@
 					flag.id = "nation-flag"
 					flag.setAttribute("height", 1000)
 					flag.setAttribute("width",  1500)
-				createFlag(flag, data.state.flag)
+				createFlag(flag, data.state.flag[0])
 				document.getElementById("container").appendChild(flag)
+
+				var alternateFlag = document.createElement("canvas")
+					alternateFlag.id = "alternate-flag"
+					alternateFlag.setAttribute("height", 1000)
+					alternateFlag.setAttribute("width",  1500)
+					alternateFlag.style.display = "none"
+				createFlag(alternateFlag, data.state.flag[1])
+				document.getElementById("container").appendChild(alternateFlag)
 
 			// container
 				var government = document.getElementById("government")
@@ -493,6 +501,16 @@
 					document.getElementById("government-leader"  ).innerText = "leader: " + (data.state.leader ? data.members[data.state.leader].name + (data.rules.includes("financial-disclosure") ? (" ($" + data.members[data.state.leader].funds + ")") : "") : "?")
 					document.getElementById("government-treasury").innerText = data.treasury
 					document.getElementById("government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
+
+				// flag
+					if (data.rules.includes("alternate-flag")) {
+						document.getElementById("government-flag").style.display = "none"
+						document.getElementById("alternate-flag").style.display = "block"
+					}
+					else {
+						document.getElementById("government-flag").style.display = "block"
+						document.getElementById("alternate-flag").style.display = "none"
+					}
 
 				// agencies
 					for (var a in data.agencies) {
