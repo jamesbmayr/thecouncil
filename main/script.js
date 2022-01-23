@@ -33,6 +33,20 @@
 			}
 		}
 
+	/* getMinSec */
+		function getMinSec(ms) {
+			if (isNaN(ms)) {
+				return ms
+			}
+			else {
+				var seconds = Math.floor(ms / 1000)
+				var minutes = Math.floor(seconds / 60)
+				seconds -= (minutes * 60)
+
+				return (minutes || "0") + ":" + (String(seconds).length == 1 ? "0" : "") + seconds
+			}
+		}
+
 	/* sendPost */
 		function sendPost(post, callback) {
 			var request = new XMLHttpRequest()

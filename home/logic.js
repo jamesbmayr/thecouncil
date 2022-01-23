@@ -1,40 +1,44 @@
 /*** modules ***/
-	var main = require("../main/logic")
-	var game = require("../game/logic")
+	var MAIN = require("../main/logic")
+	var GAME = require("../game/logic")
 	module.exports = {}
+
+/*** maps ***/
+	var MESSAGES = MAIN.getAsset("messages")
+	var CONFIGS = MAIN.getAsset("configs")
 
 /*** creates ***/
 	/* createGame */
 		module.exports.createGame = createGame
-		function createGame(request, id, callback) {
+		function createGame(REQUEST, id, callback) {
 			try {
 				// create game
-					request.game    = main.getSchema("game")
-					request.game.id = id					
+					REQUEST.game    = MAIN.getSchema("game")
+					REQUEST.game.id = id				
 
-				callback({success: true, message: "game created", location: "../../game/" + request.game.id})
+				callback({success: true, message: MESSAGES["create"], location: "../../game/" + REQUEST.game.id})
 			}
 			catch (error) {
-				main.logError(error)
+				MAIN.logError(error)
 				callback({success: false, message: "unable to create game"})
 			}
 		}
 	
 	/* createPlayer */
 		module.exports.createPlayer = createPlayer
-		function createPlayer(request) {
+		function createPlayer(REQUEST) {
 			try {
 				// create player
-					var player      = main.getSchema("player")
-						player.id   = request.session.id
+					var player      = MAIN.getSchema("player")
+						player.id   = REQUEST.session.id
 
-					if (request.post.name) {
-						player.name = main.sanitizeString(request.post.name)
+					if (REQUEST.post.name) {
+						player.name = MAIN.sanitizeString(REQUEST.post.name)
 					}
 
 				// other players
-					var otherNames = Object.keys(request.game.players).map(function(p) {
-						return request.game.players[p].name
+					var otherNames = Object.keys(REQUEST.game.players).map(function(p) {
+						return REQUEST.game.players[p].name
 					}) || []
 
 				// return value
@@ -42,46 +46,46 @@
 						return player
 					}
 			}
-			catch (error) {main.logError(error)}
+			catch (error) {MAIN.logError(error)}
 		}
 
 /*** joins ***/
 	/* joinGame */
 		module.exports.joinGame = joinGame
-		function joinGame(request, callback) {
+		function joinGame(REQUEST, callback) {
 			try {
-				if (request.game.data.state.end) {
-					callback({success: false, message: "game already ended"})
+				if (REQUEST.game.data.state.end) {
+					callback({success: false, message: MESSAGES["already-ended"]})
 				}
-				else if (!request.game.players[request.session.id] && (Object.keys(request.game.players).length >= 25)) {
-					callback({success: false, message: "game is at capacity"})
+				else if (!REQUEST.game.players[REQUEST.session.id] && (Object.keys(REQUEST.game.players).length >= CONFIGS.playerCountMaximum)) {
+					callback({success: false, message: MESSAGES["at-capacity"]})
 				}
-				else if (!request.game.players[request.session.id] && request.game.data.state.start) {
-					callback({success: false, message: "game already started"})
+				else if (!REQUEST.game.players[REQUEST.session.id] && REQUEST.game.data.state.start) {
+					callback({success: false, message: MESSAGES["already-started"]})
 				}
-				else if (request.game.players[request.session.id]) {
-					callback({success: true, message: "rejoining game", location: "../../game/" + request.game.id})
+				else if (REQUEST.game.players[REQUEST.session.id]) {
+					callback({success: true, message: MESSAGES["rejoin"], location: "../../game/" + REQUEST.game.id})
 				}
-				else if (!request.post.name || !request.post.name.length || request.post.name.length > 12) {
-					callback({success: false, message: "Enter a name between 1 and 12 characters."})
+				else if (!REQUEST.post.name || !REQUEST.post.name.length || REQUEST.post.name.length < CONFIGS.playerNameMinimum || REQUEST.post.name.length > CONFIGS.playerNameMaximum) {
+					callback({success: false, message: MESSAGES["validation-name-length"]})
 				}
-				else if (!main.isNumLet(request.post.name)) {
-					callback({success: false, message: "Your name can be letters and numbers only."})
+				else if (!MAIN.isNumLet(REQUEST.post.name)) {
+					callback({success: false, message: MESSAGES["validation-name-set"]})
 				}
 				else {
-					var player = createPlayer(request)
+					var player = createPlayer(REQUEST)
 
 					if (!player) {
-						callback({success: false, message: "Name already taken."})
+						callback({success: false, message: MESSAGES["validation-name-unique"]})
 					}
 					else {
-						request.game.players[request.session.id] = player
-						callback({success: true, message: "game joined", location: "../../game/" + request.game.id})
+						REQUEST.game.players[REQUEST.session.id] = player
+						callback({success: true, message: MESSAGES["join"], location: "../../game/" + REQUEST.game.id})
 					}
 				}
 			}
 			catch (error) {
-				main.logError(error)
+				MAIN.logError(error)
 				callback({success: false, message: "unable to join game"})
 			}
 		}

@@ -6,8 +6,8 @@
 		<script node> getAsset("google fonts") </script>node>
 		<link rel="shortcut icon" type="image/png" href="icon.png"/>
 		<link rel="stylesheet" type="text/css" href="main.css"/>
-		<script type="text/javascript" src="main.js"></script>
-		<script>window.id = "<script node>request.session.id</script>node>"</script>
+		<script defer type="text/javascript" src="main.js"></script>
+		<script>window.id = "<script node>REQUEST.session.id</script>node>"</script>
 	</head>
 	<body>
 		<div id="message" class="hidden"></div>
@@ -15,7 +15,7 @@
 			<div id="start">
 				<div id="submit-start-pole"></div>
 				<button id="submit-start">
-					<span id="submit-start-inner">launch [<script node>request.game.id</script>node>]</span>
+					<span id="submit-start-inner">launch [<script node>REQUEST.game.id</script>node>]</span>
 				</button>
 				<div id="flags-background"></div>
 			</div>

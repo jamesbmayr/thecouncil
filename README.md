@@ -61,7 +61,7 @@ thecouncil
 |   |- script.js (submitFeedback; createFlags, cycleColors)
 |
 |- game
-    |- logic.js (addPlayer, removePlayer; submitStart, submitRecall, submitIssue, submitOption, submitTally, submitCampaign; selectIssue, selectOption; enactStart, enactRecall, enactTally, enactConsequences, enactCampaign, enactElection, enactEnd; getIdeology, getApproval, getAttributes; updateTime, updateMessages, updateRatings, updateRebellions, updateOverthrow, updateMembers, updateFuture, updateIssues)
+    |- logic.js (addPlayer, removePlayer; submitStart, submitRecall, submitIssue, submitOption, submitTally, submitCampaign; selectIssue, selectOption; enactStart, enactRecall, enactTally, enactConsequences, enactMessage, enactCampaign, enactElection, enactEnd; getIdeology, getApproval, getAttributes; updateTime, updateMessages, updateRatings, updateRebellions, updateOverthrow, updateMembers, updateFuture, updateIssues)
     |- main.html
     |- main.css
     |- main.js (createSocket, checkLoop; cycleColors; submitStart; receivePost, receiveStart, receiveEnd; createNameFlag, createIssue, createGovernment, createEndMember; updateNameFlag, updateIssues, updateGovernment)

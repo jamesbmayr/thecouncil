@@ -172,7 +172,7 @@
 		-webkit-user-select: none;
 		-o-user-select: none;
 		width: calc(100% - 20px);
-		height: 400px;
+		height: 460px;
 	}
 
 	#container:not([gameplay]) #government {
@@ -361,10 +361,34 @@
 			font-size: 10px;
 		}
 
+	/* rules */
+		#government-rules {
+			float: left;
+			width: 100%;
+			padding-top: 10px;
+			height: 50px;
+			line-height: 1;
+			font-size: 0;
+			overflow-x: hidden;
+			overflow-y: scroll;
+		}
+
+		.government-rule {
+			text-align: center;
+			padding: 5px;
+			background-color: var(--black-0);
+			color: var(--black-4);
+			font-size: 10px;
+			text-transform: capitalize;
+			display: inline-block;
+			margin: 0 5px 5px 0;
+			border-radius: var(--borderRadius)
+		}
+
 /*** results ***/
 	#results {
 		float: left;
-		height: calc(100vh - 440px);
+		height: calc(100vh - 500px);
 		padding: 10px;
 		width: calc(100% - 20px);
 		user-select: none;

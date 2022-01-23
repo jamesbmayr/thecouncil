@@ -435,6 +435,7 @@
 
 		.option[selected] {
 			background-color: var(--black-4);
+			color:  var(--white-4);
 		}
 
 		.option-circle {

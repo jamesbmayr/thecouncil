@@ -244,7 +244,7 @@
 			// text
 				var timeout = document.createElement("div")
 					timeout.className = "issue-timeout"
-					timeout.innerText = Math.max(0, Math.round(data.timeout / 1000))
+					timeout.innerText = getMinSec(data.timeout)
 				issue.appendChild(timeout)
 
 				var name = document.createElement("div")
@@ -439,7 +439,7 @@
 								ids.splice(ids.indexOf(data.issues[i].id), 1)
 
 							// timeout down
-								issue.querySelector(".issue-timeout").innerText = Math.max(0, Math.round(data.issues[i].timeout / 1000))
+								issue.querySelector(".issue-timeout").innerText = getMinSec(data.issues[i].timeout)
 
 							// selected state
 								if (data.issues[i].id == data.state.issue) {

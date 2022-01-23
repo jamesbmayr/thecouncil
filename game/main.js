@@ -201,7 +201,7 @@
 			// text
 				var timeout = document.createElement("div")
 					timeout.className = "issue-timeout"
-					timeout.innerText = Math.max(0, Math.round(data.timeout / 1000))
+					timeout.innerText = getMinSec(data.timeout)
 				issue.appendChild(timeout)
 
 				var name = document.createElement("div")
@@ -319,6 +319,11 @@
 					treasury.id = "government-treasury"
 				government.appendChild(treasury)
 
+			// rules
+				var rules = document.createElement("div")
+					rules.id = "government-rules"
+				government.appendChild(rules)
+
 			// agencies
 				var agencies = document.createElement("div")
 					agencies.id = "government-agencies"
@@ -424,7 +429,7 @@
 								ids.splice(ids.indexOf(data.issues[i].id), 1)
 
 							// timeout down
-								issue.querySelector(".issue-timeout").innerText = Math.max(0, Math.round(data.issues[i].timeout / 1000))
+								issue.querySelector(".issue-timeout").innerText = getMinSec(data.issues[i].timeout)
 
 							// selected state
 								if (data.issues[i].id == data.state.issue) {
@@ -484,7 +489,7 @@
 			if (government) {
 				// stats
 					document.getElementById("government-name"    ).innerText = data.rules.includes("alternate-name") ? data.state.name[1] : data.state.name[0]
-					document.getElementById("government-election").innerText = Math.round((data.state.election - data.state.time) / 1000)
+					document.getElementById("government-election").innerText = getMinSec(data.state.election - data.state.time)
 					document.getElementById("government-leader"  ).innerText = "leader: " + (data.state.leader ? data.members[data.state.leader].name + (data.rules.includes("financial-disclosure") ? (" ($" + data.members[data.state.leader].funds + ")") : "") : "?")
 					document.getElementById("government-treasury").innerText = data.treasury
 					document.getElementById("government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
@@ -512,6 +517,29 @@
 
 						var span = document.getElementById("government-constituents-numbers-" + c)
 							span.innerText = data.constituents[c].approval + "% x" + data.constituents[c].population
+					}
+
+				// rules
+					var ruleElements = Array.from(document.querySelectorAll(".government-rule"))
+					var ruleNames = []
+					for (var e in ruleElements) {
+						var ruleName = ruleElements[e].getAttribute("rule")
+						if (!data.rules.includes(ruleName)) {
+							ruleElements[e].remove()
+						}
+						else {
+							ruleNames.push(ruleName)
+						}
+					}
+
+					for (var r in data.rules) {						
+						if (!ruleNames.includes(data.rules[r])) {
+							var ruleElement = document.createElement("div")
+								ruleElement.className = "government-rule"
+								ruleElement.setAttribute("rule", data.rules[r])
+								ruleElement.innerText = data.rules[r].replace("-", " ")
+							document.getElementById("government-rules").appendChild(ruleElement)
+						}
 					}
 			}
 		}
