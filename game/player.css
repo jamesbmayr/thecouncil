@@ -686,7 +686,7 @@
 		}
 
 		#member-constituents[reelected]:before {
-			content: "Reelected";
+			content: "In Power";
 			font-size: 20px;
 			font-weight: bold;
 			line-height: 1;
@@ -705,7 +705,7 @@
 
 	/* ideology */
 		#member-ideology-name[achieved]:after {
-			content: " - Achieved";
+			content: " - Enacted";
 			font-size: 20px;
 			font-weight: bold;
 		}

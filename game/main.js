@@ -405,7 +405,7 @@
 			// reelection
 				var reelection = document.createElement("div")
 					reelection.className = "end-member-reelection"
-					reelection.innerText = "reelected"
+					reelection.innerText = "in power"
 				if (data.state.reelected) { reelection.setAttribute("reelected", true) }
 				member.appendChild(reelection)
 		}
