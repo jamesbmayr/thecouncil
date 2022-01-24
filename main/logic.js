@@ -297,6 +297,7 @@
 								populationStep: 1000,
 								populationStartingMinimum: 1000,
 								populationStartingMaximum: 5000,
+								minimumPopulation: 1000 * 5 * 2,
 								approvalStep: 5,
 								approvalStartingMinimum: 30,
 								approvalStartingMaximum: 60,
