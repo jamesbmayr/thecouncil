@@ -1170,6 +1170,18 @@
 		module.exports.updateRebellions = updateRebellions
 		function updateRebellions(REQUEST, callback) {
 			try {
+				// collapse
+					var totalPopulation = 0
+					for (var c in REQUEST.game.data.constituents) {
+						totalPopulation += REQUEST.game.data.constituents[c].population
+					}
+					if (totalPopulation < CONFIGS.minimumPopulation) {
+						if (!REQUEST.game.data.issues.find(function(i) { return i.type == "collapse" })) {
+							REQUEST.game.data.issues.push(getAttributes(MAIN.getSchema("issue"), ISSUES.collapse[0], callback))
+						}
+						return
+					}
+
 				// rebellions & protest
 					for (var c in REQUEST.game.data.constituents) {
 						if (REQUEST.game.data.constituents[c].approval <= CONFIGS.rebellionApproval && !REQUEST.game.data.issues.find(function(i) { return i.type == "rebellion" })) {
