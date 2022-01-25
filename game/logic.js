@@ -1406,9 +1406,8 @@
 							var issue = ISSUES[REQUEST.game.future[f].type].find(function(i) { return i.name == REQUEST.game.future[f].name })
 								issue = getAttributes(MAIN.getSchema("issue"), issue, callback)
 
-							// already on the board ?
-								if (!REQUEST.game.past.find(       function(p) { return p.name.trim() == issue.name.trim() })
-								 && !REQUEST.game.data.issues.find(function(i) { return i.name.trim() == issue.name.trim() })
+							// not already on the board / scheduled --> add to board
+								if (!REQUEST.game.data.issues.find(function(i) { return i.name.trim() == issue.name.trim() })
 								 && !REQUEST.game.future.find(     function(f) { return f.name.trim() == issue.name.trim() })) {
 									REQUEST.game.data.issues.push(issue)
 								}
