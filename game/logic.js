@@ -733,8 +733,17 @@
 						REQUEST.game.data.treasury = REQUEST.game.data.treasury + winningOption.treasury
 
 					// agencies
+						var allAgenciesZero = true
 						for (var a in REQUEST.game.data.agencies) {
 							REQUEST.game.data.agencies[a] = Math.max(0, Math.min(100, REQUEST.game.data.agencies[a] + winningOption.agencies[a]))
+							if (REQUEST.game.data.agencies[a] > 0) {
+								allAgenciesZero = false
+							}
+						}
+
+					// all zero --> anarchy
+						if (allAgenciesZero && !REQUEST.game.data.rules.includes("anarchy-instated")) {
+							REQUEST.game.data.rules.push("anarchy-instated")
 						}
 
 					// member approval ratings & funds

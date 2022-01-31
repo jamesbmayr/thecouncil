@@ -383,6 +383,10 @@
 			background-color: var(--green-1);
 		}
 
+		.issue[type="collapse"] {
+			background-color: var(--red-1);
+		}
+
 		.issue[type="effect"] {
 			background-color: var(--yellow-1);
 		}
