@@ -135,7 +135,7 @@
 			createGovernment(data.data)
 
 			if (data.data.state.time < 60000) {
-				["nation-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l", "government-election", "government-election-label", "government-leader"].forEach(function(id) {
+				["government-flag", "column-left", "government", "government-name", "government-treasury", "government-agencies", "government-agencies-s", "government-agencies-r", "government-agencies-t", "government-agencies-m", "government-constituents-line", "government-constituents", "government-constituents-d", "government-constituents-e", "government-constituents-f", "government-constituents-g", "government-constituents-l", "government-election", "government-election-label", "government-leader"].forEach(function(id) {
 					document.getElementById(id).className = "hidden"
 				})
 			}
@@ -285,7 +285,7 @@
 		function createGovernment(data) {
 			// flag
 				var flag = document.createElement("canvas")
-					flag.id = "nation-flag"
+					flag.id = "government-flag"
 					flag.setAttribute("height", 1000)
 					flag.setAttribute("width",  1500)
 				createFlag(flag, data.state.flag[0])
@@ -405,7 +405,7 @@
 			// reelection
 				var reelection = document.createElement("div")
 					reelection.className = "end-member-reelection"
-					reelection.innerText = "in power"
+					reelection.innerText = "ruling"
 				if (data.state.reelected) { reelection.setAttribute("reelected", true) }
 				member.appendChild(reelection)
 		}
@@ -502,6 +502,7 @@
 					document.getElementById("government-treasury").innerText = data.treasury
 					document.getElementById("government-treasury").setAttribute("direction", data.treasury > 0 ? "up" : data.treasury < 0 ? "down" : "none")
 
+
 				// flag
 					if (data.rules.includes("alternate-flag")) {
 						document.getElementById("government-flag").style.display = "none"
@@ -511,6 +512,7 @@
 						document.getElementById("government-flag").style.display = "block"
 						document.getElementById("alternate-flag").style.display = "none"
 					}
+
 
 				// agencies
 					for (var a in data.agencies) {

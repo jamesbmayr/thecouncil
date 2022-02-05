@@ -427,6 +427,7 @@
 						var pool = pools[CONFIGS.playerIdeologies.counts[String(ideologySet.length)]]
 						ideologySet.push(pool.pop())
 					}
+					ideologySet = MAIN.sortRandom(ideologySet)
 
 				// members
 					var count = 0
@@ -701,9 +702,9 @@
 				// first issue (leader) --> get more issues
 					if (REQUEST.game.past.length == 0) {
 						winningOption.issues = {
-							"0-1": {name: MAIN.chooseRandom(ISSUES.small.filter(function(i)  { return i.type == "small"})).name,  type: "small" , delay: CONFIGS.firstIssueDelay},
-							"0-2": {name: MAIN.chooseRandom(ISSUES.medium.filter(function(i) { return i.type == "medium"})).name, type: "medium", delay: CONFIGS.firstIssueDelay + CONFIGS.loopTime},
-							"0-3": {name: MAIN.chooseRandom(ISSUES.small.filter(function(i)  { return i.type == "small"})).name,  type: "small" , delay: CONFIGS.firstIssueDelay + CONFIGS.loopTime + CONFIGS.loopTime}
+							"0-1": {name: MAIN.chooseRandom(ISSUES.small.filter(function(i)  { return i.type == "small"})).name,  type: "small" , delay: 0},
+							"0-3": {name: MAIN.chooseRandom(ISSUES.small.filter(function(i)  { return i.type == "small"})).name,  type: "small" , delay: CONFIGS.firstIssueDelay},
+							"0-2": {name: MAIN.chooseRandom(ISSUES.medium.filter(function(i) { return i.type == "medium"})).name, type: "medium", delay: CONFIGS.firstIssueDelay * 2}
 						}
 					}
 
@@ -763,8 +764,10 @@
 						for (var i in winningOption.issues) {
 							if (Number(i.split("-")[0]) <= randomChance && randomChance < Number(i.split("-")[1])) {
 								var consequenceIssue = winningOption.issues[i]
+								if (!REQUEST.game.future.find(function(f) { return f.name == consequenceIssue.name })) {
 									consequenceIssue.delay = consequenceIssue.delay || CONFIGS.defaultIssueDelay
-								REQUEST.game.future.push(consequenceIssue)
+									REQUEST.game.future.push(consequenceIssue)
+								}
 							}
 						}
 
@@ -1109,7 +1112,7 @@
 
 				// end
 					if (time >= election && REQUEST.game.data.state.exists) {
-						var messageData = MESSAGES["election-sequence"][STRING(time - election)]
+						var messageData = MESSAGES["election-sequence"][String(time - election)]
 						if (messageData && messageData.observers) {
 							callback(observers, messageData.observers)
 						}
@@ -1404,9 +1407,8 @@
 							var issue = ISSUES[REQUEST.game.future[f].type].find(function(i) { return i.name == REQUEST.game.future[f].name })
 								issue = getAttributes(MAIN.getSchema("issue"), issue, callback)
 
-							// not already on the board / scheduled --> add to board
-								if (!REQUEST.game.data.issues.find(function(i) { return i.name.trim() == issue.name.trim() })
-								 && !REQUEST.game.future.find(     function(f) { return f.name.trim() == issue.name.trim() })) {
+							// not already on the board --> add to board
+								if (!REQUEST.game.data.issues.find(function(i) { return i.name == issue.name })) {
 									REQUEST.game.data.issues.push(issue)
 								}
 
@@ -1467,9 +1469,9 @@
 								var issue = MAIN.chooseRandom(ISSUES[type])
 							}
 							while (issue && tryAgain && // ensure this issue isn't already done / current / upcoming
-								(  REQUEST.game.past.find(       function(p) { return p.name.trim() == issue.name.trim() })
-								|| REQUEST.game.data.issues.find(function(i) { return i.name.trim() == issue.name.trim() })
-								|| REQUEST.game.future.find(     function(f) { return f.name.trim() == issue.name.trim() })))
+								(  REQUEST.game.past.find(       function(p) { return p.name == issue.name })
+								|| REQUEST.game.data.issues.find(function(i) { return i.name == issue.name })
+								|| REQUEST.game.future.find(     function(f) { return f.name == issue.name })))
 
 							if (issue) {
 								REQUEST.game.data.issues.push(getAttributes(MAIN.getSchema("issue"), issue, callback))

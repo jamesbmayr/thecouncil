@@ -249,7 +249,7 @@
 								case (/^\/data\/?$/).test(REQUEST.url):
 									try {
 										if (MAIN.getEnvironment("debug")) {
-											RESPONSE.end("<pre>" + UTIL.inspect(DB) + "</pre>")
+											RESPONSE.end("<pre>" + UTIL.inspect(DB, {depth: Infinity}) + "</pre>")
 										}
 										else {
 											_404(REQUEST, RESPONSE)

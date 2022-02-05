@@ -188,10 +188,12 @@
 			document.getElementById("container").setAttribute("gameplay", true)
 			
 			createMember(data.data, data.data.members[window.id], data.data.rules)
-			createFlag(document.getElementById("nation-flag"), data.data.state.flag[0])
+			
+			createFlag(document.getElementById("government-flag"), data.data.state.flag[0])
 			createFlag(document.getElementById("alternate-flag"), data.data.state.flag[1])
 					   document.getElementById("alternate-flag").style.display = "none"
 			createFlag(document.getElementById("district-flag"), data.data.members[window.id].state.flag)
+
 
 			updateButtons(data)
 
@@ -529,12 +531,12 @@
 				}
 
 			// flag
-				if (government.data.rules.includes("alternate-flag")) {
-					document.getElementById("nation-flag").style.display = "none"
+				if (government.rules.includes("alternate-flag")) {
+					document.getElementById("government-flag").style.display = "none"
 					document.getElementById("alternate-flag").style.display = "block"
 				}
 				else {
-					document.getElementById("nation-flag").style.display = "block"
+					document.getElementById("government-flag").style.display = "block"
 					document.getElementById("alternate-flag").style.display = "none"
 				}
 		}

@@ -82,13 +82,14 @@
 		#mode-bar span {
 			width: 50%;
 			height: 40px;
-			font-size: 25px;
+			font-size: 40px;
 			position: absolute;
 			top: 30px;
 			text-align: center;
 			color: var(--black-4);
 			text-shadow: 0px 0px 10px var(--white-4);
 			font-weight: normal;
+			line-height: 1;
 		}
 
 	/* council / district buttons */
@@ -350,6 +351,8 @@
 		-o-user-select: none;
 		overflow-x: hidden;
 		overflow-y: scroll;
+		display: flex;
+		flex-direction: column;
 	}
 
 	#container:not([gameplay]) #issues {
@@ -370,29 +373,40 @@
 		box-shadow: 0px 0px 20px var(--black-4);
 	}
 
-	/* colors */
+	/* colors & sort */
 		.issue[type="leader"] {
 			background-color: var(--purple-1);
+			order: -100;
 		}
 
-		.issue[type="repeal"], .issue[type="enact"] {
+		.issue[type="repeal"] {
 			background-color: var(--blue-1);
+			order: 100;
+		}
+
+		.issue[type="enact"] {
+			background-color: var(--blue-1);
+			order: 10;
 		}
 
 		.issue[type="austerity"] {
 			background-color: var(--green-1);
+			order: -10;
 		}
 
 		.issue[type="disaster"] {
 			background-color: var(--yellow-1);
+			order: -1;
 		}
 
 		.issue[type="protest"], .issue[type="coup"] {
 			background-color: var(--orange-1);
+			order: -1;
 		}
 
 		.issue[type="rebellion"], .issue[type="war"], .issue[type="collapse"] {
 			background-color: var(--red-1);
+			order: -10;
 		}
 		
 	/* info */
@@ -686,7 +700,7 @@
 		}
 
 		#member-constituents[reelected]:before {
-			content: "In Power";
+			content: "Ruling";
 			font-size: 20px;
 			font-weight: bold;
 			line-height: 1;
