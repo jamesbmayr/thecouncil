@@ -162,7 +162,7 @@
 					callback([REQUEST.session.id], {success: false, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"].rules : "") + RULES["term-length"].description}) // rule: formal-language
 				}
 				else {
-					callback(Object.keys(REQUEST.game.observers), {success: true, recall: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"].recall : "") + REQUEST.game.data.members[REQUEST.session.id].name + MESSAGES["recall-called"]}) // rule: formal-language
+					callback(Object.keys(REQUEST.game.players).concat(Object.keys(REQUEST.game.observers)), {success: true, showTally: false, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"].recall : "") + REQUEST.game.data.members[REQUEST.session.id].name + MESSAGES["recall-called"]}) // rule: formal-language
 					enactRecall(REQUEST, callback)
 				}
 			}
@@ -484,6 +484,7 @@
 					var issue = getAttributes(MAIN.getSchema("issue"), ISSUES.leader[0], callback)
 
 				// members
+					var leaderOption = null
 					for (var m in REQUEST.game.data.members) {
 						REQUEST.game.data.members[m].state.selection = null
 
@@ -496,8 +497,9 @@
 
 							// rule: term-limits & rule: no consecutives
 								if (!REQUEST.game.data.rules.includes("term-limits") && !REQUEST.game.data.rules.includes("no-consecutives")) {
-									option.default = true
-									issue.options.push(option)
+									option.isIncumbent = true
+									option.name = option.name + " (incumbent)"
+									leaderOption = option
 								}
 						}
 						else {
@@ -506,14 +508,15 @@
 						}
 					}
 
+					issue.options = MAIN.sortRandom(issue.options)
+					if (leaderOption) {
+						issue.options.unshift(leaderOption)
+					}
+
 				// enact
 					REQUEST.game.data.issues.push(issue)
 					REQUEST.game.data.state.issue  = issue.id
 					REQUEST.game.data.state.leader = null
-
-					if (!issue.options.find(function(o) { return o.default })) {
-						MAIN.chooseRandom(issue.options).default = true
-					}
 			}
 			catch (error) {
 				MAIN.logError(error)
@@ -568,74 +571,56 @@
 
 					// rebellion: insufficient funds
 						else if (issue.type == "rebellion" && winningOptions.ids.length && (REQUEST.game.data.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"]["insufficient-treasury"] : "") + MESSAGES["consequence-rebellion-insufficient-treasury"]}) // rule: formal-language
 						}
 
 					// rebellion: insufficient military
 						else if (issue.type == "rebellion" && winningOptions.ids.length && (REQUEST.game.data.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"]["insufficient-military"] : "") + MESSAGES["consequence-rebellion-insufficient-military"]}) // rule: formal-language
 						}
 
 					// protest: insufficient funds
 						else if (issue.type == "protest" && winningOptions.ids.length && (REQUEST.game.data.treasury + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury) < 0)) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"]["insufficient-treasury"] : "") + MESSAGES["consequence-protest-insufficient-treasury"]}) // rule: formal-language
 						}
 
 					// protest: insufficient military
 						else if (issue.type == "protest" && winningOptions.ids.length && (REQUEST.game.data.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"]["insufficient-military"] : "") + MESSAGES["consequence-protest-insufficient-military"]}) // rule: formal-language
 						}
 
 					// austerity: insufficient s
 						else if (issue.type == "austerity" && winningOptions.ids.length && (REQUEST.game.data.agencies.s + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.s) < 0)) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"]["insufficient-cutbacks"] : "") + MESSAGES["consequence-cutbacks-insufficient-s"]}) // rule: formal-language
 						}
 
 					// austerity: insufficient r
 						else if (issue.type == "austerity" && winningOptions.ids.length && (REQUEST.game.data.agencies.r + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.r) < 0)) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"]["insufficient-cutbacks"] : "") + MESSAGES["consequence-cutbacks-insufficient-r"]}) // rule: formal-language
 						}
 
 					// austerity: insufficient t
 						else if (issue.type == "austerity" && winningOptions.ids.length && (REQUEST.game.data.agencies.t + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.t) < 0)) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"]["insufficient-cutbacks"] : "") + MESSAGES["consequence-cutbacks-insufficient-t"]}) // rule: formal-language
 						}
 
 					// austerity: insufficient m
 						else if (issue.type == "austerity" && winningOptions.ids.length && (REQUEST.game.data.agencies.m + (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).agencies.m) < 0)) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"]["insufficient-cutbacks"] : "") + MESSAGES["consequence-cutbacks-insufficient-m"]}) // rule: formal-language
 						}
 
 				// special rules
 					// rule: balanced-budget
 						else if (REQUEST.game.data.rules.includes("balanced-budget") && winningOptions.ids.length && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury < 0) && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury + REQUEST.game.data.treasury < 0)) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"].rules : "") + RULES["balanced-budget"].description}) // rule: formal-language
 						}
 
@@ -657,18 +642,14 @@
 
 					// rule: majority-threshold
 						else if (REQUEST.game.data.rules.includes("majority-threshold") && winningOptions.ids.length && (winningOption.ids.length <= totalVotes / 2)) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"].rules : "") + RULES["majority-threshold"].description}) // rule: formal-language
 						}
 
 				// otherwise
-					// tie --> default
+					// tie --> first option
 						else if (winningOptions.ids.length !== 1) {
-							issue.options.find(function(o) {
-								return o.default
-							}).state.selected = true
+							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"].tie : "") + MESSAGES["tie"]}) // rule: formal-language
 						}
 
@@ -697,9 +678,7 @@
 				// data
 					var winningOption = issue.options.find(function(o) {
 						return o.state.selected
-					}) || issue.options.find(function(o) {
-						return o.default
-					})
+					}) || issue.options[0]
 
 					winningOption.state.selected = true
 
@@ -724,7 +703,7 @@
 						winningOption.issues = {
 							"0-1": {name: MAIN.chooseRandom(ISSUES.small.filter(function(i)  { return i.type == "small"})).name,  type: "small" , delay: CONFIGS.firstIssueDelay},
 							"0-2": {name: MAIN.chooseRandom(ISSUES.medium.filter(function(i) { return i.type == "medium"})).name, type: "medium", delay: CONFIGS.firstIssueDelay + CONFIGS.loopTime},
-							"0-3": {name: MAIN.chooseRandom(ISSUES.large.filter(function(i)  { return i.type == "large"})).name,  type: "large" , delay: CONFIGS.firstIssueDelay + CONFIGS.loopTime + CONFIGS.loopTime}
+							"0-3": {name: MAIN.chooseRandom(ISSUES.small.filter(function(i)  { return i.type == "small"})).name,  type: "small" , delay: CONFIGS.firstIssueDelay + CONFIGS.loopTime + CONFIGS.loopTime}
 						}
 					}
 
@@ -783,7 +762,9 @@
 						var randomChance = Math.random()
 						for (var i in winningOption.issues) {
 							if (Number(i.split("-")[0]) <= randomChance && randomChance < Number(i.split("-")[1])) {
-								REQUEST.game.future.push(winningOption.issues[i])
+								var consequenceIssue = winningOption.issues[i]
+									consequenceIssue.delay = consequenceIssue.delay || CONFIGS.defaultIssueDelay
+								REQUEST.game.future.push(consequenceIssue)
 							}
 						}
 
@@ -819,7 +800,7 @@
 							REQUEST.game.data.members[winningOption.id].state.leader = true
 
 							// new term
-								if (!winningOption.default) {
+								if (!winningOption.isIncumbent) {
 									REQUEST.game.data.state.term = 0
 								}
 
@@ -836,13 +817,13 @@
 						}
 
 					// collapse
-						else if (issue.type == "collapse" && winningOption.default) {
+						else if (issue.type == "collapse" && winningOption.rules.find(function(r) { return r.name == "immediate-end" })) {
 							REQUEST.game.data.state.exists = false
 							updateOverthrow(REQUEST, callback)
 						}
 
 					// rebellion
-						else if (issue.type == "rebellion" && winningOption.default) {
+						else if (issue.type == "rebellion" && winningOption.rules.find(function (r) { return r.name == "anarchy-instated" })) {
 							REQUEST.game.data.state.exists = false
 							updateOverthrow(REQUEST, callback)
 						}

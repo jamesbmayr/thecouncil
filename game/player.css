@@ -383,19 +383,15 @@
 			background-color: var(--green-1);
 		}
 
-		.issue[type="collapse"] {
-			background-color: var(--red-1);
-		}
-
-		.issue[type="effect"] {
+		.issue[type="disaster"] {
 			background-color: var(--yellow-1);
 		}
 
-		.issue[type="protest"] {
+		.issue[type="protest"], .issue[type="coup"] {
 			background-color: var(--orange-1);
 		}
 
-		.issue[type="rebellion"] {
+		.issue[type="rebellion"], .issue[type="war"], .issue[type="collapse"] {
 			background-color: var(--red-1);
 		}
 		
