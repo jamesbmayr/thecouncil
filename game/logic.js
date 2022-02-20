@@ -149,6 +149,9 @@
 				else if (REQUEST.game.data.state.cooldown) {
 					callback([REQUEST.session.id], {success: false, message: MESSAGES["ongoing-event"]})
 				}
+				else if (REQUEST.game.data.state.issue && REQUEST.game.data.state.issue.type == "leader") {
+					callback([REQUEST.session.id], {success: false, message: MESSAGES["recall-no-leader"]})
+				}
 				else if (!REQUEST.game.data.state.leader) {
 					callback([REQUEST.session.id], {success: false, message: MESSAGES["recall-no-leader"]})
 				}
@@ -384,7 +387,7 @@
 						if (issue && issue.type == "leader") {
 							var allSelected = true
 							for (var m in REQUEST.game.data.members) {
-								if (!REQUEST.game.data.members[m].state.campaign && !REQUEST.game.data.members[m].state.selection) {
+								if (!REQUEST.game.data.members[m].state.selection) {
 									allSelected = false
 								}
 							}
@@ -481,6 +484,11 @@
 		module.exports.enactRecall = enactRecall
 		function enactRecall(REQUEST, callback) {
 			try {
+				// already in a recall
+					if (REQUEST.game.data.state.issue && REQUEST.game.data.state.issue.type == "leader") {
+						return
+					}
+
 				// create issue
 					var issue = getAttributes(MAIN.getSchema("issue"), ISSUES.leader[0], callback)
 
@@ -515,9 +523,9 @@
 					}
 
 				// enact
+					REQUEST.game.data.state.leader = null
 					REQUEST.game.data.issues.push(issue)
 					REQUEST.game.data.state.issue  = issue.id
-					REQUEST.game.data.state.leader = null
 			}
 			catch (error) {
 				MAIN.logError(error)
@@ -529,11 +537,18 @@
 		module.exports.enactTally = enactTally
 		function enactTally(REQUEST, callback) {
 			try {
-				// assign votes to options
+				// get issue
 					var issue = REQUEST.game.data.issues.find(function(i) {
 						return i.id == REQUEST.game.data.state.issue
 					})
-					
+
+				// clear votes
+					for (var o in issue.options) {
+						issue.options[o].state.votes = []
+					}
+				
+				// assign votes to options
+					var totalVotes = 0
 					for (var m in REQUEST.game.data.members) {
 						var option = issue.options.find(function(o) {
 							return o.id == REQUEST.game.data.members[m].state.selection
@@ -541,19 +556,17 @@
 
 						if (option) {
 							option.state.votes.push(m)
+							totalVotes++
 						}
-						REQUEST.game.data.members[m].state.selection = null
 					}
 
 				// determine winning option(s)
-					var totalVotes = 0
 					var winningOptions = {
 						ids:   [],
 						votes: 0
 					}
 
 					for (var o in issue.options) {
-						totalVotes += issue.options[o].state.votes.length
 						if (issue.options[o].state.votes.length > winningOptions.votes) {
 							winningOptions.votes = issue.options[o].state.votes.length
 							winningOptions.ids   = [issue.options[o].id]
@@ -620,13 +633,13 @@
 
 				// special rules
 					// rule: balanced-budget
-						else if (REQUEST.game.data.rules.includes("balanced-budget") && winningOptions.ids.length && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury < 0) && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury + REQUEST.game.data.treasury < 0)) {
+						else if (issue.type !== "leader" && REQUEST.game.data.rules.includes("balanced-budget") && winningOptions.ids.length && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury < 0) && (issue.options.find(function(o) { return o.id == winningOptions.ids[0] }).treasury + REQUEST.game.data.treasury < 0)) {
 							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"].rules : "") + RULES["balanced-budget"].description}) // rule: formal-language
 						}
 
 					// rule: executive-decision
-						else if (REQUEST.game.data.rules.includes("executive-decision") && issue.timeout <= RULES["executive-decision"].timeout && issue.options.find(function(o) { return o.state.votes.includes(REQUEST.game.data.state.leader) })) {
+						else if (issue.type !== "leader" && REQUEST.game.data.rules.includes("executive-decision") && issue.timeout <= RULES["executive-decision"].timeout && issue.options.find(function(o) { return o.state.votes.includes(REQUEST.game.data.state.leader) })) {
 							issue.options.find(function(o) {
 								return o.state.votes.includes(REQUEST.game.data.state.leader)
 							}).state.selected = true
@@ -634,7 +647,7 @@
 						}
 
 					// rule: tiebreaker-leader
-						else if (winningOptions.ids.length > 1 && REQUEST.game.data.rules.includes("tiebreaker-leader") && REQUEST.game.data.state.leader && issue.options.find(function(o) { return winningOptions.ids.includes(o.id) && o.state.votes.includes(REQUEST.game.data.state.leader) })) {
+						else if (issue.type !== "leader" && winningOptions.ids.length > 1 && REQUEST.game.data.rules.includes("tiebreaker-leader") && REQUEST.game.data.state.leader && issue.options.find(function(o) { return winningOptions.ids.includes(o.id) && o.state.votes.includes(REQUEST.game.data.state.leader) })) {
 							issue.options.find(function(o) {
 								return winningOptions.ids.includes(o.id) && o.state.votes.includes(REQUEST.game.data.state.leader)
 							}).state.selected = true
@@ -642,7 +655,7 @@
 						}
 
 					// rule: majority-threshold
-						else if (REQUEST.game.data.rules.includes("majority-threshold") && winningOptions.ids.length && (winningOption.ids.length <= totalVotes / 2)) {
+						else if (issue.type !== "leader" && REQUEST.game.data.rules.includes("majority-threshold") && winningOptions.ids.length && (winningOption.ids.length <= totalVotes / 2)) {
 							issue.options[0].state.selected = true
 							callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"].rules : "") + RULES["majority-threshold"].description}) // rule: formal-language
 						}
@@ -664,7 +677,6 @@
 
 				// reset & enact consequences
 					enactConsequences(REQUEST, callback, issue)
-
 			}
 			catch (error) {
 				MAIN.logError(error)
@@ -682,6 +694,11 @@
 					}) || issue.options[0]
 
 					winningOption.state.selected = true
+
+				// clear out member selections
+					for (var m in REQUEST.game.data.members) {
+						REQUEST.game.data.members[m].state.selection = null
+					}
 
 				// special numbers
 					var messageData = MESSAGES["issue-sequence"][String(REQUEST.game.past.length)]
@@ -1073,7 +1090,7 @@
 								}
 
 							// rule: term-limits
-								if (REQUEST.game.data.state.exists && REQUEST.game.data.rules.includes("term-limits") && !REQUEST.game.data.state.cooldown && REQUEST.game.data.state.term >= RULES["term-limits"].term) { // rule: term-limits
+								if (REQUEST.game.data.state.exists && REQUEST.game.data.rules.includes("term-limits") && !REQUEST.game.data.state.cooldown && REQUEST.game.data.state.term >= RULES["term-limits"].term && !(REQUEST.game.data.state.issue && REQUEST.game.data.state.issue.type == "leader")) { // rule: term-limits
 									enactRecall(REQUEST, callback)
 									callback(Object.keys(REQUEST.game.observers), {success: true, message: (REQUEST.game.data.rules.includes("formal-language") ? RULES["formal-language"].rules : "") + RULES["term-limits"].description}) // rule: formal-language
 								}
@@ -1382,7 +1399,7 @@
 						else if (REQUEST.game.data.state.time % CONFIGS.donationTimeModulo == 0 && !REQUEST.game.data.rules.includes("donation-ban")) { // rule: donation-ban
 							for (var c in member.constituents) {
 								if (member.constituents[c].approval >= CONFIGS.donationApproval) {
-									member.funds = Math.min(0, member.funds + member.constituents[c].population)
+									member.funds = Math.min(0, member.funds + Math.ceil(member.constituents[c].population * CONFIGS.donationPerPopulation / CONFIGS.campaignCost) * CONFIGS.campaignCost)
 								}
 							}
 						}
@@ -1405,11 +1422,19 @@
 					// add to issues
 						if (REQUEST.game.future[f].delay <= 0) {
 							var issue = ISSUES[REQUEST.game.future[f].type].find(function(i) { return i.name == REQUEST.game.future[f].name })
-								issue = getAttributes(MAIN.getSchema("issue"), issue, callback)
+							
+							// name found?
+								if (issue) {
+									// format issue
+										issue = getAttributes(MAIN.getSchema("issue"), issue, callback)
 
-							// not already on the board --> add to board
-								if (!REQUEST.game.data.issues.find(function(i) { return i.name == issue.name })) {
-									REQUEST.game.data.issues.push(issue)
+									// not already on the board --> add to board
+										if (!REQUEST.game.data.issues.find(function(i) { return i.name == issue.name })) {
+											REQUEST.game.data.issues.push(issue)
+										}
+								}
+								else {
+									logError("invalid event name: " + REQUEST.game.future[f].name)
 								}
 
 							// remove from future

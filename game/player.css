@@ -248,8 +248,12 @@
 			bottom: 0px;
 			border-radius: var(--borderRadius) var(--borderRadius) 0px 0px;
 			font-size: 20px;
-			overflow: hidden;
 			text-overflow: ellipsis;
+		}
+
+		#member-constituents div span:first-child {
+			margin-top: -13px;
+			font-weight: bold;
 		}
 
 		#member-constituents-d {

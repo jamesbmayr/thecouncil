@@ -330,8 +330,13 @@
 			border-radius: var(--borderRadius) var(--borderRadius) 0px 0px;
 			font-size: 15px;
 			color: var(--black-4);
-			overflow: hidden;
 			text-overflow: ellipsis;
+		}
+
+		#government-constituents div span:first-child {
+			color: var(--white-4);
+			margin-top: -13px;
+			font-weight: bold;
 		}
 
 		#government-constituents-d {

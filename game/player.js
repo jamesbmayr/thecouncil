@@ -326,7 +326,7 @@
 							constituents.appendChild(element)
 
 							var span = document.createElement("span")
-								span.className = "option-agencies-number-" + a
+								span.className = "option-consituents-number-" + c
 								span.innerText = "(" + (subdata.constituents[c].approval > 0 ? "+" + subdata.constituents[c].approval : subdata.constituents[c].approval) + ")"
 							element.appendChild(span)
 						}
@@ -377,8 +377,11 @@
 				for (var c in data.constituents) {
 					var element = document.createElement("div")
 						element.id = "member-constituents-" + c
-						element.innerText = c
 					constituents.appendChild(element)
+
+					var span = document.createElement("span")
+						span.innerText = c
+					element.appendChild(span)
 
 					var span = document.createElement("span")
 						span.id = "member-constituents-numbers-" + c

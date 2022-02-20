@@ -273,7 +273,7 @@
 							constituents.appendChild(element)
 
 							var span = document.createElement("span")
-								span.className = "option-agencies-number-" + a
+								span.className = "option-constituents-number-" + c
 								span.innerText = "(" + (subdata.constituents[c].approval > 0 ? "+" + subdata.constituents[c].approval : subdata.constituents[c].approval) + ")"
 							element.appendChild(span)
 						}
@@ -368,8 +368,11 @@
 				for (var c in data.constituents) {
 					var element = document.createElement("div")
 						element.id = "government-constituents-" + c
-						element.innerText = (c == "d") ? "dwarves" : (c == "e") ? "elves" : (c == "f") ? "fairies" : (c == "g") ? "goblins" : "lizardfolk"
 					constituents.appendChild(element)
+
+					var span = document.createElement("span")
+						span.innerText = (c == "d") ? "dwarves" : (c == "e") ? "elves" : (c == "f") ? "fairies" : (c == "g") ? "goblins" : "lizardfolk"
+					element.appendChild(span)
 
 					var span = document.createElement("span")
 						span.id = "government-constituents-numbers-" + c
