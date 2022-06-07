@@ -719,20 +719,19 @@
 				// first issue (leader) --> get more issues
 					if (REQUEST.game.past.length == 0) {
 						winningOption.issues = {
-							"0-1": {name: MAIN.chooseRandom(ISSUES.small.filter(function(i)  { return i.type == "small"})).name,  type: "small" , delay: 0},
-							"0-3": {name: MAIN.chooseRandom(ISSUES.small.filter(function(i)  { return i.type == "small"})).name,  type: "small" , delay: CONFIGS.firstIssueDelay},
-							"0-2": {name: MAIN.chooseRandom(ISSUES.medium.filter(function(i) { return i.type == "medium"})).name, type: "medium", delay: CONFIGS.firstIssueDelay * 2}
+							"0-1": {name: MAIN.chooseRandom(ISSUES.small.filter(function(i) { return i.type == "small"})).name, type: "small", delay: CONFIGS.firstIssueDelay},
+							"0-2": {name: MAIN.chooseRandom(ISSUES.small.filter(function(i) { return i.type == "small"})).name, type: "small", delay: CONFIGS.firstIssueDelay},
 						}
 					}
 
 				// consequences
 					// treasury
-						REQUEST.game.data.treasury = REQUEST.game.data.treasury + winningOption.treasury
+						REQUEST.game.data.treasury = REQUEST.game.data.treasury + (winningOption.treasury || 0)
 
 					// agencies
 						var allAgenciesZero = true
 						for (var a in REQUEST.game.data.agencies) {
-							REQUEST.game.data.agencies[a] = Math.max(0, Math.min(100, REQUEST.game.data.agencies[a] + winningOption.agencies[a]))
+							REQUEST.game.data.agencies[a] = Math.max(0, Math.min(100, REQUEST.game.data.agencies[a] + (winningOption.agencies[a] || 0)))
 							if (REQUEST.game.data.agencies[a] > 0) {
 								allAgenciesZero = false
 							}
@@ -752,22 +751,22 @@
 								var member = REQUEST.game.data.members[issue.options[o].state.votes[v]]
 								
 								if (issue.options[o].state.selected) {
-									member.funds                          = Math.max(0, member.funds + winningOption.funds * donationMultiplier)
+									member.funds                          = Math.max(0, member.funds + ((winningOption.funds || 0) * donationMultiplier))
 									for (var c in member.constituents) {
-										member.constituents[c].approval   = Math.max(0, Math.min(100, member.constituents[c].approval + winningOption.constituents[c].approval * approvalMultiplier))
-										member.constituents[c].population = Math.max(0, member.constituents[c].population + winningOption.constituents[c].population)
+										member.constituents[c].approval   = Math.max(0, Math.min(100, member.constituents[c].approval + (winningOption.constituents[c].approval || 0) * approvalMultiplier))
+										member.constituents[c].population = Math.max(0, member.constituents[c].population + (winningOption.constituents[c].population || 0))
 									}
 								}
 								else {
-									member.funds                            = Math.max(0, member.funds + Math.floor(issue.options[o].funds * CONFIGS.failedVoteFundsMultiplier * donationMultiplier))
+									member.funds                            = Math.max(0, member.funds + Math.floor((issue.options[o].funds || 0) * CONFIGS.failedVoteFundsMultiplier * donationMultiplier))
 									for (var c in member.constituents) {
 										if (REQUEST.game.data.rules.includes("secret-voting")) { // rule: secret-voting
-											member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + winningOption.constituents[c].approval * approvalMultiplier))
+											member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + (winningOption.constituents[c].approval || 0) * approvalMultiplier))
 										}
 										else {
-											member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + issue.options[o].constituents[c].approval * approvalMultiplier))
+											member.constituents[c].approval = Math.max(0, Math.min(100, member.constituents[c].approval + (issue.options[o].constituents[c].approval || 0) * approvalMultiplier))
 										}
-										member.constituents[c].population = Math.max(0, member.constituents[c].population + winningOption.constituents[c].population)
+										member.constituents[c].population = Math.max(0, member.constituents[c].population + (winningOption.constituents[c].population || 0))
 									}
 								}
 							}
@@ -1391,7 +1390,7 @@
 					// public financing
 						if (REQUEST.game.data.rules.includes("public-financing")) { // rule: public financing
 							if (REQUEST.game.data.state.time % RULES["public-financing"].timeModulo == 0) {
-								member.funds = Math.min(0, member.funds + RULES["public-financing"].funds)
+								member.funds = Math.max(0, member.funds + RULES["public-financing"].funds)
 							}
 						}
 
@@ -1399,7 +1398,7 @@
 						else if (REQUEST.game.data.state.time % CONFIGS.donationTimeModulo == 0 && !REQUEST.game.data.rules.includes("donation-ban")) { // rule: donation-ban
 							for (var c in member.constituents) {
 								if (member.constituents[c].approval >= CONFIGS.donationApproval) {
-									member.funds = Math.min(0, member.funds + Math.ceil(member.constituents[c].population * CONFIGS.donationPerPopulation / CONFIGS.campaignCost) * CONFIGS.campaignCost)
+									member.funds = Math.max(0, member.funds + Math.ceil(member.constituents[c].population * CONFIGS.donationPerPopulation / CONFIGS.campaignCost) * CONFIGS.campaignCost)
 								}
 							}
 						}
@@ -1434,7 +1433,7 @@
 										}
 								}
 								else {
-									logError("invalid event name: " + REQUEST.game.future[f].name)
+									MAIN.logError("invalid event name: " + REQUEST.game.future[f].name)
 								}
 
 							// remove from future

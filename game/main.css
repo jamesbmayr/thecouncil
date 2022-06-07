@@ -594,7 +594,6 @@
 			float: left;
 			width: 100%;
 			height: 50px;
-			margin-right: 2.5px;
 			pointer-events: none;
 		}
 
@@ -656,7 +655,6 @@
 			float: left;
 			width: calc(100%);
 			height: 50px;
-			margin-left: 2.5px;
 			pointer-events: none;
 		}
 
