@@ -55,7 +55,10 @@
 					}
 
 				// where next ?
-					if ((/[.](ico|png|jpg|jpeg|gif|svg|pdf|txt|css|js)$/).test(REQUEST.url)) { // serve asset
+					if ((/^\/ping\/?$/).test(REQUEST.url)) { // ping
+						routeRequest(REQUEST, RESPONSE)
+					}
+					else if ((/[.](ico|png|jpg|jpeg|gif|svg|pdf|txt|css|js)$/).test(REQUEST.url)) { // serve asset
 						routeRequest(REQUEST, RESPONSE)
 					}
 					else { // get session and serve html
@@ -71,6 +74,17 @@
 				// assets
 					if (!REQUEST.session) {
 						switch (true) {
+							// ping
+								case (/^\/ping\/?$/).test(REQUEST.url):
+									try {
+										RESPONSE.writeHead(200, {
+											"Content-Type": "text/json"
+										})
+										RESPONSE.end( JSON.stringify({success: true, timestamp: new Date().getTime()}) )
+									}
+									catch (error) {_403(error)}
+								break
+								
 							// icon
 								case (/\/favicon[.]ico$/).test(REQUEST.url):
 								case (/\/icon[.]png$/).test(REQUEST.url):

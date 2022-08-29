@@ -98,9 +98,9 @@
 									<meta name="keywords" content="game,council,politics,fantasy,decision,vote,election,multiplayer"/>\
 									<meta name="author" content="James Mayr"/>\
 									<meta property="og:title" content="Keep the republic from crumbling - rule the fantasy realm together in The Council, a card game of politics and persuasion."/>\
-									<meta property="og:url" content="https://thecouncil.herokuapp.com"/>\
+									<meta property="og:url" content="https://jamesmayr.com/thecouncil"/>\
 									<meta property="og:description" content="Keep the republic from crumbling - rule the fantasy realm together in The Council, a card game of politics and persuasion."/>\
-									<meta property="og:image" content="https://thecouncil.herokuapp.com/banner.png"/>\
+									<meta property="og:image" content="https://jamesmayr.com/thecouncil/banner.png"/>\
 									<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>'
 						break
 						case "css variables":
