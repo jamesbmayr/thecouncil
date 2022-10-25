@@ -5,6 +5,7 @@
 		createSocket()
 		function createSocket() {
 			socket = new WebSocket(location.href.replace("http","ws"))
+			socket.keepPinging = false
 			socket.onopen = function() { socket.send(null) }
 			socket.onerror = function(error) {}
 			socket.onclose = function() {
@@ -14,6 +15,7 @@
 
 			socket.onmessage = function(message) {
 				try {
+					socket.keepPinging = true
 					var post = JSON.parse(message.data)
 					if (post && (typeof post == "object")) {
 						receivePost(post)
@@ -26,9 +28,12 @@
 				clearInterval(socket.pingLoop)
 			}
 			socket.pingLoop = setInterval(function() {
-				fetch("/ping", {method: "GET"})
-					.then(function(response){ return response.json() })
-					.then(function(data) {})
+				if (socket.keepPinging) {
+					socket.keepPinging = false
+					fetch("/ping", {method: "GET"})
+						.then(function(response){ return response.json() })
+						.then(function(data) {})
+				}
 			}, pingInterval)
 		}
 
